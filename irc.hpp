@@ -28,4 +28,18 @@ class irc
 		
 };
 
+//faire une classe client
+
+// typedef struct	t_env
+// {
+// 	struct sockaddr_storage	their_addr;
+// 	socklen_t		addr_size;
+// 	int			newfd;
+// 	int			sockfd;
+// 	int			fdmax;
+// 	fd_set			master;
+// 	fd_set			fdreads;
+// }		s_env;
+
+
 #endif
