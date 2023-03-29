@@ -39,9 +39,11 @@ class Server
 		struct epoll_event	_events[MAX_EVENTS];
 		int 				_epoll_fd;
 
-		void	initSocket();
-		int		makeSocketNonBlocking(int sfd);
+		void	initSocket(char *port);
+		
 		void	serverLoop();
 };
+
+int	makeSocketNonBlocking(int sfd);
 
 #endif

@@ -1,6 +1,8 @@
 #include "irc.hpp"
 #include "Server.hpp"
 
+//utiliser un container map et ne pas distinguer les nickname du style Dan et dan
+
 int	main(int argc, char **argv)
 {
 	if (argc != 2)
