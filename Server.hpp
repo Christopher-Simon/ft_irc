@@ -32,6 +32,7 @@ class Server
 
 	private:
 		std::vector<int>	client;
+		//std::map<int, Client> client;
 		int					_sockfd;
 		struct sockaddr_in	_address;
 		int					_addrlen;

@@ -120,28 +120,50 @@ void	Server::initSocket(char *port) {
 	// 	throw (std::runtime_error("epoll fail"));
 	serverLoop();
 }
-int makeSocketNonBlocking(int sfd)
-{
-	int flags, s;
+// int makeSocketNonBlocking(int sfd)
+// {
+// 	int flags, s;
 
-	flags = fcntl(sfd, F_GETFL, 0);
-	if (flags == -1)
-	{
-		return -1;
-	}
-	flags |= O_NONBLOCK;
-	s = fcntl (sfd, F_SETFL, flags);
-	if (s == -1)
-	{
-		return -1;
-	}
-	return 0;
-}
+// 	flags = fcntl(sfd, F_GETFL, 0);
+// 	if (flags == -1)
+// 	{
+// 		return -1;
+// 	}
+// 	flags |= O_NONBLOCK;
+// 	s = fcntl (sfd, F_SETFL, flags);
+// 	if (s == -1)
+// 	{
+// 		return -1;
+// 	}
+// 	return 0;
+// }
 
 void	Server::serverLoop() {
 	int event_count;
 	int nb_client = 4;
 	(void)_events;
+	//SET UP THE ADMIN WINDOW
+	std::cout<<"Set up server window"<<std::endl;
+	//int newfd;
+	//newfd = accept(_sockfd, (struct sockaddr *)&_address, (socklen_t *)&_addrlen);
+	// if (newfd < 0)
+	// {
+	// 	std::cout << RED << "Socket listen failed" << RESET << std::endl;
+	// }
+	// else
+	// {
+	// 	std::cout << GREEN << "Client server accepted successful : FD = " << newfd<< RESET << std::endl;
+	// }
+	if (makeSocketNonBlocking(0) == -1)
+	{
+		std::cout << RED << "fcntl failed" << RESET << std::endl;
+	}
+	_event.events = EPOLLIN | EPOLLET;
+	_event.data.fd = 0;
+	if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, 0, &_event))
+		throw (std::runtime_error("epoll fail"));
+	nb_client++;
+	//LOOP
 	while (1)
 	{
 		event_count = epoll_wait(_epoll_fd, _events, MAX_EVENTS, 30000);
@@ -174,7 +196,42 @@ void	Server::serverLoop() {
 				_event.data.fd = newfd;
 				if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, newfd, &_event))
 					throw (std::runtime_error("epoll fail"));
+				//IDENTIFICATION CLIENT
+				// while (1)
+				// {
+				// 	ssize_t counti;
+				// 	char bufi[512];
+
+				// 	counti = read (_events[i].data.fd, bufi, sizeof bufi);
+				// 	if (counti == -1 || counti == 0)
+				// 	{
+				// 		//done = 1;
+				// 		break;
+				// 	}
+				// 	std::string id = bufi;
+				// 	std::cout<<"ID a dit: "<<id.substr(0,counti);
+				// }
 				nb_client++;
+			}
+			else if (_events[i].data.fd == 0)
+			{
+				ssize_t countserv;
+				char bufs[512];
+
+				countserv = read (_events[i].data.fd, bufs, sizeof bufs);
+				if (countserv == -1 || countserv == 0)
+				{
+					//done = 1;
+					break;
+				}
+				std::string msg = bufs;
+				std::cout<<"Server a dit: "<<msg.substr(0,countserv);
+				if (strcmp(msg.substr(0,countserv).c_str(), "exit\n") == 0)
+				{
+					// close all clients
+					close(_sockfd);
+					exit(0);
+				}
 			}
 			else
 			{
