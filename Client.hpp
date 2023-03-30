@@ -19,7 +19,7 @@ private:
 public:
 	Client();
 	Client(Server &serv, int);
-	Client(Server &serv); // createur avec std map en parametre pour surveiller les nickname des autres clients
+	Client(int fd); // createur avec std map en parametre pour surveiller les nickname des autres clients
 	~Client();
 
 	int getfd();

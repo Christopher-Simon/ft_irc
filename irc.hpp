@@ -9,6 +9,14 @@
 #include <list>
 #include <map>
 
+#include <signal.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <fstream>
+#include <unistd.h>
+#include <sys/epoll.h>
+#include <string.h> 
+#include <fcntl.h>
 
 #define GREEN "\033[32m"
 #define RED "\033[31m"
@@ -17,16 +25,9 @@
 #define PURPLE "\033[35m"
 #define RESET "\033[0m"
 
-class irc 
-{
-	public:
-		irc();
-		irc(irc const & raw);
-		~irc();
-		irc & operator=(irc const & rhs);
+#define BUFFER_SIZE 10000
+#define MAX_EVENTS 1
 
-	private:
-		
-};
+extern bool gtrl_c;
 
 #endif

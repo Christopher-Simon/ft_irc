@@ -11,16 +11,7 @@
 
 #include "irc.hpp"
 
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <fstream>
-#include <unistd.h>
-#include <sys/epoll.h>
-#include <string.h> 
-#include <fcntl.h>
-
 #include "Client.hpp"
-#define MAX_EVENTS 1
 
 class Client;
 
@@ -36,7 +27,7 @@ class Server
 		int get_sockfd();
 		int get_epollfd();
 
-		void add_client(Client &nouv);
+		void add_client();
 		void send_msg(std::string, int);
 		void print_client();
 

@@ -18,25 +18,15 @@ Client::Client(Server &serv, int opt)
 	_identified = opt;
 }
 
-Client::Client(Server &serv)
+Client::Client(int fd): _fd(fd), _identified(0)
 {
-	this->_fd = accept(serv.get_sockfd(), (struct sockaddr *)&serv._address, (socklen_t *)&serv._addrlen);
-	if (this->_fd < 0)
-		throw (std::runtime_error("Socket listen failed"));
-	else
-		std::cout << GREEN << "Client accepted successful : FD = " << _fd<< RESET << std::endl;
-	if (makeSocketNonBlocking(_fd) == -1)
-		throw (std::runtime_error("fcntl failed"));
-	serv._event.events = EPOLLIN | EPOLLET;
-	serv._event.data.fd = _fd;
-	if (epoll_ctl(serv.get_epollfd(), EPOLL_CTL_ADD, _fd, &serv._event))
-		throw (std::runtime_error("epoll fail"));
-	_identified = 0;
+
 }
 
 Client::~Client()
 {
-
+	std::cout << _fd << std::endl;
+	close(_fd);
 }
 
 int Client::getfd()
@@ -47,17 +37,20 @@ int Client::getfd()
 std::string Client::get_msg()
 {
 	int count;
-	char buf[512];
+	char buf[BUFFER_SIZE];
+	std::string msg;
 
 	while (1)
 	{
-		count = read(_fd, buf, sizeof buf);
+		count = recv(_fd, buf, BUFFER_SIZE - 1, 0);
+		std::cout << "count : " << count << std::endl;
 		if (count == -1 || count == 0)
 			break;
+		buf[count] = '\0';
+		msg += buf;
 	}
-	std::string msg = buf;
-	//std::cout<<"msg:"<<msg<<std::endl;
-	return (msg.substr(0, count));
+	std::cout << msg;
+	return (msg);
 }
 
 bool Client::get_status()

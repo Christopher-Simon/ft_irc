@@ -4,6 +4,13 @@
 #include <iomanip>
 #include <iterator>
 
+bool gtrl_c(1);
+
+void	sighandler(int signum) {
+	if (signum == SIGINT)
+		gtrl_c = false;
+}
+
 int	main(int argc, char **argv)
 {
 	if (argc != 2)
@@ -14,32 +21,20 @@ int	main(int argc, char **argv)
 	try {
 		Server	serv(argv[1]);
 		int event_count;
-		Client NvServ(serv, 0);
-		serv.add_client(NvServ);
-		while (1)
+		signal(SIGINT, &sighandler);
+		while (gtrl_c)
 		{
+			std::cout << GREEN << "###### On epoll wait #######" << RESET << std::endl;
 			event_count = epoll_wait(serv.get_epollfd(), serv._events, MAX_EVENTS, 30000);
-			std::cout << event_count << std::endl;
-			for (int i = 0; i < event_count; i++) 
+			std::cout << "event count : " << event_count << std::endl;
+			for (int i = 0; i < event_count; i++)
 			{
-				std::cout << serv._events[i].data.fd << std::endl;
+				std::cout << "fd[" << serv._events[i].data.fd << "]" << std::endl;
 				if (serv._events[i].data.fd == serv.get_sockfd())
 				{
 					std::cout<<"client trying connect"<<std::endl;
-					Client Nouv(serv);
-					serv.add_client(Nouv);
+					serv.add_client();
 					//serv.print_client();
-				}
-				else if (serv._events[i].data.fd == 0)
-				{
-					std::string msg = serv.pool_client[0].get_msg();
-					std::cout<<"Server a dit: "<<msg;
-					if (strcmp(msg.substr(0, msg.size()).c_str(), "exit\n") == 0)
-					{
-						// close all clients
-						close(serv.get_sockfd());
-						exit(0);
-					}
 				}
 				else
 				{
@@ -50,7 +45,6 @@ int	main(int argc, char **argv)
 				}
 			}
 		}
-		close(serv.get_sockfd());
 	} catch (std::exception & e) {
 		std::cerr << RED << e.what() << RESET << std::endl;
 	}
