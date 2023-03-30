@@ -19,7 +19,10 @@
 #include <string.h> 
 #include <fcntl.h>
 
+#include "Client.hpp"
 #define MAX_EVENTS 1
+
+class Client;
 
 class Server 
 {
@@ -30,19 +33,27 @@ class Server
 		~Server();
 		Server & operator=(Server const & rhs);
 
-	private:
-		std::vector<int>	client;
-		//std::map<int, Client> client;
-		int					_sockfd;
-		struct sockaddr_in	_address;
-		int					_addrlen;
+		int get_sockfd();
+		int get_epollfd();
+
+		void add_client(Client &nouv);
+		void send_msg(std::string, int);
+		void print_client();
+
 		struct epoll_event	_event;
 		struct epoll_event	_events[MAX_EVENTS];
+		struct sockaddr_in	_address;
+		int					_addrlen;
+		std::map<int, Client> pool_client;
+
+	private:
+		//std::vector<int>	client;
+		//std::map<int, Client> client;
+		int					_sockfd;
 		int 				_epoll_fd;
 
 		void	initSocket(char *port);
-		
-		void	serverLoop();
+
 };
 
 int	makeSocketNonBlocking(int sfd);

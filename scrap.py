@@ -10,9 +10,11 @@ html_content = requests.get(url).text
 soup = BeautifulSoup(html_content, "html.parser")
 # print(soup.prettify())
 # for el in soup.find_all("h3"):
-for el in soup.findAll(['h3', 'div']):
-	if (el in soup.find_all('h3')):
-		print(el.get('id'))
-	else:
-		print("YOLO:")
-		print(el.code)
+# for el in soup.findAll(['h3', 'div']):
+# 	if (el in soup.find_all('h3')):
+# 		print(el.get('id'))
+	# else:
+	# 	print("YOLO:")
+	# 	print(el.code)
+for el in soup.findAll(['code']):
+	print(el.string)
