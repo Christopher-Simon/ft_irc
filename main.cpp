@@ -44,9 +44,11 @@ int	main(int argc, char **argv)
 				else
 				{
 					int fd_client = serv._events[i].data.fd;
-					//if (serv.pool_client[fd_client].get_status() == 1)
 					std::string msg = serv.pool_client[fd_client].get_msg();
-					serv.send_msg(msg, fd_client);
+					if (serv.pool_client[fd_client].get_status() == 1)
+						serv.send_msg(msg, fd_client);
+					else if (serv.pool_client[fd_client].get_status() == 0)
+						serv.pool_client[fd_client].identify(msg);
 				}
 			}
 		}

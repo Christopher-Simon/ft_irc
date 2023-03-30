@@ -24,6 +24,7 @@ public:
 
 	int getfd();
 	bool get_status();
+	void identify(std::string &);
 	std::string get_msg();
 
 };

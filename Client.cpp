@@ -52,15 +52,34 @@ std::string Client::get_msg()
 	while (1)
 	{
 		count = read(_fd, buf, sizeof buf);
+		buf[count] = '\0';
 		if (count == -1 || count == 0)
 			break;
 	}
 	std::string msg = buf;
-	//std::cout<<"msg:"<<msg<<std::endl;
+	std::cout<<"msg:"<<msg<<std::endl;
 	return (msg.substr(0, count));
 }
 
 bool Client::get_status()
 {
 	return (this->_identified);
+}
+
+void Client::identify(std::string &msg)
+{
+	if (msg.substr(0, 6) != "CAP LS")
+		return;
+	size_t index = msg.find_first_of("\r\n", 0);
+	std::cout<<"good 1 -"<<index<<std::endl;
+	//while (index < msg.size() && (msg[index] == '\r' ||)
+	index++;
+	if (index == std::string::npos)
+		return;
+	std::cout<<msg.substr(index + 1, 4)<<std::endl;
+	if (msg.substr(index + 1, 4) != "NICK")
+		return;
+	_nickname = msg.substr(index + 6, msg.find_first_of("\r\n", index + 6)- index - 6);
+	std::cout<<"NICK = "<<_nickname<<std::endl;
+	return;
 }
