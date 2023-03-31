@@ -24,6 +24,8 @@ public:
 
 	int getfd();
 	bool get_status();
+	std::string get_nick();
+	void identify(std::string &, Server &);
 	std::string get_msg();
 
 };

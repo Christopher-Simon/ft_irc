@@ -13,6 +13,9 @@
 
 #include "Client.hpp"
 
+//#define MACRO(int e, int d): 
+//#define RPL_WELCOME(clt, )
+
 class Client;
 
 typedef	std::map<int, Client *>  mapClient;
@@ -30,6 +33,7 @@ class Server
 		int get_epollfd();
 
 		void add_client();
+		void send_all_msg(std::string, int);
 		void send_msg(std::string, int);
 		void print_client();
 		void del_client(int del_fd);

@@ -114,7 +114,7 @@ void	Server::add_client()
 	pool_client[newFd] = new Client(newFd);
 }
 
-void	Server::send_msg(std::string msg, int fd_avoid)
+void Server::send_all_msg(std::string msg, int fd_avoid)
 {
 	for (std::map<int, Client *>::iterator ok = pool_client.begin();ok != pool_client.end();ok++)
 	{
@@ -140,7 +140,12 @@ void	Server::del_client(int del_fd)
 	pool_client.erase(it);
 }
 
-void	Server::print_client()
+void Server::send_msg(std::string msg, int fd)
+{
+	send(fd,msg.c_str(), msg.size(), 0);
+}
+
+void Server::print_client()
 {
 	std::cout<<"----------------"<<std::endl;
 	std::cout<<"Nb de client enregistre:"<<pool_client.size()<<std::endl;

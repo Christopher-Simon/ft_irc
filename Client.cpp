@@ -57,3 +57,44 @@ bool Client::get_status()
 {
 	return (this->_identified);
 }
+
+std::string RPL_WELCOME(Client &clt)
+{
+	std::string op1 = "<";
+	std::string op = "> :Welcome to the Network";
+	return (op1 + clt.get_nick() + op);
+}
+
+void Client::identify(std::string &msg, Server &serv)
+{
+	if (msg.substr(0, 6) != "CAP LS")
+		return;
+	size_t index = msg.find_first_of("\r\n", 0);
+	std::cout<<"good 1 -"<<index<<std::endl;
+	//while (index < msg.size() && (msg[index] == '\r' ||)
+	index++;
+	if (index == std::string::npos)
+		return;
+	//std::cout<<msg.substr(index + 1, 4)<<std::endl;
+	if (msg.substr(index + 1, 4) != "NICK")
+		return;
+	_nickname = msg.substr(index + 6, msg.find_first_of("\r\n", index + 6)- index - 6);
+	std::cout<<"NICK = "<<_nickname<<std::endl;
+	index = msg.find_first_of("\r\n", index + 6)+ 1;
+	if (index == std::string::npos)
+		return;
+	if (msg.substr(index + 1, 4) != "USER")
+		return;
+	_user = msg.substr(index + 6, msg.find_first_of(" \r\n", index + 6)- index - 6);
+	std::cout<<"USER = "<<_user<<std::endl;
+
+	//serv.send_msg("<client> :Welcome to the <networkname> Network, <nick>[!<user>@<host>]", _fd);
+	serv.send_msg(RPL_WELCOME(*this), _fd);
+	_identified = 1;
+	return;
+}
+
+std::string Client::get_nick()
+{
+	return (this->_nickname);
+}
