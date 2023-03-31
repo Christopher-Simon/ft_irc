@@ -136,13 +136,18 @@ void Server::add_client(Client &nouv)
 	pool_client[nouv.getfd()] = nouv;
 }
 
-void Server::send_msg(std::string msg, int fd_avoid)
+void Server::send_all_msg(std::string msg, int fd_avoid)
 {
 	for (std::map<int, Client>::iterator ok = pool_client.begin();ok != pool_client.end();ok++)
 	{
 		if (ok->first != fd_avoid && ok->first != 0)
 			send(ok->first, msg.c_str(), msg.size(), 0);
 	}
+}
+
+void Server::send_msg(std::string msg, int fd)
+{
+	send(fd,msg.c_str(), msg.size(), 0);
 }
 
 void Server::print_client()

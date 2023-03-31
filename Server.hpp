@@ -22,6 +22,9 @@
 #include "Client.hpp"
 #define MAX_EVENTS 1
 
+//#define MACRO(int e, int d): 
+//#define RPL_WELCOME(clt, )
+
 class Client;
 
 class Server 
@@ -37,6 +40,7 @@ class Server
 		int get_epollfd();
 
 		void add_client(Client &nouv);
+		void send_all_msg(std::string, int);
 		void send_msg(std::string, int);
 		void print_client();
 

@@ -46,9 +46,9 @@ int	main(int argc, char **argv)
 					int fd_client = serv._events[i].data.fd;
 					std::string msg = serv.pool_client[fd_client].get_msg();
 					if (serv.pool_client[fd_client].get_status() == 1)
-						serv.send_msg(msg, fd_client);
+						serv.send_all_msg(msg, fd_client);
 					else if (serv.pool_client[fd_client].get_status() == 0)
-						serv.pool_client[fd_client].identify(msg);
+						serv.pool_client[fd_client].identify(msg, serv);
 				}
 			}
 		}
