@@ -30,8 +30,12 @@ Server::Server(Server const & raw)
 
 Server::~Server()
 {
+	std::cout << "Destroying Server" << std::endl;
 	close(_sockfd);
 	close(_epoll_fd);
+	mapClient::iterator it;
+	for (it = pool_client.begin(); it != pool_client.end(); ++it)
+		delete it->second;
 }
 //******************ACCESSORS*****************//
 
@@ -84,17 +88,17 @@ void	Server::initSocket(char *port) {
 		throw (std::runtime_error("epoll fail"));
 }
 
-int Server::get_sockfd()
+int	Server::get_sockfd()
 {
 	return (this->_sockfd);
 }
 
-int Server::get_epollfd()
+int	Server::get_epollfd()
 {
 	return (this->_epoll_fd);
 }
 
-void Server::add_client()
+void	Server::add_client()
 {
 	int newFd = accept(_sockfd, (struct sockaddr *)&_address, (socklen_t *)&_addrlen);
 	if (newFd < 0)
@@ -107,25 +111,43 @@ void Server::add_client()
 	_event.data.fd = newFd;
 	if (epoll_ctl(get_epollfd(), EPOLL_CTL_ADD, newFd, &_event))
 		throw (std::runtime_error("epoll fail"));
-	pool_client[newFd] = Client(newFd);
+	pool_client[newFd] = new Client(newFd);
 }
 
-void Server::send_msg(std::string msg, int fd_avoid)
+void	Server::send_msg(std::string msg, int fd_avoid)
 {
-	for (std::map<int, Client>::iterator ok = pool_client.begin();ok != pool_client.end();ok++)
+	for (std::map<int, Client *>::iterator ok = pool_client.begin();ok != pool_client.end();ok++)
 	{
 		if (ok->first != fd_avoid && ok->first != 0)
 			send(ok->first, msg.c_str(), msg.size(), 0);
 	}
 }
 
-void Server::print_client()
+void	Server::del_client(int del_fd)
+{
+	mapClient::iterator	it;
+
+	it = pool_client.find(del_fd);
+	if (it == pool_client.end())
+	{
+		std::cerr << "error : del_client, fd doesn't exist";
+		return ;
+	}
+	std::cout << "delete client fd : " << it->first << std::endl;
+	if (epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, del_fd, NULL))
+		throw (std::runtime_error("epoll DEL fail"));
+	delete	it->second;
+	pool_client.erase(it);
+}
+
+void	Server::print_client()
 {
 	std::cout<<"----------------"<<std::endl;
 	std::cout<<"Nb de client enregistre:"<<pool_client.size()<<std::endl;
-	for (std::map<int, Client>::iterator ok = pool_client.begin();ok != pool_client.end();ok++)
+	for (std::map<int, Client *>::iterator ok = pool_client.begin();ok != pool_client.end();ok++)
 	{
-		std::cout<<"Client sur fd "<<ok->second.getfd()<<std::endl;
+		// ok->second->getfd()
+		std::cout << "Client sur fd " << ok->second->getfd() << std::endl;
 	}
 	std::cout<<"----------------"<<std::endl;
 }

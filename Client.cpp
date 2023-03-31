@@ -20,12 +20,12 @@ Client::Client(Server &serv, int opt)
 
 Client::Client(int fd): _fd(fd), _identified(0)
 {
-
 }
 
 Client::~Client()
 {
-	std::cout << _fd << std::endl;
+
+	std::cout << "destroy client fd : " << _fd << std::endl;
 	close(_fd);
 }
 
@@ -43,13 +43,13 @@ std::string Client::get_msg()
 	while (1)
 	{
 		count = recv(_fd, buf, BUFFER_SIZE - 1, 0);
-		std::cout << "count : " << count << std::endl;
+		// std::cout << "count : " << count << std::endl;
 		if (count == -1 || count == 0)
 			break;
 		buf[count] = '\0';
 		msg += buf;
 	}
-	std::cout << msg;
+	// std::cout << msg;
 	return (msg);
 }
 

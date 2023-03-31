@@ -15,6 +15,8 @@
 
 class Client;
 
+typedef	std::map<int, Client *>  mapClient;
+
 class Server 
 {
 	public:
@@ -30,12 +32,13 @@ class Server
 		void add_client();
 		void send_msg(std::string, int);
 		void print_client();
+		void del_client(int del_fd);
 
 		struct epoll_event	_event;
 		struct epoll_event	_events[MAX_EVENTS];
 		struct sockaddr_in	_address;
 		int					_addrlen;
-		std::map<int, Client> pool_client;
+		mapClient			pool_client;
 
 	private:
 		//std::vector<int>	client;

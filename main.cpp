@@ -24,7 +24,7 @@ int	main(int argc, char **argv)
 		signal(SIGINT, &sighandler);
 		while (gtrl_c)
 		{
-			std::cout << GREEN << "###### On epoll wait #######" << RESET << std::endl;
+			std::cout << GREEN << "####### On epoll wait #######" << RESET << std::endl;
 			event_count = epoll_wait(serv.get_epollfd(), serv._events, MAX_EVENTS, 30000);
 			std::cout << "event count : " << event_count << std::endl;
 			for (int i = 0; i < event_count; i++)
@@ -34,14 +34,15 @@ int	main(int argc, char **argv)
 				{
 					std::cout<<"client trying connect"<<std::endl;
 					serv.add_client();
-					//serv.print_client();
 				}
 				else
 				{
 					int fd_client = serv._events[i].data.fd;
-					//if (serv.pool_client[fd_client].get_status() == 1)
-					std::string msg = serv.pool_client[fd_client].get_msg();
-					serv.send_msg(msg, fd_client);
+					std::string msg = serv.pool_client[fd_client]->get_msg();
+					if (msg == "exit\n")
+						serv.del_client(fd_client);
+					else
+						serv.send_msg(msg, fd_client);
 				}
 			}
 		}
