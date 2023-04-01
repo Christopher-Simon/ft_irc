@@ -47,11 +47,28 @@ std::string Client::get_msg()
 		if (count == -1 || count == 0)
 			break;
 		buf[count] = '\0';
+		//std::cout<<buf;
 		msg += buf;
 	}
 	// std::cout << msg;
 	return (msg);
 }
+
+// std::string Client::get_msg()
+// {
+// 	int count;
+// 	char buf[512];
+
+// 	while (1)
+// 	{
+// 		count = read(_fd, buf, sizeof buf);
+// 		if (count == -1 || count == 0)
+// 			break;
+// 	}
+// 	std::string msg = buf;
+// 	//std::cout<<"msg:"<<msg<<std::endl;
+// 	return (msg.substr(0, count));
+// }
 
 bool Client::get_status()
 {
@@ -75,7 +92,7 @@ void Client::identify(std::string &msg, Server &serv)
 	index++;
 	if (index == std::string::npos)
 		return;
-	//std::cout<<msg.substr(index + 1, 4)<<std::endl;
+	std::cout<<msg.substr(index + 1, 4)<<std::endl;
 	if (msg.substr(index + 1, 4) != "NICK")
 		return;
 	_nickname = msg.substr(index + 6, msg.find_first_of("\r\n", index + 6)- index - 6);
