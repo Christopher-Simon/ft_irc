@@ -1,8 +1,10 @@
 #include "irc.hpp"
 #include "Server.hpp"
 #include "Client.hpp"
+#include "Command.hpp"
 #include <iomanip>
 #include <iterator>
+#include "Code.hpp"
 
 bool gtrl_c(1);
 
@@ -10,6 +12,10 @@ void	sighandler(int signum) {
 	if (signum == SIGINT)
 		gtrl_c = false;
 }
+
+// TO DO
+// Controler que le nickname n'est pas deja celui d'un autre utilisateur
+
 
 int	main(int argc, char **argv)
 {
@@ -20,6 +26,8 @@ int	main(int argc, char **argv)
 	}
 	try {
 		Server	serv(argv[1]);
+		Command cmd;
+
 		int event_count;
 		signal(SIGINT, &sighandler);
 		while (gtrl_c)
@@ -43,10 +51,12 @@ int	main(int argc, char **argv)
 					std::cout<<msg<<std::endl;
 					if (msg == "exit\n")
 						serv.del_client(fd_client);
-					else if (serv.pool_client[fd_client]->get_status() == 0)
-						serv.send_all_msg(msg, fd_client);
-					else if (serv.pool_client[fd_client]->get_status() == 0)
-						serv.pool_client[fd_client]->identify(msg, serv);
+					else
+						cmd.exec(msg, serv, *serv.pool_client[fd_client]);
+					// else if (serv.pool_client[fd_client]->get_status() == 1)
+					// 	cmd.exec(msg, serv, *serv.pool_client[fd_client]);
+					// else if (serv.pool_client[fd_client]->get_status() == 0)
+					// 	serv.pool_client[fd_client]->identify(msg, serv);
 
 					//std::string msg = serv.pool_client[fd_client].get_msg();
 					//if (serv.pool_client[fd_client].get_status() == 1)

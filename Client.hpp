@@ -11,12 +11,17 @@ class Client
 {
 private:
 	int _fd;
-	std::string _nickname;
-	std::string _intern_nick;
-	std::string _user;
-	bool _identified;
+
 
 public:
+	std::string _nickname;
+	//std::string _intern_nick;
+	std::string _username; // is the username of the client on the local machin
+	std::string _hotsname; //is the hostname of the client's computer
+	std::string _servername; // is the name of the server that the client is connecting to
+	std::string _realname;
+	bool _identified;
+	
 	Client();
 	Client(Server &serv, int);
 	Client(int fd); // createur avec std map en parametre pour surveiller les nickname des autres clients
