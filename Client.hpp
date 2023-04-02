@@ -3,9 +3,11 @@
 
 
 #include "Server.hpp"
+#include "Command.hpp"
 #include "irc.hpp"
 
 class Server;
+class Command;
 
 class Client
 {
@@ -15,13 +17,14 @@ private:
 
 public:
 	std::string _nickname;
+	std::string _intern_nick;
 	//std::string _intern_nick;
 	std::string _username; // is the username of the client on the local machin
 	std::string _hotsname; //is the hostname of the client's computer
 	std::string _servername; // is the name of the server that the client is connecting to
 	std::string _realname;
 	std::vector<char> _mods;
-	bool _identified;
+	int _identified;
 	
 	Client();
 	Client(Server &serv, int);
@@ -33,6 +36,8 @@ public:
 	std::string get_nick();
 	//void identify(std::string &, Server &);
 	std::string get_msg();
+
+	void check_registered(Server &, Command &);
 
 };
 

@@ -45,6 +45,7 @@ class Server
 		int					_addrlen;
 		mapClient			pool_client;
 		mapChannel			pool_channel;
+		std::string			password;
 
 	private:
 		//std::vector<int>	client;

@@ -50,21 +50,16 @@ std::string Client::get_msg()
 	return (msg);
 }
 
-// std::string Client::get_msg()
-// {
-// 	int count;
-// 	char buf[512];
-
-// 	while (1)
-// 	{
-// 		count = read(_fd, buf, sizeof buf);
-// 		if (count == -1 || count == 0)
-// 			break;
-// 	}
-// 	std::string msg = buf;
-// 	//std::cout<<"msg:"<<msg<<std::endl;
-// 	return (msg.substr(0, count));
-// }
+void Client::check_registered(Server &serv, Command &cmd)
+{
+	if (_identified != 3)
+		return;
+	serv.send_msg(cmd.ircrep->RPL_WELCOME(*this), _fd);
+	serv.send_msg(cmd.ircrep->RPL_YOURHOST(*this), _fd);
+	serv.send_msg(cmd.ircrep->RPL_CREATED(*this), _fd);
+	serv.send_msg(cmd.ircrep->RPL_MYINFO(*this), _fd);
+	serv.send_msg(cmd.ircrep->RPL_ISUPPORT(*this), _fd);
+}
 
 bool Client::get_status()
 {

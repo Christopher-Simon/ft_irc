@@ -22,10 +22,14 @@ public:
 
 	void exec(std::string &, Server &, Client &);
 	void exec_line(std::string msg, Server &serv, Client &clt);
-	void identify(std::string &, Server &, Client &);
+	//void identify(std::string &, Server &, Client &);
 
-	void PING(std::string cmd,std::vector<std::string> vect, Server &serv, Client &clt);
+	void USER(std::string cmd, std::string line, Server &serv, Client &clt);
+	void NICK(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
+	void PASS(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
+	void PING(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 	void MODE(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
+	
 };
 
 #endif
