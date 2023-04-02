@@ -24,7 +24,6 @@ Client::Client(int fd): _fd(fd), _identified(0)
 
 Client::~Client()
 {
-
 	std::cout << "destroy client fd : " << _fd << std::endl;
 	close(_fd);
 }
@@ -43,14 +42,11 @@ std::string Client::get_msg()
 	while (1)
 	{
 		count = recv(_fd, buf, BUFFER_SIZE - 1, 0);
-		// std::cout << "count : " << count << std::endl;
 		if (count == -1 || count == 0)
 			break;
 		buf[count] = '\0';
-		//std::cout<<buf;
 		msg += buf;
 	}
-	// std::cout << msg;
 	return (msg);
 }
 
@@ -75,48 +71,6 @@ bool Client::get_status()
 	return (this->_identified);
 }
 
-
-
-// void Client::identify(std::string &msg, Server &serv)
-// {
-// 	if (msg.substr(0, 6) != "CAP LS")
-// 		return;
-// 	size_t index = msg.find_first_of("\r\n", 0);
-// 	std::cout<<"good 1 -"<<index<<std::endl;
-// 	//while (index < msg.size() && (msg[index] == '\r' ||)
-// 	index++;
-// 	if (index == std::string::npos)
-// 		return;
-// 	std::cout<<msg.substr(index + 1, 4)<<std::endl;
-// 	if (msg.substr(index + 1, 4) != "NICK")
-// 		return;
-// 	_nickname = msg.substr(index + 6, msg.find_first_of("\r\n", index + 6)- index - 6);
-// 	std::cout<<"NICK = "<<_nickname<<std::endl;
-// 	index = msg.find_first_of("\r\n", index + 6)+ 1;
-// 	if (index == std::string::npos)
-// 		return;
-// 	if (msg.substr(index + 1, 4) != "USER")
-// 		return;
-// 	_username = msg.substr(index + 6, msg.find_first_of(" ", index + 6)- index - 6);
-// 	index = msg.find_first_of(" ", index + 6) + 1;
-// 	std::cout<<"USER = "<<_username<<std::endl;
-// 	_hotsname = msg.substr(index, msg.find_first_of(" ", index + 1)- index);
-// 	std::cout<<"HOSTNAME = "<<_hotsname<<std::endl;
-// 	index = msg.find_first_of(" ", index + 1) + 1;
-// 	_servername = msg.substr(index, msg.find_first_of(" ", index + 1)- index);
-// 	std::cout<<"SERVERNAME = "<<_servername<<std::endl;
-// 	index = msg.find_first_of(" ", index + 1) + 2;
-// 	_realname = msg.substr(index, msg.find_first_of("\r\n", index + 1)- index);
-// 	std::cout<<"REALNAME = "<<_realname<<std::endl;
-// 	//serv.send_msg("<client> :Welcome to the <networkname> Network, <nick>[!<user>@<host>]", _fd);
-// 	serv.send_msg(RPL_WELCOME(*this), _fd);
-// 	serv.send_msg(RPL_YOURHOST(*this), _fd);
-// 	serv.send_msg(RPL_CREATED(*this), _fd);
-// 	serv.send_msg(RPL_MYINFO(*this), _fd);
-// 	serv.send_msg(RPL_ISUPPORT(*this), _fd);
-// 	_identified = 1;
-// 	return;
-// }
 
 std::string Client::get_nick()
 {

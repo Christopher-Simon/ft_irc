@@ -10,15 +10,16 @@
 #include <map>
 
 #include "irc.hpp"
-
 #include "Client.hpp"
+#include "Channel.hpp"
 
-//#define MACRO(int e, int d): 
-//#define RPL_WELCOME(clt, )
+//Ajouter la gestion de la destruction des classes channel
 
 class Client;
+class Channel;
 
 typedef	std::map<int, Client *>  mapClient;
+typedef std::map<std::string, Channel *> mapChannel;
 
 class Server 
 {
@@ -43,6 +44,7 @@ class Server
 		struct sockaddr_in	_address;
 		int					_addrlen;
 		mapClient			pool_client;
+		mapChannel			pool_channel;
 
 	private:
 		//std::vector<int>	client;

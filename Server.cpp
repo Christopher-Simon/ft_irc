@@ -19,7 +19,7 @@ Server::Server()
 
 Server::Server(char *port)
 {
-	initSocket(port);	
+	initSocket(port);
 }
 
 Server::Server(Server const & raw)

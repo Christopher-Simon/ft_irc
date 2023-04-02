@@ -1,11 +1,30 @@
 #include "Command.hpp"
 
+std::vector<std::string> ft_split(std::string &msg)
+{
+	size_t index = 0;
+	int flag = 0;
+	std::vector<std::string> vect;
+	while (index != std::string::npos)
+	{
+		while(msg[index] != '\0' && msg[index] == ' ')
+			index++;
+		if (flag == 1 && msg[msg.find_first_of(" \0", index)] == '\0')
+			break;
+		std::string morceau = msg.substr(index, msg.find_first_of(" \0", index) - index);
+		vect.push_back(morceau);
+		flag = 1;
+		index = msg.find_first_of(" \0", index);
+	}
+	return (vect);
+}
+
 Command::Command()
 {
 	ircrep = new Code();
-	cmd_repertory["PING"] = &Command::ping;
+	cmd_repertory["PING"] = &Command::PING;
 	//CAP
-	//MODE
+	cmd_repertory["MODE"] = &Command::MODE;
 	
 }
 
@@ -44,7 +63,7 @@ void Command::exec_line(std::string msg, Server &serv, Client &clt)
 	std::string cmd = msg.substr(0, msg.find_first_of(" \r\n",0));
 	std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::toupper);
 	if (cmd_repertory.find(cmd) != cmd_repertory.end())
-		(this->*cmd_repertory[cmd])(cmd, msg, serv, clt);
+		(this->*cmd_repertory[cmd])(cmd, ft_split(msg), serv, clt);
 
 }
 
@@ -90,18 +109,37 @@ void Command::identify(std::string &msg, Server &serv, Client &clt)
 	return;
 }
 
-//A REVOIR COMPLETEMENT
-void Command::ping(std::string cmd, std::string msg, Server &serv, Client &clt)
+
+void Command::MODE(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt)
 {
-	//std::cout<<"PING received"<<serv.get_sockfd()<<clt.get_status()<<msg<<std::endl;
-	size_t index = msg.find_first_of(" \r\n", cmd.size()) + 1;
-	if (index == std::string::npos) //a tester
+	if (vect.size() < 2)
+		return; //THROW ERR_NEEDMOREPARAMS
+	if (vect[1][0] == '#')
+	{
+		//MODE CHANNEL
+		std::string target = vect[1].substr(1, vect[1].size());
+		if (serv.pool_channel.find(target) == serv.pool_channel.end())
+			return; //THROW ERR_NOSUCHCHANNEL
+		if (vect.size() == 2)
+			return; //RPL_CHANNELMODEIS
+		if (serv.pool_channel.find(target)->second->_members.find(&clt)->second.find('o', 0) == std::string::npos)
+			return; //ERR_CHANOPRIVSNEEDED
+		//TBC
+	}
+	std::cout<<cmd<<std::endl;
+	return;
+}
+
+//A REVOIR COMPLETEMENT
+void Command::PING(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt)
+{
+	if (vect.size() != 2) //a tester
 		serv.send_msg(ircrep->ERR_NEEDMOREPARAMS(cmd, clt),clt.getfd()); //ajouter l'erreur no origin ?
-	std::string arg = msg.substr(cmd.size()+1, msg.size());
+	//std::string arg = msg.substr(cmd.size()+1, msg.size());
 	// if (arg != clt._servername)
 	// 	serv.send_msg
 	std::string reply = "PONG ";
 	std::string space = " :";
-	std::cout<<reply + clt._servername + space + arg<<std::endl;
-	serv.send_msg(reply + clt._servername + space + arg, clt.getfd());
+	std::cout<<reply + clt._servername + space + vect[1]<<std::endl;
+	serv.send_msg(reply + clt._servername + space + vect[1], clt.getfd());
 }

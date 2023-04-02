@@ -20,6 +20,7 @@ public:
 	std::string _hotsname; //is the hostname of the client's computer
 	std::string _servername; // is the name of the server that the client is connecting to
 	std::string _realname;
+	std::vector<char> _mods;
 	bool _identified;
 	
 	Client();
@@ -30,10 +31,18 @@ public:
 	int getfd();
 	bool get_status();
 	std::string get_nick();
-	void identify(std::string &, Server &);
+	//void identify(std::string &, Server &);
 	std::string get_msg();
 
 };
 
 #endif
+
+//modes
+// USER MODES :
+// - a : away
+// - i : invisible
+// - w : wallops
+// - r : restricted
+// - o : operator
 

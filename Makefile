@@ -5,7 +5,7 @@ CXXFLAGS = -std=c++98 -Wall -Wextra -Werror -g3
 CPPFLAGS = -MMD 
 
 SRC = main.cpp \
-Server.cpp Client.cpp Command.cpp Code.cpp
+Server.cpp Client.cpp Command.cpp Code.cpp Channel.cpp
 
 OBJ_DIR = obj/
 OBJ = $(addprefix  $(OBJ_DIR), $(SRC:.cpp=.o))

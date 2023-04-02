@@ -14,7 +14,7 @@ class Code;
 class Command
 {
 public:
-	std::map<std::string, void(Command::*)(std::string cmd, std::string msg, Server &serv, Client &clt)> cmd_repertory;
+	std::map<std::string, void(Command::*)(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt)> cmd_repertory;
 	Code *ircrep;
 
 	Command();
@@ -24,7 +24,8 @@ public:
 	void exec_line(std::string msg, Server &serv, Client &clt);
 	void identify(std::string &, Server &, Client &);
 
-	void ping(std::string cmd,std::string msg, Server &serv, Client &clt);
+	void PING(std::string cmd,std::vector<std::string> vect, Server &serv, Client &clt);
+	void MODE(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 };
 
 #endif
