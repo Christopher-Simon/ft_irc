@@ -38,11 +38,23 @@ int	main(int argc, char **argv)
 				else
 				{
 					int fd_client = serv._events[i].data.fd;
-					std::string msg = serv.pool_client[fd_client]->get_msg();
-					if (msg == "exit\n")
+					try{
+						serv.pool_client[fd_client]->get_msg();
+					} catch (Client::LostConnExceptions & e){
+						std::cerr << e.what() << std::endl;
 						serv.del_client(fd_client);
-					else
-						serv.send_msg(msg, fd_client);
+						break ;
+					}
+					if (serv.pool_client[fd_client]->get_buffer() == "exit\n")
+						serv.del_client(fd_client);
+					// else if (serv.pool_client[fd_client]->get_buffer().find("\r\n"))
+					// 	serv.send_msg(fd_client);
+					if (serv.pool_client[fd_client]->get_buffer().find("\r\n") != std::string::npos)
+						std::cout << "there is \\r\\n" << std::endl;
+					if (serv.pool_client[fd_client]->get_buffer().find("\n") != std::string::npos)
+						std::cout << "there is \\n" << std::endl;
+					if (serv.pool_client[fd_client]->get_buffer().find("\n") != std::string::npos)
+						std::cout << "there is no \\r\\n" << std::endl;
 				}
 			}
 		}

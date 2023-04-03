@@ -6,7 +6,7 @@ Client::Client()
 	_identified = 0;
 }
 
-Client::Client(Server &serv, int opt)
+Client::Client(Server &serv, int opt):_buffer()
 {
 	this->_fd = 0;
 	if (makeSocketNonBlocking(0) == -1)
@@ -34,26 +34,31 @@ int Client::getfd()
 	return (this->_fd);
 }
 
-std::string Client::get_msg()
+void Client::get_msg()
 {
 	int count;
 	char buf[BUFFER_SIZE];
-	std::string msg;
 
-	while (1)
-	{
-		count = recv(_fd, buf, BUFFER_SIZE - 1, 0);
-		// std::cout << "count : " << count << std::endl;
-		if (count == -1 || count == 0)
-			break;
-		buf[count] = '\0';
-		msg += buf;
-	}
-	// std::cout << msg;
-	return (msg);
+	count = recv(_fd, buf, BUFFER_SIZE - 1, 0);
+	if (count < 0)
+		throw (std::runtime_error("recv failed"));
+	// std::cout << "count : " << count << std::endl;
+	buf[count] = '\0';
+	_buffer += buf;
+	if (count == 0)
+		throw(LostConnExceptions());
 }
 
 bool Client::get_status()
 {
 	return (this->_identified);
+}
+
+std::string Client::get_buffer() const {
+	return (_buffer);
+}
+
+const char* Client::LostConnExceptions::what() const throw()
+{
+	return("Connection with client lost");
 }

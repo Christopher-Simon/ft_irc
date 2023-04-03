@@ -30,7 +30,7 @@ class Server
 		int get_epollfd();
 
 		void add_client();
-		void send_msg(std::string, int);
+		void send_msg(int);
 		void print_client();
 		void del_client(int del_fd);
 
