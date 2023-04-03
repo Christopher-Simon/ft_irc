@@ -9,11 +9,15 @@ class Channel
 {
 public:
 	Channel();
+	Channel(std::string);
+	Channel(std::string, std::string);
 	~Channel();
 
 	std::map<Client *, std::string> _members; //la string detaille les mods des utilisateurs dans le channel
 	std::vector<char> _channel_mods;
 	std::string _name;
+	bool _iskey;
+	std::string _key;
 };
 
 #endif

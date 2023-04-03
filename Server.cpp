@@ -36,6 +36,9 @@ Server::~Server()
 	mapClient::iterator it;
 	for (it = pool_client.begin(); it != pool_client.end(); ++it)
 		delete it->second;
+	mapChannel::iterator it2;
+	for (it2 = pool_channel.begin(); it2 != pool_channel.end(); ++it2)
+		delete it2->second;
 }
 //******************ACCESSORS*****************//
 
@@ -155,4 +158,15 @@ void Server::print_client()
 		std::cout << "Client sur fd " << ok->second->getfd() << std::endl;
 	}
 	std::cout<<"----------------"<<std::endl;
+}
+
+int Server::check_exist(std::string &ptl_nick)
+{
+	mapClient::iterator it;
+	for (it = pool_client.begin(); it != pool_client.end(); ++it)
+	{
+		if (ptl_nick == it->second->_intern_nick)
+			return (1);
+	}
+	return (0);
 }

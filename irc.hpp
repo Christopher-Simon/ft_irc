@@ -28,6 +28,13 @@
 #define BUFFER_SIZE 10000
 #define MAX_EVENTS 1
 
+#define U_AWAY 'a'
+#define U_INVISIBLE 'i'
+#define U_WALLOPS 'w'
+#define U_RESTRICTED 'r'
+#define U_OPERATOR 'o'
+
+
 extern bool gtrl_c;
 
 #endif

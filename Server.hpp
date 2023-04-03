@@ -34,6 +34,7 @@ class Server
 		int get_epollfd();
 
 		void add_client();
+		int check_exist(std::string &);
 		void send_all_msg(std::string, int);
 		void send_msg(std::string, int);
 		void print_client();

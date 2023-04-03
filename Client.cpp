@@ -71,3 +71,19 @@ std::string Client::get_nick()
 {
 	return (this->_nickname);
 }
+
+void Client::add_mod(char c)
+{
+	if (_mods.find(c) != std::string::npos)
+		return;
+	_mods = _mods + c;
+	return;
+}
+
+void Client::rem_mod(char c)
+{
+	if (_mods.find(c) == std::string::npos)
+		return;
+	_mods.erase(_mods.find(c), 1);
+	return;
+}

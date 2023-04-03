@@ -18,12 +18,11 @@ private:
 public:
 	std::string _nickname;
 	std::string _intern_nick;
-	//std::string _intern_nick;
 	std::string _username; // is the username of the client on the local machin
 	std::string _hotsname; //is the hostname of the client's computer
 	std::string _servername; // is the name of the server that the client is connecting to
 	std::string _realname;
-	std::vector<char> _mods;
+	std::string _mods;
 	int _identified;
 	
 	Client();
@@ -34,10 +33,11 @@ public:
 	int getfd();
 	bool get_status();
 	std::string get_nick();
-	//void identify(std::string &, Server &);
 	std::string get_msg();
 
 	void check_registered(Server &, Command &);
+	void add_mod(char);
+	void rem_mod(char);
 
 };
 

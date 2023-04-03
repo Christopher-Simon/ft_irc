@@ -20,8 +20,8 @@ public:
 	std::string RPL_CREATED(Client &clt);
 	std::string RPL_MYINFO(Client &clt);
 	std::string RPL_ISUPPORT(Client &clt);
+	std::string RPL_UMODEIS(Client &clt);
 	// RPL_BOUNCE (010)
-	// RPL_UMODEIS (221)
 	// RPL_LUSERCLIENT (251)
 	// RPL_LUSEROP (252)
 	// RPL_LUSERUNKNOWN (253)
@@ -95,20 +95,20 @@ public:
 	// RPL_SASLMECHS (908)
 
 	std::string ERR_NEEDMOREPARAMS(std::string, Client &);
-	// std::string ERR_NICKNAMEINUSE(std::string, Client &);
-	// std::string ERR_PASSWDMISMATCH(std::string, Client &);
+	std::string ERR_NONICKNAMEGIVEN(Client &clt);
+	std::string ERR_NICKNAMEINUSE(std::string &nick, Client &clt);
+	std::string ERR_ALREADYREGISTERED(Client &clt);
+	std::string ERR_PASSWDMISMATCH(Client &clt);
+	std::string ERR_NOTREGISTERED(Client &clt);
+	std::string ERR_UMODEUNKNOWNFLAG(Client &clt);
 	// std::string ERR_UNKNOWNCOMMAND(std::string, Client &);
 	// std::string ERR_NOMOTD(std::string, Client &);
-	// std::string ERR_NONICKNAMEGIVEN(std::string, Client &);
 	// std::string ERR_ERRONEUSNICKNAME(std::string, Client &);
 	// std::string ERR_NICKCOLLISION(std::string, Client &);
 	// std::string ERR_USERNOTINCHANNEL(std::string, Client &);
 	// std::string ERR_NOTONCHANNEL(std::string, Client &);
-	// std::string ERR_NOTREGISTERED(std::string, Client &);
-	// std::string ERR_ALREADYREGISTERED(std::string, Client &);
 	// std::string ERR_CHANOPRIVSNEEDED(std::string, Client &);
 	// std::string ERR_NOOPERHOST(std::string, Client &);
-	// std::string ERR_UMODEUNKNOWNFLAG(std::string, Client &);
 	// std::string ERR_USERSDONTMATCH(std::string, Client &);
 	// ERR_UNKNOWNERROR (400)
 	// ERR_NOSUCHNICK (401)
