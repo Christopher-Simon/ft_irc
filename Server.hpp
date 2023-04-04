@@ -10,16 +10,19 @@
 #include <map>
 
 #include "irc.hpp"
-
 #include "Client.hpp"
+#include "Channel.hpp"
+
+//Ajouter la gestion de la destruction des classes channel
 
 class Client;
-
+class Channel;
 
 class Server 
 {
 	public:
 		typedef	std::map<int, Client *>  mapClient;
+    typedef std::map<std::string, Channel *> mapChannel;
 		Server();
 		Server(char *port);
 		Server(Server const & raw);
@@ -30,7 +33,9 @@ class Server
 		int get_epollfd();
 
 		void add_client();
-		void send_msg(int);
+		int check_exist(std::string &);
+		void send_all_msg(std::string, int);
+		void send_msg(std::string, int);
 		void print_client();
 		void del_client(int del_fd);
 
@@ -39,6 +44,8 @@ class Server
 		struct sockaddr_in	_address;
 		int					_addrlen;
 		mapClient			pool_client;
+		mapChannel			pool_channel;
+		std::string			password;
 
 	private:
 		//std::vector<int>	client;

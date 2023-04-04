@@ -3,21 +3,28 @@
 
 
 #include "Server.hpp"
+#include "Command.hpp"
 #include "irc.hpp"
 
 class Server;
+class Command;
 
 class Client
 {
 private:
 	int _fd;
-	std::string _nickname;
-	std::string _intern_nick;
-	std::string _user;
 	std::string _buffer;
-	bool _identified;
 
 public:
+	std::string _nickname;
+	std::string _intern_nick;
+	std::string _username; // is the username of the client on the local machin
+	std::string _hotsname; //is the hostname of the client's computer
+	std::string _servername; // is the name of the server that the client is connecting to
+	std::string _realname;
+	std::string _mods;
+	int _identified;
+	
 	Client();
 	Client(Server &serv, int);
 	Client(int fd); // createur avec std map en parametre pour surveiller les nickname des autres clients
@@ -29,6 +36,21 @@ public:
 	};
 	int getfd();
 	bool get_status();
+	std::string get_nick();
+	std::string get_msg();
+
+	void check_registered(Server &, Command &);
+	void add_mod(char);
+	void rem_mod(char);
+
+//modes
+// USER MODES :
+// - a : away
+// - i : invisible
+// - w : wallops
+// - r : restricted
+// - o : operator
+
 	void get_msg();
 	std::string & get_buffer();
 };

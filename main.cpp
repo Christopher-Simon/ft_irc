@@ -1,8 +1,10 @@
 #include "irc.hpp"
 #include "Server.hpp"
 #include "Client.hpp"
+#include "Command.hpp"
 #include <iomanip>
 #include <iterator>
+#include "Code.hpp"
 
 bool gtrl_c(1);
 
@@ -11,15 +13,24 @@ void	sighandler(int signum) {
 		gtrl_c = false;
 }
 
-int	main(int argc, char **argv)
+// TO DO
+// Controler que le nickname n'est pas deja celui d'un autre utilisateur
+//pb dans le parsing du USER
+
+
+int	main(int argc, char *argv[])
 {
-	if (argc != 2)
+	if (argc != 3)
 	{
 		std::cerr << RED << "Wrong argument number." << RESET << std::endl;
 		return 1;
 	}
 	try {
 		Server	serv(argv[1]);
+		Command cmd;
+		std::string tmp = argv[2];
+		serv.password = tmp;//temp
+
 		int event_count;
 		signal(SIGINT, &sighandler);
 		while (gtrl_c)

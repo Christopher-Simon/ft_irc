@@ -1,0 +1,31 @@
+INVITE
+- JOIN
+- KICK
+- LIST
+- NAMES
+- PART
+- TOPIC
+- MODE
+- NICK
+- OPER
+- QUIT
+- USER
+- KILL
+- PING
+- PONG
+- AWAY
+- ISON
+- USERHOST
+- USERS (handled but disabled)
+- WALLOPS
+- NOTICE
+- PRIVMSG
+- ADMIN
+- INFO
+- LUSERS
+- MOTD
+- TIME
+- VERSION
+- WHO
+- WHOIS
+- WHOWAS

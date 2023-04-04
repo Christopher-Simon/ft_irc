@@ -19,7 +19,7 @@ Server::Server()
 
 Server::Server(char *port)
 {
-	initSocket(port);	
+	initSocket(port);
 }
 
 Server::Server(Server const & raw)
@@ -36,6 +36,9 @@ Server::~Server()
 	mapClient::iterator it;
 	for (it = pool_client.begin(); it != pool_client.end(); ++it)
 		delete it->second;
+	mapChannel::iterator it2;
+	for (it2 = pool_channel.begin(); it2 != pool_channel.end(); ++it2)
+		delete it2->second;
 }
 //******************ACCESSORS*****************//
 
@@ -117,7 +120,7 @@ void	Server::add_client()
 	pool_client[newFd] = new Client(newFd);
 }
 
-void	Server::send_msg(int fd_avoid)
+void Server::send_all_msg(std::string msg, int fd_avoid)
 {
 	std::string msg = pool_client[fd_avoid]->get_buffer();
 	for (std::map<int, Client *>::iterator ok = pool_client.begin();ok != pool_client.end();ok++)
@@ -146,7 +149,12 @@ void	Server::del_client(int del_fd)
 	pool_client.erase(it);
 }
 
-void	Server::print_client()
+void Server::send_msg(std::string msg, int fd)
+{
+	send(fd,msg.c_str(), msg.size(), 0);
+}
+
+void Server::print_client()
 {
 	std::cout<<"----------------"<<std::endl;
 	std::cout<<"Nb de client enregistre:"<<pool_client.size()<<std::endl;
@@ -156,4 +164,15 @@ void	Server::print_client()
 		std::cout << "Client sur fd " << ok->second->getfd() << std::endl;
 	}
 	std::cout<<"----------------"<<std::endl;
+}
+
+int Server::check_exist(std::string &ptl_nick)
+{
+	mapClient::iterator it;
+	for (it = pool_client.begin(); it != pool_client.end(); ++it)
+	{
+		if (ptl_nick == it->second->_intern_nick)
+			return (1);
+	}
+	return (0);
 }
