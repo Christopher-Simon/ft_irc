@@ -63,6 +63,9 @@ void	Server::initSocket(char *port) {
 	if (_sockfd == -1)
 		throw (std::runtime_error("Socket creation failed"));
 	std::cout << GREEN << "Socket creation successful" << RESET << std::endl;
+	int optval = 1;
+	if (setsockopt(_sockfd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)))
+		throw (std::runtime_error("Socket option set failed"));
 
 	_address.sin_family = AF_INET;
 	_address.sin_addr.s_addr = INADDR_ANY;
@@ -119,11 +122,14 @@ void	Server::add_client()
 
 void Server::send_all_msg(std::string msg, int fd_avoid)
 {
+	std::string msg = pool_client[fd_avoid]->get_buffer();
 	for (std::map<int, Client *>::iterator ok = pool_client.begin();ok != pool_client.end();ok++)
 	{
-		if (ok->first != fd_avoid && ok->first != 0)
+		if (ok->first != fd_avoid && ok->first != 0){
 			send(ok->first, msg.c_str(), msg.size(), 0);
+		}
 	}
+	pool_client[fd_avoid]->get_buffer().clear();
 }
 
 void	Server::del_client(int del_fd)

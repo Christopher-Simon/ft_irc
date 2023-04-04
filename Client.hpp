@@ -13,7 +13,7 @@ class Client
 {
 private:
 	int _fd;
-
+	std::string _buffer;
 
 public:
 	std::string _nickname;
@@ -30,6 +30,10 @@ public:
 	Client(int fd); // createur avec std map en parametre pour surveiller les nickname des autres clients
 	~Client();
 
+	class	LostConnExceptions : public std::exception {
+		public:
+			virtual const char*	what() const throw();
+	};
 	int getfd();
 	bool get_status();
 	std::string get_nick();
@@ -39,10 +43,6 @@ public:
 	void add_mod(char);
 	void rem_mod(char);
 
-};
-
-#endif
-
 //modes
 // USER MODES :
 // - a : away
@@ -51,3 +51,8 @@ public:
 // - r : restricted
 // - o : operator
 
+	void get_msg();
+	std::string & get_buffer();
+};
+
+#endif

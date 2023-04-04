@@ -18,12 +18,11 @@
 class Client;
 class Channel;
 
-typedef	std::map<int, Client *>  mapClient;
-typedef std::map<std::string, Channel *> mapChannel;
-
 class Server 
 {
 	public:
+		typedef	std::map<int, Client *>  mapClient;
+    typedef std::map<std::string, Channel *> mapChannel;
 		Server();
 		Server(char *port);
 		Server(Server const & raw);
