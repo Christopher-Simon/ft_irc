@@ -30,7 +30,8 @@ public:
 	void PING(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 	void MODE(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 	void JOIN(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
-
+	void LIST(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
+	void PART(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 };
 
 #endif

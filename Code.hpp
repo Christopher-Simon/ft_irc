@@ -21,6 +21,9 @@ public:
 	std::string RPL_MYINFO(Client &clt);
 	std::string RPL_ISUPPORT(Client &clt);
 	std::string RPL_UMODEIS(Client &clt);
+	std::string RPL_LISTSTART(Client &clt);
+	std::string RPL_LIST(Client &clt, std::string name, int nb);
+	std::string RPL_LISTEND(Client &clt);
 	// RPL_BOUNCE (010)
 	// RPL_LUSERCLIENT (251)
 	// RPL_LUSEROP (252)
@@ -51,9 +54,6 @@ public:
 	// RPL_ENDOFWHOIS (318)
 	// RPL_WHOISCHANNELS (319)
 	// RPL_WHOISSPECIAL (320)
-	// RPL_LISTSTART (321)
-	// RPL_LIST (322)
-	// RPL_LISTEND (323)
 	// RPL_CHANNELMODEIS (324)
 	// RPL_CREATIONTIME (329)
 	// RPL_WHOISACCOUNT (330)
@@ -101,19 +101,19 @@ public:
 	std::string ERR_PASSWDMISMATCH(Client &clt);
 	std::string ERR_NOTREGISTERED(Client &clt);
 	std::string ERR_UMODEUNKNOWNFLAG(Client &clt);
+	std::string ERR_NOSUCHCHANNEL(Client &clt, std::string name);
+	std::string ERR_NOTONCHANNEL(Client &clt, std::string name);
 	// std::string ERR_UNKNOWNCOMMAND(std::string, Client &);
 	// std::string ERR_NOMOTD(std::string, Client &);
 	// std::string ERR_ERRONEUSNICKNAME(std::string, Client &);
 	// std::string ERR_NICKCOLLISION(std::string, Client &);
 	// std::string ERR_USERNOTINCHANNEL(std::string, Client &);
-	// std::string ERR_NOTONCHANNEL(std::string, Client &);
 	// std::string ERR_CHANOPRIVSNEEDED(std::string, Client &);
 	// std::string ERR_NOOPERHOST(std::string, Client &);
 	// std::string ERR_USERSDONTMATCH(std::string, Client &);
 	// ERR_UNKNOWNERROR (400)
 	// ERR_NOSUCHNICK (401)
 	// ERR_NOSUCHSERVER (402)
-	// ERR_NOSUCHCHANNEL (403)
 	// ERR_CANNOTSENDTOCHAN (404)
 	// ERR_TOOMANYCHANNELS (405)
 	// ERR_WASNOSUCHNICK (406)

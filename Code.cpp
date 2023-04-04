@@ -20,30 +20,53 @@ std::string Code::Base(Client &clt, std::string nb)
 
 std::string Code::RPL_WELCOME(Client &clt)
 {
-	std::string op = " :           __________                                 \n         .'----------`.                              \n         | .--------. |                             \n         | |########| |       __________              \n         | |########| |      /__________\\             \n.--------| `--------' |------|    --=-- |-------------.\n|        `----,-.-----'      |o ======  |             | \n|       ______|_|_______     |__________|             | \n|      /  %%%%%%%%%%%%  \\                             | \n|     /  %%%%%%%%%%%%%%  \\                            | \n|     ^^^^^^^^^^^^^^^^^^^^                            | \n+-----------------------------------------------------+\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ \n";
+	std::string op = " :           __________                                 \n         .'----------`.                              \n         | .--------. |                             \n         | |########| |       __________              \n         | |########| |      /__________\\             \n.--------| `--------' |------|    --=-- |-------------.\n|        `----,-.-----'      |o ======  |             | \n|       ______|_|_______     |__________|             | \n|      /  %%%%%%%%%%%%  \\                             | \n|     /  %%%%%%%%%%%%%%  \\                            | \n|     ^^^^^^^^^^^^^^^^^^^^                            | \n+-----------------------------------------------------+\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ \r\n";
 	std::cout<<Base(clt, "001") + clt.get_nick() + op<<std::endl;
 	return (Base(clt, "001") + clt.get_nick() + op);
 }
 
 std::string Code::RPL_YOURHOST(Client &clt)
 {
-	std::string op = " :Your host is ..., running version\n";
+	std::string op = " :Your host is ..., running version\r\n";
 	std::cout<<Base(clt, "002") + clt.get_nick() + op<<std::endl;
 	return (Base(clt, "002") + clt.get_nick() + op);
 }
 
 std::string Code::RPL_CREATED(Client &clt)
 {
-	std::string op = " :Your host is ..., running version\n";
+	std::string op = " :Your host is ..., running version\r\n";
 	std::cout<<Base(clt, "003") + clt.get_nick() + op<<std::endl;
 	return (Base(clt, "003") + clt.get_nick() + op);
 }
 
+std::string Code::RPL_LISTSTART(Client &clt)
+{
+	std::string op = " Channel :Users Name\r\n";
+	return (Base(clt, "321") + clt.get_nick() + op);
+}
+
+std::string Code::RPL_LIST(Client &clt, std::string name, int nb)
+{
+	std::string op = " #";
+	std::string space = " ";
+	std::string end = "\r\n";
+	std::stringstream stream;
+	stream<<nb;
+	std::string nbr = stream.str();
+	std::cout<<Base(clt, "322") + clt.get_nick() + op + name + space + nbr + end<<std::endl;
+	return (Base(clt, "322") + clt.get_nick() + op + name + space + nbr + end);
+}
+
+std::string Code::RPL_LISTEND(Client &clt)
+{
+	std::string op = " :End of /LIST\r\n";
+	return (Base(clt, "323") + clt.get_nick() + op);
+}
+
 std::string Code::RPL_UMODEIS(Client &clt)
 {
-	std::string op = " :Your host is ..., running version\n";
+	std::string op = " :Your host is ..., running version\r\n";
 	std::string sign = " +";
-	//std::cout<<Base(clt, "003") + clt.get_nick() + op<<std::endl;
 	std::cout<<"mode user : "<<clt._mods<<std::endl;
 	return (Base(clt, "221") + clt.get_nick() + sign + clt._mods);
 }
@@ -51,7 +74,7 @@ std::string Code::RPL_UMODEIS(Client &clt)
 std::string Code::RPL_MYINFO(Client &clt)
 {
 	std::string space = " ";
-	std::string op = "IRC_perso_maggle\n";
+	std::string op = "IRC_perso_maggle\r\n";
 	std::cout<<Base(clt, "004")+ clt.get_nick() +space+ clt._servername +space+ op<<std::endl;
 	return (Base(clt, "004")+ clt.get_nick() +space+ clt._servername +space+ op);
 }
@@ -59,57 +82,71 @@ std::string Code::RPL_MYINFO(Client &clt)
 std::string Code::RPL_ISUPPORT(Client &clt)
 {
 	std::string space = " ";
-	std::string op = "MODES=4\n";
+	std::string op = "MODES=4\r\n";
 	std::cout<<Base(clt, "005")+ clt.get_nick() +space+ op<<std::endl;
 	return (Base(clt, "005")+ clt.get_nick() +space+ op);
 }
 
 std::string Code::ERR_NEEDMOREPARAMS(std::string cmd, Client &clt)
 {
-	std::string reply = " :Not enough parameters";
+	std::string reply = " :Not enough parameters\r\n";
 	return (Base(clt, "461") + cmd + reply);
 }
 
 std::string Code::ERR_NONICKNAMEGIVEN(Client &clt)
 {
 	std::string space = " ";
-	std::string reply = " :No nickname given";
+	std::string reply = " :No nickname given\r\n";
 	return (Base(clt, "431") + space + clt._nickname + reply);
 }
 
 std::string Code::ERR_NICKNAMEINUSE(std::string &nick, Client &clt)
 {
 	std::string space = " ";
-	std::string reply = " :Nickname is already in use";
+	std::string reply = " :Nickname is already in use\r\n";
 	return (Base(clt, "433") + space + nick + reply);
 }
 
 std::string Code::ERR_ALREADYREGISTERED(Client &clt)
 {
 	std::string space = " ";
-	std::string reply = " :You may not reregister";
+	std::string reply = " :You may not reregister\r\n";
 	return (Base(clt, "462") + space + clt._nickname + reply);
 }
 
 std::string Code::ERR_NOTREGISTERED(Client &clt)
 {
 	std::string space = " ";
-	std::string reply = " :You have not registered";
+	std::string reply = " :You have not registered\r\n";
 	return (Base(clt, "451") + space + clt._nickname + reply);
 }
 
 std::string Code::ERR_PASSWDMISMATCH(Client &clt)
 {
 	std::string space = " ";
-	std::string reply = " :Password incorrect";
+	std::string reply = " :Password incorrect\r\n";
 	return (Base(clt, "464") + space + clt._nickname + reply);
 }
 
 std::string Code::ERR_UMODEUNKNOWNFLAG(Client &clt)
 {
 	std::string space = " ";
-	std::string reply = " :Unknown MODE flag";
+	std::string reply = " :Unknown MODE flag\r\n";
 	return (Base(clt, "501") + space + clt._nickname + reply);
+}
+
+std::string Code::ERR_NOSUCHCHANNEL(Client &clt, std::string name)
+{
+	std::string space = " ";
+	std::string reply = " :No such channel\r\n";
+	return (Base(clt, "403") + space + clt._nickname +space + name+ reply);
+}
+
+std::string Code::ERR_NOTONCHANNEL(Client &clt, std::string name)
+{
+	std::string space = " ";
+	std::string reply = " :You're not on that channel\r\n";
+	return (Base(clt, "442") + space + clt._nickname +space + name+ reply);
 }
 
 // std::string Code::ERR_NICKNAMEINUSE(std::string cmd, Client &clt)

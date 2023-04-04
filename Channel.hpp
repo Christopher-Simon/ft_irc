@@ -15,6 +15,7 @@ public:
 
 	std::map<Client *, std::string> _members; //la string detaille les mods des utilisateurs dans le channel
 	std::vector<char> _channel_mods;
+	unsigned int nb_memb;
 	std::string _name;
 	bool _iskey;
 	std::string _key;

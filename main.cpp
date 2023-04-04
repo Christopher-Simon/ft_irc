@@ -15,6 +15,7 @@ void	sighandler(int signum) {
 
 // TO DO
 // Controler que le nickname n'est pas deja celui d'un autre utilisateur
+//pb dans le parsing du USER
 
 
 int	main(int argc, char *argv[])

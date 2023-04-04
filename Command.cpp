@@ -1,8 +1,5 @@
 #include "Command.hpp"
 
-#include  <iostream>
-#include  <bits/stdc++.h>
-
 void print_vect(std::vector<std::string> vect)
 {
 	for (size_t i = 0; i < vect.size(); i++)
@@ -32,6 +29,8 @@ Command::Command()
 	cmd_repertory["NICK"] = &Command::NICK;
 	cmd_repertory["PASS"] = &Command::PASS;
 	cmd_repertory["JOIN"] = &Command::JOIN;
+	cmd_repertory["LIST"] = &Command::LIST;
+	cmd_repertory["PART"] = &Command::PART;
 }
 
 Command::~Command()
@@ -237,9 +236,9 @@ void Command::PING(std::string cmd, std::vector<std::string> vect, Server &serv,
 	// 	serv.send_msg
 	std::string reply = "PONG ";
 	std::string space = " :";
-	std::cout<<reply + clt._servername + space + vect[1]<<std::endl;
+	//std::cout<<reply + clt._servername + space + vect[1]<<std::endl;
 	serv.send_msg(reply + clt._servername + space + vect[1], clt.getfd());
-	std::cout<<cmd<<serv.get_sockfd()<<std::endl;
+	//std::cout<<cmd<<serv.get_sockfd()<<std::endl;
 }
 
 //ajout du droit de channel operator quand le client cree un channel qui existait pas
@@ -267,6 +266,7 @@ void Command::JOIN(std::string cmd, std::vector<std::string> vect, Server &serv,
 		return;
 	}
 	//gerer le cas ou les noms sont des memes avec des majuscules
+	//faire gaffe a ce que les messages d'erreur ne bloquent pas l'execution du reste de la liste
 	for(size_t i = 0; i < list_channel.size(); i++)
 	{
 		if (serv.pool_channel.find(list_channel[i]) != serv.pool_channel.end()) //Channel trouve
@@ -274,6 +274,7 @@ void Command::JOIN(std::string cmd, std::vector<std::string> vect, Server &serv,
 			if (serv.pool_channel.find(list_channel[i])->second->_members.find(&clt) != serv.pool_channel.find(list_channel[i])->second->_members.end()) //client deja present dans le channel
 				return;
 			serv.pool_channel.find(list_channel[i])->second->_members[&clt] = "i";
+			serv.pool_channel.find(list_channel[i])->second->nb_memb++;
 			std::cout<<clt.get_nick()<<" added to channel "<<list_channel[i]<<std::endl;
 		}
 		else //channel pas existante
@@ -284,4 +285,59 @@ void Command::JOIN(std::string cmd, std::vector<std::string> vect, Server &serv,
 		}
 	}
 	return;
+}
+
+void Command::LIST(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt)
+{
+	if (clt._identified < 3)
+	{
+		serv.send_msg(ircrep->ERR_NOTREGISTERED(clt),clt.getfd());
+		return;
+	}
+	if (vect.size() == 1)
+	{
+		serv.send_msg(ircrep->RPL_LISTSTART(clt), clt.getfd());
+		mapChannel::iterator it2;
+		for (it2 = serv.pool_channel.begin(); it2 != serv.pool_channel.end(); ++it2)
+			serv.send_msg(ircrep->RPL_LIST(clt, it2->second->_name, it2->second->nb_memb), clt.getfd());
+		serv.send_msg(ircrep->RPL_LISTEND(clt), clt.getfd());
+	}
+	cmd.empty();
+}
+
+//Ajouter l'option reason 
+void Command::PART(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt)
+{
+	if (clt._identified < 3)
+	{
+		serv.send_msg(ircrep->ERR_NOTREGISTERED(clt),clt.getfd());
+		return;
+	}
+	if (vect.size() == 1)
+	{
+		serv.send_msg(ircrep->ERR_NEEDMOREPARAMS(cmd, clt),clt.getfd());
+		return;
+	}
+	std::vector<std::string> list_channel = ft_split(vect[1], ',');
+	for(size_t i = 0; i < list_channel.size(); i++)
+	{
+		if (serv.pool_channel.find(list_channel[i]) == serv.pool_channel.end())
+			serv.send_msg(ircrep->ERR_NOSUCHCHANNEL(clt, list_channel[i]),clt.getfd());
+		else if (serv.pool_channel.find(list_channel[i])->second->_members.find(&clt) == serv.pool_channel.find(list_channel[i])->second->_members.end()) //client pas dans le channel
+			serv.send_msg(ircrep->ERR_NOTONCHANNEL(clt, list_channel[i]),clt.getfd());
+		else
+		{
+			std::cout<<"Temp : leaving channel"<<std::endl;
+			serv.pool_channel.find(list_channel[i])->second->_members.erase(&clt);
+			serv.pool_channel.find(list_channel[i])->second->nb_memb--;
+			std::string reply = ":";
+			std::string r2 = "!~";
+			std::string r3 = "@";
+			std::string r5 = " PART ";
+			std::string r4 = " :Leaving the channel";
+			std::cout<<reply + clt.get_nick() + r2 + clt.get_nick() + r3 + clt._servername + r5 + list_channel[i] + r4<<std::endl;
+			serv.send_msg(reply + clt.get_nick() + r2 + clt.get_nick() + r3 + clt._servername + r5 + list_channel[i] + r4, clt.getfd());
+		}
+	}
+
 }
