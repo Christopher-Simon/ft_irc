@@ -331,13 +331,17 @@ void Command::PART(std::string cmd, std::vector<std::string> vect, Server &serv,
 			serv.pool_channel.find(list_channel[i])->second->_members.erase(&clt);
 			serv.pool_channel.find(list_channel[i])->second->nb_memb--;
 			std::string reply = ":";
-			std::string r2 = "!~";
+			std::string r2 = "!";
 			std::string r3 = "@";
 			std::string r5 = " PART ";
-			std::string r4 = " :Leaving the channel";
+			std::string r4 = "\r\n";
 			std::cout<<reply + clt.get_nick() + r2 + clt.get_nick() + r3 + clt._servername + r5 + list_channel[i] + r4<<std::endl;
 			serv.send_msg(reply + clt.get_nick() + r2 + clt.get_nick() + r3 + clt._servername + r5 + list_channel[i] + r4, clt.getfd());
 		}
 	}
 
 }
+
+// //nous avions signe un contrat le ... pour : listing
+// //il a ete confirme que tout ces elements avaient ete livres le ... 
+// comment envisager de s'engager dans un nouveau contrat si le premier n'est pas honore 

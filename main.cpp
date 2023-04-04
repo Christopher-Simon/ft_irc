@@ -56,11 +56,12 @@ int	main(int argc, char *argv[])
 						serv.del_client(fd_client);
 						break ;
 					}
-					std::string str = serv.pool_client[fd_client]->get_buffer();
+					//std::string str = serv.pool_client[fd_client]->get_buffer();
 					if (serv.pool_client[fd_client]->get_buffer() == "exit\n") //TODO Replace par la command QUIT ou LEAVE ou DISCONNECT
 						serv.del_client(fd_client);
 					else if (serv.pool_client[fd_client]->get_buffer().find("\r\n") != std::string::npos) {
-						serv.send_all_msg(fd_client);
+						cmd.exec(serv.pool_client[fd_client]->get_buffer(), serv, *serv.pool_client[fd_client]);//serv.send_all_msg(fd_client);
+						serv.pool_client[fd_client]->get_buffer().clear();
 					}
 				}
 			}
