@@ -5,7 +5,16 @@ CXXFLAGS = -std=c++98 -Wall -Wextra -Werror -g3
 CPPFLAGS = -MMD 
 
 SRC = main.cpp \
-Server.cpp Client.cpp Command.cpp Code.cpp Channel.cpp
+Server.cpp Client.cpp Command.cpp Code.cpp Channel.cpp \
+JOIN.cpp \
+LIST.cpp \
+MODE.cpp \
+NICK.cpp \
+PART.cpp \
+PASS.cpp \
+PING.cpp \
+USER.cpp \
+utils.cpp
 
 
 OBJ_DIR = obj/

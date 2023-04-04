@@ -34,4 +34,7 @@ public:
 	void PART(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 };
 
+void print_vect(std::vector<std::string> vect);
+std::vector<std::string> ft_split(std::string &msg, char sep);
+
 #endif

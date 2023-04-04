@@ -77,6 +77,17 @@
 		"shared_mutex": "cpp",
 		"thread": "cpp",
 		"typeindex": "cpp",
-		"valarray": "cpp"
+		"valarray": "cpp",
+		"barrier": "cpp",
+		"coroutine": "cpp",
+		"expected": "cpp",
+		"latch": "cpp",
+		"semaphore": "cpp",
+		"source_location": "cpp",
+		"spanstream": "cpp",
+		"stacktrace": "cpp",
+		"stop_token": "cpp",
+		"syncstream": "cpp",
+		"variant": "cpp"
 	}
 }
