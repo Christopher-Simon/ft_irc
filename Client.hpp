@@ -37,7 +37,6 @@ public:
 	int getfd();
 	bool get_status();
 	std::string get_nick();
-	std::string get_msg();
 
 	void check_registered(Server &, Command &);
 	void add_mod(char);

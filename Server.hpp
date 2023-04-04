@@ -22,7 +22,7 @@ class Server
 {
 	public:
 		typedef	std::map<int, Client *>  mapClient;
-    typedef std::map<std::string, Channel *> mapChannel;
+    	typedef std::map<std::string, Channel *> mapChannel;
 		Server();
 		Server(char *port);
 		Server(Server const & raw);
@@ -34,7 +34,7 @@ class Server
 
 		void add_client();
 		int check_exist(std::string &);
-		void send_all_msg(std::string, int);
+		void send_all_msg(int);
 		void send_msg(std::string, int);
 		void print_client();
 		void del_client(int del_fd);

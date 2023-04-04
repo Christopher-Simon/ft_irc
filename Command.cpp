@@ -76,7 +76,7 @@ void Command::NICK(std::string cmd, std::vector<std::string> vect, Server &serv,
 	}
 	std::string ptl_nick = vect[1];
 	std::transform(ptl_nick.begin(), ptl_nick.end(), ptl_nick.begin(), ::toupper);
-	mapClient::iterator it;
+	Server::mapClient::iterator it;
 	// for (it = serv.pool_client.begin(); it != serv.pool_client.end(); ++it)
 	// {
 	// 	if (ptl_nick == it->second->_intern_nick)
@@ -297,7 +297,7 @@ void Command::LIST(std::string cmd, std::vector<std::string> vect, Server &serv,
 	if (vect.size() == 1)
 	{
 		serv.send_msg(ircrep->RPL_LISTSTART(clt), clt.getfd());
-		mapChannel::iterator it2;
+		Server::mapChannel::iterator it2;
 		for (it2 = serv.pool_channel.begin(); it2 != serv.pool_channel.end(); ++it2)
 			serv.send_msg(ircrep->RPL_LIST(clt, it2->second->_name, it2->second->nb_memb), clt.getfd());
 		serv.send_msg(ircrep->RPL_LISTEND(clt), clt.getfd());

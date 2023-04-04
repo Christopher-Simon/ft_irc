@@ -57,17 +57,10 @@ int	main(int argc, char *argv[])
 						break ;
 					}
 					std::string str = serv.pool_client[fd_client]->get_buffer();
-					for (size_t i(0); str[i]; i++ )
-					{
-						if (str[i]!='\r')
-							std::cout << " char : " << str[i] << " int : " << (int)str[i] << std::endl;
-						else
-							std::cout << " char : \\r " << " int : " << (int)str[i] << std::endl;
-					}
-					if (serv.pool_client[fd_client]->get_buffer() == "exit\n")
+					if (serv.pool_client[fd_client]->get_buffer() == "exit\n") //TODO Replace par la command QUIT ou LEAVE ou DISCONNECT
 						serv.del_client(fd_client);
 					else if (serv.pool_client[fd_client]->get_buffer().find("\r\n") != std::string::npos) {
-						serv.send_msg(fd_client);
+						serv.send_all_msg(fd_client);
 					}
 				}
 			}
