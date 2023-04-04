@@ -54,7 +54,7 @@ bool Client::get_status()
 	return (this->_identified);
 }
 
-std::string Client::get_buffer() const {
+std::string & Client::get_buffer() {
 	return (_buffer);
 }
 

@@ -30,9 +30,7 @@ public:
 	int getfd();
 	bool get_status();
 	void get_msg();
-	std::string get_buffer() const;
-
+	std::string & get_buffer();
 };
 
 #endif
-

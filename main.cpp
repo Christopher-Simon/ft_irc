@@ -45,16 +45,19 @@ int	main(int argc, char **argv)
 						serv.del_client(fd_client);
 						break ;
 					}
+					std::string str = serv.pool_client[fd_client]->get_buffer();
+					for (size_t i(0); str[i]; i++ )
+					{
+						if (str[i]!='\r')
+							std::cout << " char : " << str[i] << " int : " << (int)str[i] << std::endl;
+						else
+							std::cout << " char : \\r " << " int : " << (int)str[i] << std::endl;
+					}
 					if (serv.pool_client[fd_client]->get_buffer() == "exit\n")
 						serv.del_client(fd_client);
-					// else if (serv.pool_client[fd_client]->get_buffer().find("\r\n"))
-					// 	serv.send_msg(fd_client);
-					if (serv.pool_client[fd_client]->get_buffer().find("\r\n") != std::string::npos)
-						std::cout << "there is \\r\\n" << std::endl;
-					if (serv.pool_client[fd_client]->get_buffer().find("\n") != std::string::npos)
-						std::cout << "there is \\n" << std::endl;
-					if (serv.pool_client[fd_client]->get_buffer().find("\n") != std::string::npos)
-						std::cout << "there is no \\r\\n" << std::endl;
+					else if (serv.pool_client[fd_client]->get_buffer().find("\r\n") != std::string::npos) {
+						serv.send_msg(fd_client);
+					}
 				}
 			}
 		}

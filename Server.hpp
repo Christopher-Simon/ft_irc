@@ -15,11 +15,11 @@
 
 class Client;
 
-typedef	std::map<int, Client *>  mapClient;
 
 class Server 
 {
 	public:
+		typedef	std::map<int, Client *>  mapClient;
 		Server();
 		Server(char *port);
 		Server(Server const & raw);

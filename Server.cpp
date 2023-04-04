@@ -60,6 +60,9 @@ void	Server::initSocket(char *port) {
 	if (_sockfd == -1)
 		throw (std::runtime_error("Socket creation failed"));
 	std::cout << GREEN << "Socket creation successful" << RESET << std::endl;
+	int optval = 1;
+	if (setsockopt(_sockfd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)))
+		throw (std::runtime_error("Socket option set failed"));
 
 	_address.sin_family = AF_INET;
 	_address.sin_addr.s_addr = INADDR_ANY;
