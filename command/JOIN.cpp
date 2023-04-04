@@ -38,6 +38,7 @@ void Command::JOIN(std::string cmd, std::vector<std::string> vect, Server &serv,
 		}
 		else //channel pas existante
 		{
+			//AJOUTER le mod du channel
 			serv.pool_channel[list_channel[i]] = new Channel(list_channel[i]);
 			serv.pool_channel.find(list_channel[i])->second->_members[&clt] = "O";
 			std::cout<<clt.get_nick()<<" added to created channel "<<list_channel[i]<<std::endl;

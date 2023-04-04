@@ -47,7 +47,7 @@ std::string Code::RPL_LISTSTART(Client &clt)
 
 std::string Code::RPL_LIST(Client &clt, std::string name, int nb)
 {
-	std::string op = " #";
+	std::string op = " ";
 	std::string space = " ";
 	std::string end = "\r\n";
 	std::stringstream stream;
@@ -69,6 +69,14 @@ std::string Code::RPL_UMODEIS(Client &clt)
 	std::string sign = " +";
 	std::cout<<"mode user : "<<clt._mods<<std::endl;
 	return (Base(clt, "221") + clt.get_nick() + sign + clt._mods);
+}
+
+//AJOUTER le + au debut de la string des mods
+std::string Code::RPL_CHANNELMODEIS(Client &clt, std::string title, std::string mods)
+{
+	std::string op = " ";
+	std::string space = "\r\n";
+	return (Base(clt, "324") + clt.get_nick() + op + title + op + mods);
 }
 
 std::string Code::RPL_MYINFO(Client &clt)
@@ -133,6 +141,14 @@ std::string Code::ERR_UMODEUNKNOWNFLAG(Client &clt)
 	std::string space = " ";
 	std::string reply = " :Unknown MODE flag\r\n";
 	return (Base(clt, "501") + space + clt._nickname + reply);
+}
+
+//a revoir
+std::string Code::ERR_CHANOPRIVSNEEDED(Client &clt, std::string title)
+{
+	std::string space = " ";
+	std::string reply = "* " + title + " :You're not a channel operator\r\n";
+	return (Base(clt, "482") + space + reply);
 }
 
 std::string Code::ERR_NOSUCHCHANNEL(Client &clt, std::string name)

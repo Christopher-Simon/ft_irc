@@ -24,6 +24,7 @@ public:
 	std::string RPL_LISTSTART(Client &clt);
 	std::string RPL_LIST(Client &clt, std::string name, int nb);
 	std::string RPL_LISTEND(Client &clt);
+	std::string RPL_CHANNELMODEIS(Client &clt, std::string title, std::string mods);
 	// RPL_BOUNCE (010)
 	// RPL_LUSERCLIENT (251)
 	// RPL_LUSEROP (252)
@@ -54,7 +55,6 @@ public:
 	// RPL_ENDOFWHOIS (318)
 	// RPL_WHOISCHANNELS (319)
 	// RPL_WHOISSPECIAL (320)
-	// RPL_CHANNELMODEIS (324)
 	// RPL_CREATIONTIME (329)
 	// RPL_WHOISACCOUNT (330)
 	// RPL_NOTOPIC (331)
@@ -103,6 +103,7 @@ public:
 	std::string ERR_UMODEUNKNOWNFLAG(Client &clt);
 	std::string ERR_NOSUCHCHANNEL(Client &clt, std::string name);
 	std::string ERR_NOTONCHANNEL(Client &clt, std::string name);
+	std::string ERR_CHANOPRIVSNEEDED(Client &clt, std::string title);
 	// std::string ERR_UNKNOWNCOMMAND(std::string, Client &);
 	// std::string ERR_NOMOTD(std::string, Client &);
 	// std::string ERR_ERRONEUSNICKNAME(std::string, Client &);

@@ -15,14 +15,22 @@ void Command::MODE(std::string cmd, std::vector<std::string> vect, Server &serv,
 	if (vect[1][0] == '#')
 	{
 		//MODE CHANNEL IMCOMPLET
-		//ajout du check du nb de parametres
-		std::string target = vect[1].substr(1, vect[1].size());
+		std::string target = vect[1];
 		if (serv.pool_channel.find(target) == serv.pool_channel.end())
-			return; //THROW ERR_NOSUCHCHANNEL
+		{
+			serv.send_msg(ircrep->ERR_NOSUCHCHANNEL(clt, target),clt.getfd());
+			return;
+		}
 		if (vect.size() == 2)
-			return; //RPL_CHANNELMODEIS
+		{
+			serv.send_msg(ircrep->RPL_CHANNELMODEIS(clt, target, serv.pool_channel.find(target)->second->_channel_mods),clt.getfd());
+			return;
+		}
 		if (serv.pool_channel.find(target)->second->_members.find(&clt)->second.find('o', 0) == std::string::npos)
-			return; //ERR_CHANOPRIVSNEEDED
+		{
+			serv.send_msg(ircrep->ERR_CHANOPRIVSNEEDED(clt, target),clt.getfd());
+			return;
+		}
 		//TBC
 	}
 	else
