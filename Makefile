@@ -6,30 +6,31 @@ CPPFLAGS = -MMD
 
 SRC = main.cpp \
 Server.cpp Client.cpp Command.cpp Code.cpp Channel.cpp \
-JOIN.cpp \
-LIST.cpp \
-MODE.cpp \
-NICK.cpp \
-PART.cpp \
-PASS.cpp \
-PING.cpp \
-USER.cpp \
+$(CMD_DIR)JOIN.cpp \
+$(CMD_DIR)LIST.cpp \
+$(CMD_DIR)MODE.cpp \
+$(CMD_DIR)NICK.cpp \
+$(CMD_DIR)PART.cpp \
+$(CMD_DIR)PASS.cpp \
+$(CMD_DIR)PING.cpp \
+$(CMD_DIR)USER.cpp \
 utils.cpp
 
-
+CMD_DIR = command/
 OBJ_DIR = obj/
 OBJ = $(addprefix  $(OBJ_DIR), $(SRC:.cpp=.o))
+
 
 DEPS = $(OBJ:.o=.d)
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJ)
+	$(CXX) $(CXXFLAGS)  -o $(NAME) $(OBJ)
 
 $(OBJ_DIR)%.o: %.cpp
 	mkdir -p $(dir $@) 
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -I. -o $@
 
 clean:
 	rm -rf $(OBJ_DIR)
