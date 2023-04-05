@@ -22,7 +22,6 @@ public:
 
 	void exec(std::string &, Server &, Client &);
 	void exec_line(std::string msg, Server &serv, Client &clt);
-	//void identify(std::string &, Server &, Client &);
 
 	void USER(std::string cmd, std::string line, Server &serv, Client &clt);
 	void NICK(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
@@ -32,6 +31,7 @@ public:
 	void JOIN(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 	void LIST(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 	void PART(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
+	void INVITE(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 	void PRIVMSG(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 };
 

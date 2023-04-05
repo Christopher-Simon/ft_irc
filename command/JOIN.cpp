@@ -28,18 +28,19 @@ void Command::JOIN(std::string cmd, std::vector<std::string> vect, Server &serv,
 	//faire gaffe a ce que les messages d'erreur ne bloquent pas l'execution du reste de la liste
 	for(size_t i = 0; i < list_channel.size(); i++)
 	{
-		if (serv.pool_channel.find(list_channel[i]) != serv.pool_channel.end()) //Channel trouve
+		if (serv.channel_exist(list_channel[i]) == 1) //Channel trouve
 		{
-			if (serv.pool_channel.find(list_channel[i])->second->_members.find(&clt) != serv.pool_channel.find(list_channel[i])->second->_members.end()) //client deja present dans le channel
+			if (serv.client_in_channel(list_channel[i], clt) == 1) //client deja present dans le channel
 				return;
-			serv.pool_channel.find(list_channel[i])->second->_members[&clt] = "i";
+			serv.pool_channel.find(list_channel[i])->second->_members[clt.getfd()] = "i";
 			serv.pool_channel.find(list_channel[i])->second->nb_memb++;
 			std::cout<<clt.get_nick()<<" added to channel "<<list_channel[i]<<std::endl;
 		}
 		else //channel pas existante
 		{
+			//AJOUTER le mod du channel
 			serv.pool_channel[list_channel[i]] = new Channel(list_channel[i]);
-			serv.pool_channel.find(list_channel[i])->second->_members[&clt] = "O";
+			serv.pool_channel.find(list_channel[i])->second->_members[clt.getfd()] = "O";
 			std::cout<<clt.get_nick()<<" added to created channel "<<list_channel[i]<<std::endl;
 		}
 	}

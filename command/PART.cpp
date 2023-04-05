@@ -18,13 +18,14 @@ void Command::PART(std::string cmd, std::vector<std::string> vect, Server &serv,
 	{
 		if (serv.pool_channel.find(list_channel[i]) == serv.pool_channel.end())
 			serv.send_msg(ircrep->ERR_NOSUCHCHANNEL(clt, list_channel[i]),clt.getfd());
-		else if (serv.pool_channel.find(list_channel[i])->second->_members.find(&clt) == serv.pool_channel.find(list_channel[i])->second->_members.end()) //client pas dans le channel
+		else if (serv.pool_channel.find(list_channel[i])->second->_members.find(clt.getfd()) == serv.pool_channel.find(list_channel[i])->second->_members.end()) //client pas dans le channel
 			serv.send_msg(ircrep->ERR_NOTONCHANNEL(clt, list_channel[i]),clt.getfd());
 		else
 		{
 			std::cout<<"Temp : leaving channel"<<std::endl;
-			serv.pool_channel.find(list_channel[i])->second->_members.erase(&clt);
-			serv.pool_channel.find(list_channel[i])->second->nb_memb--;
+			// serv.pool_channel.find(list_channel[i])->second->_members.erase(&clt);
+			// serv.pool_channel.find(list_channel[i])->second->nb_memb--;
+			serv.pool_channel.find(list_channel[i])->second->remove_memb(clt.getfd(), serv);
 			std::string reply = ":";
 			std::string r2 = "!";
 			std::string r3 = "@";

@@ -12,6 +12,7 @@ Command::Command()
 	cmd_repertory["JOIN"] = &Command::JOIN;
 	cmd_repertory["LIST"] = &Command::LIST;
 	cmd_repertory["PART"] = &Command::PART;
+	cmd_repertory["INVITE"] = &Command::INVITE;
 	cmd_repertory["PRIVMSG"] = &Command::PRIVMSG;
 }
 
@@ -24,6 +25,7 @@ void Command::exec(std::string &msg, Server &serv, Client &clt)
 {
 	//aucune gestion des prefix pour le moment
 	//integrer les commandes d'identification dans ce process
+	//std::cout<<"MESSAGE RECU"<<std::endl<<msg<<std::endl;
 	size_t index = 0;
 	while(index != std::string::npos)
 	{

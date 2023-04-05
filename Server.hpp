@@ -22,7 +22,7 @@ class Server
 {
 	public:
 		typedef	std::map<int, Client *>  mapClient;
-    	typedef std::map<std::string, Channel *> mapChannel;
+		typedef std::map<std::string, Channel *> mapChannel;
 		Server();
 		Server(char *port);
 		Server(Server const & raw);
@@ -33,12 +33,18 @@ class Server
 		int get_epollfd();
 
 		void add_client();
-		int check_exist(std::string &);
+		int check_nick_exist(std::string);
 		void send_all_msg(int);
 		void send_all_msg(std::string msg, int fd_avoid);
 		void send_msg(std::string, int);
 		void print_client();
 		void del_client(int del_fd);
+		void del_channel(Channel &chan);
+		int channel_exist(std::string);
+		int client_in_channel(std::string, Client &);
+
+		std::string get_chan_mods(std::string);
+		std::string get_userinchan_mods(std::string, Client &);
 
 		struct epoll_event	_event;
 		struct epoll_event	_events[MAX_EVENTS];

@@ -19,7 +19,7 @@ void Command::NICK(std::string cmd, std::vector<std::string> vect, Server &serv,
 	// 		return;
 	// 	}
 	// }
-	if (serv.check_exist(ptl_nick) == 1)
+	if (serv.check_nick_exist(ptl_nick) != 0)
 	{
 		serv.send_msg(ircrep->ERR_NICKNAMEINUSE(vect[1], clt),clt.getfd());
 		return;

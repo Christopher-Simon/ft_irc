@@ -2,8 +2,10 @@
 # define CHANNEL_HPP
 
 #include "Client.hpp"
+#include "Server.hpp"
 
 class Client;
+class Server;
 
 class Channel
 {
@@ -13,12 +15,17 @@ public:
 	Channel(std::string, std::string);
 	~Channel();
 
-	std::map<Client *, std::string> _members; //la string detaille les mods des utilisateurs dans le channel
-	std::vector<char> _channel_mods;
+	std::map<int, std::string> _members; //la string detaille les mods des utilisateurs dans le channel
+	std::string _channel_mods;
 	unsigned int nb_memb;
 	std::string _name;
 	bool _iskey;
 	std::string _key;
+
+	void remove_memb(int fd, Server &serv);
+	void add_mod(char);
+	void rem_mod(char);
+
 };
 
 #endif
