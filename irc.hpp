@@ -29,6 +29,7 @@
 
 #define BUFFER_SIZE 10000
 #define MAX_EVENTS 1
+#define	NC_EASY_TEST 0
 
 #define U_AWAY 'a'
 #define U_INVISIBLE 'i'

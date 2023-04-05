@@ -12,6 +12,7 @@ Command::Command()
 	cmd_repertory["JOIN"] = &Command::JOIN;
 	cmd_repertory["LIST"] = &Command::LIST;
 	cmd_repertory["PART"] = &Command::PART;
+	cmd_repertory["PRIVMSG"] = &Command::PRIVMSG;
 }
 
 Command::~Command()
@@ -28,10 +29,10 @@ void Command::exec(std::string &msg, Server &serv, Client &clt)
 	{
 		this->exec_line(msg.substr(index, msg.find_first_of("\r\n", index) - index), serv, clt);
 		index = msg.find_first_of("\r\n", index + 1);
-		while (msg[index] == '\r' || msg[index] == '\n')
-			index++;
 		if (index == std::string::npos)
 			break;
+		while (msg[index] == '\r' || msg[index] == '\n')
+			index++;
 	}
 
 }

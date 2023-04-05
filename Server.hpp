@@ -35,6 +35,7 @@ class Server
 		void add_client();
 		int check_exist(std::string &);
 		void send_all_msg(int);
+		void send_all_msg(std::string msg, int fd_avoid);
 		void send_msg(std::string, int);
 		void print_client();
 		void del_client(int del_fd);

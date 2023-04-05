@@ -8,9 +8,10 @@ void Command::USER(std::string cmd, std::string line, Server &serv, Client &clt)
 		return;
 	}
 	//PARSING PAS PARFAIT
+	std::cout << line << std::endl;
 	std::vector<std::string> vect;
 	size_t index = 0;
-	vect.push_back(line.substr(index + 6, line.find_first_of(" ", index + 6)- index - 6));
+	vect.push_back(line.substr(index + 5, line.find_first_of(" ", index + 5)- index - 5));
 	index = line.find_first_of(" ", index + 6) + 1;
 	vect.push_back(line.substr(index, line.find_first_of(" ", index + 1)- index));
 	index = line.find_first_of(" ", index + 1) + 1;

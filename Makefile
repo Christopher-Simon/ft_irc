@@ -14,6 +14,7 @@ $(CMD_DIR)PART.cpp \
 $(CMD_DIR)PASS.cpp \
 $(CMD_DIR)PING.cpp \
 $(CMD_DIR)USER.cpp \
+$(CMD_DIR)PRIVMSG.cpp \
 utils.cpp
 
 CMD_DIR = command/
