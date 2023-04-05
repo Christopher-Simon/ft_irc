@@ -1,4 +1,4 @@
-#include "Command.hpp"
+#include "../Command.hpp"
 
 
 //Modifier pour traiter le cas ou on veut ajouter plusieurs modes en meme temps

@@ -11,14 +11,6 @@ void Command::NICK(std::string cmd, std::vector<std::string> vect, Server &serv,
 	std::string ptl_nick = vect[1];
 	std::transform(ptl_nick.begin(), ptl_nick.end(), ptl_nick.begin(), ::toupper);
 	Server::mapClient::iterator it;
-	// for (it = serv.pool_client.begin(); it != serv.pool_client.end(); ++it)
-	// {
-	// 	if (ptl_nick == it->second->_intern_nick)
-	// 	{
-	// 		serv.send_msg(ircrep->ERR_NICKNAMEINUSE(vect[1], clt),clt.getfd());
-	// 		return;
-	// 	}
-	// }
 	if (serv.check_nick_exist(ptl_nick) != 0)
 	{
 		serv.send_msg(ircrep->ERR_NICKNAMEINUSE(vect[1], clt),clt.getfd());

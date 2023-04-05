@@ -32,7 +32,7 @@ public:
 
 //modes
 // for users :
-//     - O : channel creator
+//     - q : channel creator
 //     - o : channel operator
 //     - v : voice
 // for channels :

@@ -45,7 +45,7 @@
 #define C_KEYLOCKED 'k'
 #define C_USERLIMIT 'l'
 
-#define CU_CREATOR 'O'
+#define CU_CREATOR 'q'
 #define CU_OPERATOR 'o'
 #define CU_VOICE 'v'
 

@@ -33,6 +33,7 @@ public:
 	void PART(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 	void INVITE(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 	void PRIVMSG(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
+	//void NAMES(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 };
 
 void print_vect(std::vector<std::string> vect);
