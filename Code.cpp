@@ -39,6 +39,14 @@ std::string Code::RPL_CREATED(Client &clt)
 	return (Base(clt, "003") + clt.get_nick() + op);
 }
 
+std::string Code::RPL_INVITING(Client &clt, std::string title)
+{
+	std::string op = " inviteduser ";
+	std::string end = "\r\n";
+	//std::cout<<Base(clt, "003") + clt.get_nick() + op<<std::endl;
+	return (Base(clt, "321") + clt.get_nick() + op + title + end);
+}
+
 std::string Code::RPL_LISTSTART(Client &clt)
 {
 	std::string op = " Channel :Users Name\r\n";
@@ -76,7 +84,8 @@ std::string Code::RPL_CHANNELMODEIS(Client &clt, std::string title, std::string 
 {
 	std::string op = " ";
 	std::string space = "\r\n";
-	return (Base(clt, "324") + clt.get_nick() + op + title + op + mods);
+	std::cout<<"mode channel : "<<clt._mods<<std::endl;
+	return (Base(clt, "324") + clt.get_nick() + op + title + op + mods + space);
 }
 
 std::string Code::RPL_MYINFO(Client &clt)
@@ -99,6 +108,12 @@ std::string Code::ERR_NEEDMOREPARAMS(std::string cmd, Client &clt)
 {
 	std::string reply = " :Not enough parameters\r\n";
 	return (Base(clt, "461") + cmd + reply);
+}
+
+std::string Code::ERR_UNKNOWNCOMMAND(std::string cmd, Client &clt)
+{
+	std::string reply = " :Too many parameters or unknown command\r\n";
+	return (Base(clt, "421") + cmd + reply);
 }
 
 std::string Code::ERR_NONICKNAMEGIVEN(Client &clt)
@@ -143,12 +158,12 @@ std::string Code::ERR_UMODEUNKNOWNFLAG(Client &clt)
 	return (Base(clt, "501") + space + clt._nickname + reply);
 }
 
-//a revoir
+//a revoir // envoi a tous les clients ?
 std::string Code::ERR_CHANOPRIVSNEEDED(Client &clt, std::string title)
 {
 	std::string space = " ";
-	std::string reply = "* " + title + " :You're not a channel operator\r\n";
-	return (Base(clt, "482") + space + reply);
+	std::string reply = " :You're not a channel operator\r\n";
+	return (Base(clt, "482") + space + clt._nickname + space + title + reply);
 }
 
 std::string Code::ERR_NOSUCHCHANNEL(Client &clt, std::string name)
@@ -156,6 +171,20 @@ std::string Code::ERR_NOSUCHCHANNEL(Client &clt, std::string name)
 	std::string space = " ";
 	std::string reply = " :No such channel\r\n";
 	return (Base(clt, "403") + space + clt._nickname +space + name+ reply);
+}
+
+std::string Code::ERR_USERONCHANNEL(Client &clt, std::string name)
+{
+	std::string space = " ";
+	std::string reply = " :is already on channe\r\n";
+	return (Base(clt, "443") + space + clt._nickname +space + name+ reply);
+}
+
+std::string Code::ERR_NOSUCHNICK(Client &clt)
+{
+	std::string space = " ";
+	std::string reply = " :No such nick\r\n";
+	return (Base(clt, "401") + space + clt._nickname +reply);
 }
 
 std::string Code::ERR_NOTONCHANNEL(Client &clt, std::string name)

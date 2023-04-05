@@ -149,6 +149,21 @@ void	Server::del_client(int del_fd)
 	pool_client.erase(it);
 }
 
+void Server::del_channel(Channel &chan)
+{
+	if (chan.nb_memb != 0 || chan._members.size() != 0)
+		std::cout<<"Warning : deleting non empty channel"<<std::endl;
+	std::string name = chan._name;
+	if (pool_channel.find(name) == pool_channel.end())
+	{
+		std::cout<<"Error : channel to delete not found"<<std::endl;
+		return;
+	}
+	delete(pool_channel.find(name)->second);
+	std::cout<<"Info : channel "<< name << " deleted"<<std::endl;
+	pool_channel.erase(chan._name);
+}
+
 void Server::send_msg(std::string msg, int fd)
 {
 	send(fd,msg.c_str(), msg.size(), 0);
@@ -166,13 +181,39 @@ void Server::print_client()
 	std::cout<<"----------------"<<std::endl;
 }
 
-int Server::check_exist(std::string &ptl_nick)
+int Server::check_nick_exist(std::string nick)
 {
 	mapClient::iterator it;
+	std::string ptl_nick = nick;
+	std::transform(ptl_nick.begin(), ptl_nick.end(), ptl_nick.begin(), ::toupper);
 	for (it = pool_client.begin(); it != pool_client.end(); ++it)
 	{
 		if (ptl_nick == it->second->_intern_nick)
-			return (1);
+			return (it->second->getfd());
 	}
 	return (0);
+}
+
+int Server::channel_exist(std::string title)
+{
+	if (pool_channel.find(title) != pool_channel.end())
+		return 1;
+	return 0;
+}
+
+int Server::client_in_channel(std::string title, Client &clt)
+{
+	if (pool_channel.find(title)->second->_members.find(clt.getfd()) != pool_channel.find(title)->second->_members.end())
+		return (1);
+	return 0;
+}
+
+std::string Server::get_chan_mods(std::string title)
+{
+	return (pool_channel.find(title)->second->_channel_mods);
+}
+
+std::string Server::get_userinchan_mods(std::string title, Client &clt)
+{
+	return (pool_channel.find(title)->second->_members[clt.getfd()]);
 }

@@ -1,5 +1,7 @@
 #include "Command.hpp"
 
+
+//Modifier pour traiter le cas ou on veut ajouter plusieurs modes en meme temps
 void Command::MODE(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt)
 {
 	if (clt._identified < 3)
@@ -26,19 +28,27 @@ void Command::MODE(std::string cmd, std::vector<std::string> vect, Server &serv,
 			serv.send_msg(ircrep->RPL_CHANNELMODEIS(clt, target, serv.pool_channel.find(target)->second->_channel_mods),clt.getfd());
 			return;
 		}
-		if (serv.pool_channel.find(target)->second->_members.find(&clt)->second.find('o', 0) == std::string::npos)
+		if (serv.pool_channel.find(target)->second->_members.find(clt.getfd())->second.find('o', 0) == std::string::npos)
 		{
 			serv.send_msg(ircrep->ERR_CHANOPRIVSNEEDED(clt, target),clt.getfd());
 			return;
 		}
-		//TBC
+		std::string cmods = "imnptkl";
+		if (!((vect[2][0] == '+' || vect[2][0] == '-') && vect[2].length() == 2 && cmods.find(vect[2][1]) != std::string::npos))
+		{
+			return;
+		}
+		if (vect[2][0] == '+')
+			serv.pool_channel.find(target)->second->add_mod(vect[2][1]);
+		else if (vect[2][0] == '-')
+			serv.pool_channel.find(target)->second->rem_mod(vect[2][1]);
 	}
 	else
 	{
 		//question si le mode sort un nickname deja existant mais sans maj par exemple
 		std::string ptl_nick = vect[1].substr(0, vect[1].find_first_of(" \r\n",0));
 		std::transform(ptl_nick.begin(), ptl_nick.end(), ptl_nick.begin(), ::toupper);
-		if (serv.check_exist(ptl_nick)== 0)
+		if (serv.check_nick_exist(ptl_nick)== 0)
 		{
 			return; //ERR_NOSUCHNICK
 		}

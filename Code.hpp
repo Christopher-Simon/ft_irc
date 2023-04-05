@@ -25,6 +25,7 @@ public:
 	std::string RPL_LIST(Client &clt, std::string name, int nb);
 	std::string RPL_LISTEND(Client &clt);
 	std::string RPL_CHANNELMODEIS(Client &clt, std::string title, std::string mods);
+	std::string RPL_INVITING(Client &clt, std::string title);
 	// RPL_BOUNCE (010)
 	// RPL_LUSERCLIENT (251)
 	// RPL_LUSEROP (252)
@@ -63,7 +64,6 @@ public:
 	// RPL_INVITELIST (336)
 	// RPL_ENDOFINVITELIST (337)
 	// RPL_WHOISACTUALLY (338)
-	// RPL_INVITING (341)
 	// RPL_INVEXLIST (346)
 	// RPL_ENDOFINVEXLIST (347)
 	// RPL_EXCEPTLIST (348)
@@ -104,7 +104,9 @@ public:
 	std::string ERR_NOSUCHCHANNEL(Client &clt, std::string name);
 	std::string ERR_NOTONCHANNEL(Client &clt, std::string name);
 	std::string ERR_CHANOPRIVSNEEDED(Client &clt, std::string title);
-	// std::string ERR_UNKNOWNCOMMAND(std::string, Client &);
+	std::string ERR_NOSUCHNICK(Client &clt);
+	std::string ERR_USERONCHANNEL(Client &clt, std::string name);
+	std::string ERR_UNKNOWNCOMMAND(std::string cmd, Client &clt);
 	// std::string ERR_NOMOTD(std::string, Client &);
 	// std::string ERR_ERRONEUSNICKNAME(std::string, Client &);
 	// std::string ERR_NICKCOLLISION(std::string, Client &);
@@ -123,7 +125,6 @@ public:
 	// ERR_UNKNOWNCOMMAND (421)
 	// ERR_NOMOTD (422)
 	// ERR_NICKNAMEINUSE (433)
-	// ERR_USERONCHANNEL (443)
 	// ERR_YOUREBANNEDCREEP (465)
 	// ERR_CHANNELISFULL (471)
 	// ERR_UNKNOWNMODE (472)
