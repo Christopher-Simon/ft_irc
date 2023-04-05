@@ -132,6 +132,19 @@ void Server::send_all_msg(int fd_avoid)
 	pool_client[fd_avoid]->get_buffer().clear();
 }
 
+void Server::send_all_msg(std::string msg, int fd_avoid)
+{
+	// std::string msg = pool_client[fd_avoid]->get_buffer();
+	for (std::map<int, Client *>::iterator ok = pool_client.begin();ok != pool_client.end();ok++)
+	{
+		if (ok->first != fd_avoid && ok->first != 0){
+			send(ok->first, msg.c_str(), msg.size(), 0);
+			std::cout << "message sent to : " << pool_client[ok->first]->_nickname;
+		}
+	}
+	// pool_client[fd_avoid]->get_buffer().clear();
+}
+
 void	Server::del_client(int del_fd)
 {
 	mapClient::iterator	it;
