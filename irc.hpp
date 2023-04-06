@@ -44,6 +44,7 @@
 #define C_TOPICLOCKED 't'
 #define C_KEYLOCKED 'k'
 #define C_USERLIMIT 'l'
+#define C_SECRET 's'
 
 #define CU_CREATOR 'q'
 #define CU_OPERATOR 'o'

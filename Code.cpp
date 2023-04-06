@@ -69,6 +69,42 @@ std::string Code::RPL_LISTEND(Client &clt)
 	return (Base(clt, "323") + clt.get_nick() + op);
 }
 
+std::string Code::RPL_NAMREPLY(Client &clt, Server &serv, std::string title)
+{
+	std::string op = " :End of /LIST";
+	std::string mod_chan;
+	std::string rep = " :";
+	// if (serv.chan_has_mod(title, C_SECRET) == 1)
+	// 	mod_chan = " @ ";
+	// else if (serv.chan_has_mod(title, C_PRIVATE) == 1)
+	// 	mod_chan = " * ";
+	mod_chan = " = ";
+	std::map<int, std::string>::iterator it;
+	for (it = serv.pool_channel.find(title)->second->_members.begin(); it != serv.pool_channel.find(title)->second->_members.end(); it++)
+	{
+		std::string mod_user;
+		if(serv.get_userinchan_mods(title, clt).find(CU_CREATOR) != std::string::npos)
+			mod_user = "~";
+		// else if (clt._mods.find(U_AWAY) != std::string::npos)
+		// 	mod_user = "&";
+		else if (serv.get_userinchan_mods(title, clt).find(CU_OPERATOR) != std::string::npos)
+			mod_user = "@";
+		// else if (serv.get_userinchan_mods(title, clt).find(CU_VOICE) != std::string::npos)
+		// 	mod_user = "+";
+		else
+			mod_user = "";
+		rep = rep + " " + mod_user + serv.pool_client[it->first]->get_nick();
+	}
+	return (Base(clt, "353") + clt.get_nick() + mod_chan + title + rep);
+}
+
+std::string Code::RPL_ENDOFWHO(Client &clt)
+{
+	std::string op = " :End of WHO list";
+	std::string space = " ";
+	return (Base(clt, "315") + clt.get_nick() + op);
+}
+
 std::string Code::RPL_ENDOFNAMES(Client &clt, std::string title)
 {
 	std::string op = " :End of /NAMES";

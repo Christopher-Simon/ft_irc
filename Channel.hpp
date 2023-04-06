@@ -40,6 +40,7 @@ public:
 //     - m : moderated
 //     - n : outside privmsg disabled
 //     - p : private
+//     - s : secret
 //     - t : topic locked
 //     - k : key locked
 //     - l : user limit

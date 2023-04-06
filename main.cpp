@@ -13,12 +13,6 @@ void	sighandler(int signum) {
 		gtrl_c = false;
 }
 
-// TO DO
-// Controler que le nickname n'est pas deja celui d'un autre utilisateur
-//pb dans le parsing du USER
-
-//gerer les messages avec espaces (cf ft_split)
-
 int	main(int argc, char *argv[])
 {
 	if (argc != 3)

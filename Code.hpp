@@ -27,6 +27,8 @@ public:
 	std::string RPL_CHANNELMODEIS(Client &clt, std::string title, std::string mods);
 	std::string RPL_INVITING(Client &clt, std::string title);
 	std::string RPL_ENDOFNAMES(Client &clt, std::string title);
+	std::string RPL_NAMREPLY(Client &clt, Server &serv, std::string title);
+	std::string RPL_ENDOFWHO(Client &clt);
 	// RPL_BOUNCE (010)
 	// RPL_LUSERCLIENT (251)
 	// RPL_LUSEROP (252)
@@ -47,7 +49,6 @@ public:
 	// RPL_UNAWAY (305)
 	// RPL_NOWAWAY (306)
 	// RPL_WHOREPLY (352)
-	// RPL_ENDOFWHO (315)
 	// RPL_WHOISREGNICK (307)
 	// RPL_WHOISUSER (311)
 	// RPL_WHOISSERVER (312)
@@ -70,7 +71,6 @@ public:
 	// RPL_EXCEPTLIST (348)
 	// RPL_ENDOFEXCEPTLIST (349)
 	// RPL_VERSION (351)
-	// RPL_NAMREPLY (353)
 	// RPL_LINKS (364)
 	// RPL_ENDOFLINKS (365)
 	// RPL_BANLIST (367)

@@ -16,6 +16,7 @@ $(CMD_DIR)PING.cpp \
 $(CMD_DIR)USER.cpp \
 $(CMD_DIR)INVITE.cpp \
 $(CMD_DIR)PRIVMSG.cpp \
+$(CMD_DIR)NAMES.cpp \
 utils.cpp
 
 CMD_DIR = command/
