@@ -182,7 +182,7 @@ std::string Code::ERR_NOSUCHCHANNEL(Client &clt, std::string name)
 std::string Code::ERR_USERONCHANNEL(Client &clt, std::string name)
 {
 	std::string space = " ";
-	std::string reply = " :is already on channe";
+	std::string reply = " :is already on channel";
 	return (Base(clt, "443") + space + clt._nickname +space + name+ reply);
 }
 
@@ -191,6 +191,24 @@ std::string Code::ERR_NOSUCHNICK(Client &clt)
 	std::string space = " ";
 	std::string reply = " :No such nick";
 	return (Base(clt, "401") + space + clt._nickname +reply);
+}
+
+std::string	Code::ERR_CANNOTSENDTOCHAN(Client &clt, std::string channel)
+{
+	return (Base(clt, "404") + " " + \
+		clt._nickname + " " + channel + " :Cannot send to channel");
+}
+
+std::string	Code::ERR_TOOMANYTARGETS(Client &clt, std::string channel)
+{
+	return (Base(clt, "407") + " " + \
+		clt._nickname + " " + channel + " :Too many targets");
+}
+
+std::string	Code::ERR_NOTEXTTOSEND(Client &clt)
+{
+	return (Base(clt, "412") + " " + \
+		clt._nickname + " :No text to send");
 }
 
 std::string Code::ERR_NOTONCHANNEL(Client &clt, std::string name)

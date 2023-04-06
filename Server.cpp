@@ -145,11 +145,25 @@ void Server::send_all_msg(std::string msg, int fd_avoid)
 	{
 		if (ok->first != fd_avoid && ok->first != 0){
 			send(ok->first, msg.c_str(), msg.size(), 0);
-			std::cout << "message sent to : " << pool_client[ok->first]->_nickname;
+			std::cout << "message sent to : " << ok->second->_nickname;
 		}
 	}
 	// pool_client[fd_avoid]->get_buffer().clear();
 }
+
+void Server::send_channel_msg(std::string msg, std::string channel, int fd_avoid)
+{
+	std::map<int, std::string> clients = pool_channel[channel]->_members;
+	for (std::map<int, std::string>::iterator it = clients.begin(); it != clients.end(); ++it)
+	{
+		if (it->first != fd_avoid)
+		{
+			send(it->first, msg.c_str(), msg.size(), 0);
+			std::cout << "message sent to : " << it->second;
+		}
+	}
+}
+
 
 void	Server::del_client(int del_fd)
 {
@@ -192,6 +206,7 @@ void Server::send_msg(std::string msg2, int fd)
 		i++;
 	if (i == 0 || i >= 2)
 		std::cerr << RED << "\\r\\n " << i << " times  in : " << msg << RESET << std::endl;
+	std::cout << "message sent to : " << pool_client[fd]->_nickname << " [" << fd << "]" << std::endl;
 	send(fd,msg.c_str(), msg.size(), 0);
 }
 
