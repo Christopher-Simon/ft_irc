@@ -9,6 +9,17 @@
 #include <list>
 #include <map>
 
+#include <signal.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <fstream>
+#include <unistd.h>
+#include <sys/epoll.h>
+#include <string.h> 
+#include <fcntl.h>
+#include  <iostream>
+#include  <bits/stdc++.h>
+
 #define GREEN "\033[32m"
 #define RED "\033[31m"
 #define YELLOW "\033[33m"
@@ -16,30 +27,28 @@
 #define PURPLE "\033[35m"
 #define RESET "\033[0m"
 
-class irc 
-{
-	public:
-		irc();
-		irc(irc const & raw);
-		~irc();
-		irc & operator=(irc const & rhs);
+#define BUFFER_SIZE 10000
+#define MAX_EVENTS 1
+#define	NC_EASY_TEST 0
 
-	private:
-		
-};
+#define U_AWAY 'a'
+#define U_INVISIBLE 'i'
+#define U_WALLOPS 'w'
+#define U_RESTRICTED 'r'
+#define U_OPERATOR 'o'
 
-//faire une classe client
+#define C_INVITE 'i'
+#define C_MODERATED 'm'
+#define C_NOOUTSIDE 'n'
+#define C_PRIVATE 'p'
+#define C_TOPICLOCKED 't'
+#define C_KEYLOCKED 'k'
+#define C_USERLIMIT 'l'
 
-// typedef struct	t_env
-// {
-// 	struct sockaddr_storage	their_addr;
-// 	socklen_t		addr_size;
-// 	int			newfd;
-// 	int			sockfd;
-// 	int			fdmax;
-// 	fd_set			master;
-// 	fd_set			fdreads;
-// }		s_env;
+#define CU_CREATOR 'q'
+#define CU_OPERATOR 'o'
+#define CU_VOICE 'v'
 
+extern bool gtrl_c;
 
 #endif
