@@ -134,6 +134,12 @@ void Server::send_all_msg(int fd_avoid)
 
 void Server::send_all_msg(std::string msg, int fd_avoid)
 {
+	size_t i(0);
+	size_t pos(0);
+	while ((pos = msg.find("\r\n", pos + 1)) != std::string::npos)
+		i++;
+	if (i == 0 || i >= 2)
+		std::cerr << RED << "\\r\\n " << i << " times  in : " << msg << RESET << std::endl;
 	// std::string msg = pool_client[fd_avoid]->get_buffer();
 	for (std::map<int, Client *>::iterator ok = pool_client.begin();ok != pool_client.end();ok++)
 	{
@@ -177,8 +183,15 @@ void Server::del_channel(Channel &chan)
 	pool_channel.erase(chan._name);
 }
 
-void Server::send_msg(std::string msg, int fd)
+void Server::send_msg(std::string msg2, int fd)
 {
+	size_t i(0);
+	size_t pos(0);
+	std::string msg = msg2 + "\r\n";
+	while ((pos = msg.find("\r\n", pos + 1)) != std::string::npos)
+		i++;
+	if (i == 0 || i >= 2)
+		std::cerr << RED << "\\r\\n " << i << " times  in : " << msg << RESET << std::endl;
 	send(fd,msg.c_str(), msg.size(), 0);
 }
 

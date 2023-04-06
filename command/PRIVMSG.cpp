@@ -12,10 +12,10 @@ void Command::PRIVMSG(std::string cmd, std::vector<std::string> vect, Server &se
 	print_vect(vect);
 	std::string reply = "PRIVMSG ";
 	std::string space = " ";
-	std::string identifier = ":" + clt._nickname + "!" + clt._username + "@" + clt._servername;
-	std::string sender = ":" + clt._servername + space + reply + space + "#moi" + space + vect[2] + "\r\n";
-	std::string receivers = identifier + space + reply + space + "##moi" + space + vect[2] + "\r\n";
- 	std::cout << "sender : " << sender << std::endl;
+	std::string identifier = ":" + clt._nickname + "!" + clt._username + "@" + clt._hotsname;
+	// std::string sender = ":" + clt._servername + space + reply + space + "#moi" + space + vect[2] + "\r\n";
+	std::string receivers = identifier + space + reply + vect[1] + space + vect[2] + "\r\n";
+ 	// std::cout << "sender : " << sender << std::endl;
  	std::cout << "receivers : " << receivers <<std::endl;
 	// serv.send_msg(sender, clt.getfd());
 	serv.send_all_msg(receivers, clt.getfd());
