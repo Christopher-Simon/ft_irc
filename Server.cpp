@@ -230,3 +230,33 @@ std::string Server::get_userinchan_mods(std::string title, Client &clt)
 {
 	return (pool_channel.find(title)->second->_members[clt.getfd()]);
 }
+
+void Server::print_status()
+{
+	std::cout<<"--------------------------------------"<<std::endl;
+	std::cout<<"|	Number of connected clients : "<<pool_client.size()<<std::endl;
+	std::cout<<"|"<<std::endl;
+	std::cout<<"|	List of clients and mods :"<<std::endl;
+	mapClient::iterator it;
+	for (it = pool_client.begin(); it != pool_client.end(); ++it)
+		std::cout<<"|		- "<<it->second->get_nick()<<" = "<<it->second->_mods<<std::endl;
+	std::cout<<"|"<<std::endl;
+	std::cout<<"|	List of channels and mods :"<<std::endl;
+	mapChannel::iterator it2;
+	for (it2 = pool_channel.begin(); it2 != pool_channel.end(); ++it2)
+	{
+		std::cout<<"|		- "<<it2->second->_name <<" = "<<it2->second->_channel_mods<<std::endl;
+		std::map<int, std::string>::iterator it3;
+		for (it3 = it2->second->_members.begin(); it3 != it2->second->_members.end(); ++it3)
+			std::cout<<"|			> "<<pool_client[it3->first]->get_nick()<<" = "<< it3->second<<std::endl;
+	}
+	std::cout<<"--------------------------------------"<<std::endl;
+	std::cout<<std::endl;
+}
+
+int Server::chan_has_mod(std::string title, char wanted_mod)
+{
+	if (get_chan_mods(title).find(wanted_mod) != std::string::npos)
+		return 1;
+	return 0;
+}

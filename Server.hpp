@@ -44,7 +44,10 @@ class Server
 		int client_in_channel(std::string, Client &);
 
 		std::string get_chan_mods(std::string);
+		int chan_has_mod(std::string, char);
 		std::string get_userinchan_mods(std::string, Client &);
+
+		void print_status();
 
 		struct epoll_event	_event;
 		struct epoll_event	_events[MAX_EVENTS];

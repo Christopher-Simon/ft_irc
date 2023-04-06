@@ -71,6 +71,13 @@ std::string Code::RPL_LISTEND(Client &clt)
 	return (Base(clt, "323") + clt.get_nick() + op);
 }
 
+std::string Code::RPL_ENDOFNAMES(Client &clt, std::string title)
+{
+	std::string op = " :End of /NAMES\r\n";
+	std::string space = " ";
+	return (Base(clt, "366") + clt.get_nick() + space + title + op);
+}
+
 std::string Code::RPL_UMODEIS(Client &clt)
 {
 	std::string op = " :Your host is ..., running version\r\n";

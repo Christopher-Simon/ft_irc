@@ -26,6 +26,7 @@ public:
 	std::string RPL_LISTEND(Client &clt);
 	std::string RPL_CHANNELMODEIS(Client &clt, std::string title, std::string mods);
 	std::string RPL_INVITING(Client &clt, std::string title);
+	std::string RPL_ENDOFNAMES(Client &clt, std::string title);
 	// RPL_BOUNCE (010)
 	// RPL_LUSERCLIENT (251)
 	// RPL_LUSEROP (252)
@@ -70,7 +71,6 @@ public:
 	// RPL_ENDOFEXCEPTLIST (349)
 	// RPL_VERSION (351)
 	// RPL_NAMREPLY (353)
-	// RPL_ENDOFNAMES (366)
 	// RPL_LINKS (364)
 	// RPL_ENDOFLINKS (365)
 	// RPL_BANLIST (367)
