@@ -30,9 +30,8 @@ void Command::PART(std::string cmd, std::vector<std::string> vect, Server &serv,
 			std::string r2 = "!";
 			std::string r3 = "@";
 			std::string r5 = " PART ";
-			std::string r4 = "\r\n";
-			std::cout<<reply + clt.get_nick() + r2 + clt.get_nick() + r3 + clt._servername + r5 + list_channel[i] + r4<<std::endl;
-			serv.send_msg(reply + clt.get_nick() + r2 + clt.get_nick() + r3 + clt._servername + r5 + list_channel[i] + r4, clt.getfd());
+			std::cout<<reply + clt.get_nick() + r2 + clt.get_nick() + r3 + clt._servername + r5 + list_channel[i]<<std::endl;
+			serv.send_msg(reply + clt.get_nick() + r2 + clt.get_nick() + r3 + clt._servername + r5 + list_channel[i], clt.getfd());
 		}
 	}
 

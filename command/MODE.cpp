@@ -1,5 +1,6 @@
 #include "../Command.hpp"
 
+//surveiller les cas de segfault sur les check de size des vect
 
 //Modifier pour traiter le cas ou on veut ajouter plusieurs modes en meme temps
 void Command::MODE(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt)
@@ -18,29 +19,30 @@ void Command::MODE(std::string cmd, std::vector<std::string> vect, Server &serv,
 	{
 		std::string target = vect[1];
 		if (serv.pool_channel.find(target) == serv.pool_channel.end())
-		{
 			serv.send_msg(ircrep->ERR_NOSUCHCHANNEL(clt, target),clt.getfd());
-			return;
-		}
-		if (vect.size() == 2)
-		{
-			serv.send_msg(ircrep->RPL_CHANNELMODEIS(clt, target, serv.pool_channel.find(target)->second->_channel_mods),clt.getfd());
-			return;
-		}
-		if (serv.pool_channel.find(target)->second->_members.find(clt.getfd())->second.find('o', 0) == std::string::npos)
-		{
+		else if (vect.size() == 2)
+			serv.send_msg(ircrep->RPL_CHANNELMODEIS(clt, target, serv.get_chan(target)->_channel_mods),clt.getfd());
+		else if (serv.get_chan(target)->_members.find(clt.getfd())->second.find('o', 0) == std::string::npos)
 			serv.send_msg(ircrep->ERR_CHANOPRIVSNEEDED(clt, target),clt.getfd());
-			return;
-		}
-		std::string cmods = "ik";
-		if (!((vect[2][0] == '+' || vect[2][0] == '-') && vect[2].length() == 2 && cmods.find(vect[2][1]) != std::string::npos))
+		else if (vect.size() == 4)
 		{
-			return;
+			if (vect[3] != "+o" && vect[3] != "-o")
+				serv.send_msg(ircrep->ERR_UNKNOWNMODE(clt, target),clt.getfd());
+			else if (vect[3][0] == '+')
+				serv.get_chan(target)->_members.find(clt.getfd())->second = "o";
+			else if (vect[3][0] == '-')
+				serv.get_chan(target)->_members.find(clt.getfd())->second = "";
 		}
-		if (vect[2][0] == '+')
-			serv.pool_channel.find(target)->second->add_mod(vect[2][1]);
-		else if (vect[2][0] == '-')
-			serv.pool_channel.find(target)->second->rem_mod(vect[2][1]);
+		else if (vect.size() == 3)
+		{
+			if (vect[2] != "+o" && vect[2] != "-o")
+				serv.send_msg(ircrep->ERR_UNKNOWNMODE(clt, target),clt.getfd());
+			else if (vect[2][0] == '+')
+				serv.get_chan(target)->_members.find(clt.getfd())->second = "i";
+			else if (vect[2][0] == '-')
+				serv.get_chan(target)->_members.find(clt.getfd())->second = "";
+		}
+		return;
 	}
 	else
 	{

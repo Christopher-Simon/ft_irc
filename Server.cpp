@@ -151,8 +151,9 @@ void Server::send_all_msg(std::string msg, int fd_avoid)
 	// pool_client[fd_avoid]->get_buffer().clear();
 }
 
-void Server::send_channel_msg(std::string msg, std::string channel, int fd_avoid)
+void Server::send_channel_msg(std::string msg2, std::string channel, int fd_avoid)
 {
+	std::string msg = msg2 + "\r\n";
 	std::map<int, std::string> clients = pool_channel[channel]->_members;
 	for (std::map<int, std::string>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
@@ -236,7 +237,7 @@ int Server::check_nick_exist(std::string nick)
 	std::transform(ptl_nick.begin(), ptl_nick.end(), ptl_nick.begin(), ::toupper);
 	for (it = pool_client.begin(); it != pool_client.end(); ++it)
 	{
-		if (ptl_nick == it->second->_intern_nick)
+		if (ptl_nick == it->second->_intern_nick && pool_client[it->second->getfd()]->_identified == 3)
 			return (it->second->getfd());
 	}
 	return (0);
@@ -302,6 +303,11 @@ int Server::chan_has_mod(std::string title, char wanted_mod)
 	if (get_chan_mods(title).find(wanted_mod) != std::string::npos)
 		return 1;
 	return 0;
+}
+
+Channel *Server::get_chan(std::string channel_name)
+{
+	return (pool_channel.find(channel_name)->second);
 }
 
 void Server::check_channels()

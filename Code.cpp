@@ -268,6 +268,25 @@ std::string Code::ERR_NOTONCHANNEL(Client &clt, std::string name)
 	return (Base(clt, "442") + space + clt._nickname +space + name+ reply);
 }
 
+std::string Code::ERR_BADCHANNELKEY(Client &clt, std::string name)
+{
+	std::string space = " ";
+	std::string reply = " :Cannot join channel (+k)";
+	return (Base(clt, "475") + space + clt.get_nick() +space + name+ reply);
+}
+
+std::string Code::ERR_UNKNOWNMODE(Client &clt, std::string mods)
+{
+	std::string space = " ";
+	std::string reply = " :is unknown mode char to me";
+	std::string mod;
+	if (mods.length() > 1 && (mods[0] == '+' || mods[0] == '-'))
+		mod = mods.substr(1, mods.length());
+	else
+		mod = mods;
+	return (Base(clt, "472") + space + clt.get_nick() +space + mod + reply);
+}
+
 // std::string Code::ERR_NICKNAMEINUSE(std::string cmd, Client &clt)
 // std::string Code::ERR_PASSWDMISMATCH(std::string cmd, Client &clt)
 // std::string Code::ERR_UNKNOWNCOMMAND(std::string cmd, Client &clt)

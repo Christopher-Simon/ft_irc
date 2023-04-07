@@ -13,8 +13,6 @@
 #include "Client.hpp"
 #include "Channel.hpp"
 
-//Ajouter la gestion de la destruction des classes channel
-
 class Client;
 class Channel;
 
@@ -45,6 +43,7 @@ class Server
 		int client_in_channel(std::string, Client &);
 
 		std::string get_chan_mods(std::string);
+		Channel *get_chan(std::string);
 		int chan_has_mod(std::string, char);
 		std::string get_userinchan_mods(std::string, Client &);
 		void check_channels();

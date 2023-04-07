@@ -112,7 +112,8 @@ public:
 	std::string	ERR_NOTEXTTOSEND(Client &clt);
 	std::string ERR_INVALIDCHANNELNAME(Client &clt, std::string name);
 	std::string ERR_NOORIGIN(Client &clt);
-
+	std::string	ERR_BADCHANNELKEY(Client &clt, std::string name);
+	std::string ERR_UNKNOWNMODE(Client &clt, std::string mods);
 	
 	// std::string ERR_NOMOTD(std::string, Client &);
 	// std::string ERR_ERRONEUSNICKNAME(std::string, Client &);
@@ -128,14 +129,11 @@ public:
 	// ERR_WASNOSUCHNICK (406)
 	// ERR_NOORIGIN (409)
 	// ERR_INPUTTOOLONG (417)
-	// ERR_UNKNOWNCOMMAND (421)
 	// ERR_NOMOTD (422)
 	// ERR_YOUREBANNEDCREEP (465)
 	// ERR_CHANNELISFULL (471)
-	// ERR_UNKNOWNMODE (472)
 	// ERR_INVITEONLYCHAN (473)
 	// ERR_BANNEDFROMCHAN (474)
-	// ERR_BADCHANNELKEY (475)
 	// ERR_BADCHANMASK (476)
 	// ERR_NOPRIVILEGES (481)
 	// ERR_CANTKILLSERVER (483)

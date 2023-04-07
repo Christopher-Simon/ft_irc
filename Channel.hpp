@@ -19,12 +19,15 @@ public:
 	std::string _channel_mods;
 	unsigned int nb_memb;
 	std::string _name;
+	std::string _topic;
 	bool _iskey;
 	std::string _key;
 
 	void remove_memb(int fd, Server &serv);
 	void add_mod(char);
 	void rem_mod(char);
+
+	void add_member(int fd);
 
 };
 

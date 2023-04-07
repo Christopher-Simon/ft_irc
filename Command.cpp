@@ -16,6 +16,8 @@ Command::Command()
 	//cmd_repertory["INVITE"] = &Command::INVITE;
 	cmd_repertory["PRIVMSG"] = &Command::PRIVMSG;
 	cmd_repertory["NAMES"] = &Command::NAMES;
+	cmd_repertory["NOTICE"] = &Command::NOTICE;
+	cmd_repertory["TOPIC"] = &Command::TOPIC;
 }
 
 Command::~Command()

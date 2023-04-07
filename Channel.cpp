@@ -15,6 +15,7 @@ Channel::Channel(std::string name)
 	_name = name;
 	_iskey = 0;
 	nb_memb = 1;
+	_topic = "";
 }
 
 Channel::Channel(std::string name, std::string key)
@@ -23,6 +24,8 @@ Channel::Channel(std::string name, std::string key)
 	_key = key;
 	_iskey = 1;
 	nb_memb = 1;
+	_channel_mods = "k";
+	_topic = "";
 }
 
 void Channel::remove_memb(int fd, Server &serv)
@@ -47,4 +50,12 @@ void Channel::rem_mod(char c)
 		return;
 	_channel_mods.erase(_channel_mods.find(c), 1);
 	return; 
+}
+
+void Channel::add_member(int fd)
+{
+	if (_members.find(fd) != _members.end())
+		return;
+	_members[fd] = "";
+	nb_memb++;
 }
