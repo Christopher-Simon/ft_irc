@@ -107,6 +107,10 @@ public:
 	std::string ERR_NOSUCHNICK(Client &clt);
 	std::string ERR_USERONCHANNEL(Client &clt, std::string name);
 	std::string ERR_UNKNOWNCOMMAND(std::string cmd, Client &clt);
+	std::string	ERR_TOOMANYTARGETS(Client &clt, std::string channel);
+	std::string	ERR_CANNOTSENDTOCHAN(Client &clt, std::string channel);
+	std::string	ERR_NOTEXTTOSEND(Client &clt);
+	
 	// std::string ERR_NOMOTD(std::string, Client &);
 	// std::string ERR_ERRONEUSNICKNAME(std::string, Client &);
 	// std::string ERR_NICKCOLLISION(std::string, Client &);
@@ -117,7 +121,6 @@ public:
 	// ERR_UNKNOWNERROR (400)
 	// ERR_NOSUCHNICK (401)
 	// ERR_NOSUCHSERVER (402)
-	// ERR_CANNOTSENDTOCHAN (404)
 	// ERR_TOOMANYCHANNELS (405)
 	// ERR_WASNOSUCHNICK (406)
 	// ERR_NOORIGIN (409)
