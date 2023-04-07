@@ -1,9 +1,8 @@
 #include "Command.hpp"
 
-//integrer le cas chiant du changement de nick une fois enregistre
 void Command::NICK(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt)
 {
-	if (vect.size() != 2) //le code erreur renvoie le nick actuel, quid dans le cas du setup initial ?
+	if (vect.size() != 2)
 	{
 		serv.send_msg(ircrep->ERR_NONICKNAMEGIVEN(clt),clt.getfd());
 		return;
@@ -11,19 +10,22 @@ void Command::NICK(std::string cmd, std::vector<std::string> vect, Server &serv,
 	std::string ptl_nick = vect[1];
 	std::transform(ptl_nick.begin(), ptl_nick.end(), ptl_nick.begin(), ::toupper);
 	Server::mapClient::iterator it;
-	if (serv.check_nick_exist(ptl_nick) != 0)
+	if (serv.check_nick_exist(ptl_nick) != 0
+		|| vect[1].find_first_of(" ,*?!@", 0) != std::string::npos 
+		|| vect[1][0] == '$' || vect[1][0] == ':' || vect[1][0] == '#' || vect[1][0] == '&')
 	{
 		serv.send_msg(ircrep->ERR_NICKNAMEINUSE(vect[1], clt),clt.getfd());
 		return;
 	}
+	std::string prev_nick = clt._nickname;
 	clt._nickname = vect[1];
 	clt._intern_nick = ptl_nick;
-	if (clt._identified < 3)
-	{
+	if (clt._identified == 1)
 		clt._identified++;
-		std::cout<<clt._identified<<std::endl;
-		clt.check_registered(serv, *this);
+	else if (clt._identified == 3)
+	{
+		std::string reply = ":" + prev_nick + "!" + clt._username + "@" + clt._servername + " NICK :" + vect[1];
+		serv.send_msg(reply,clt.getfd());
 	}
 	cmd.empty(); 
-	//Ajout du check pour les caracteres interdits
 }

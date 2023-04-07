@@ -12,10 +12,10 @@ Command::Command()
 	cmd_repertory["JOIN"] = &Command::JOIN;
 	cmd_repertory["LIST"] = &Command::LIST;
 	cmd_repertory["PART"] = &Command::PART;
+	cmd_repertory["USER"] = &Command::USER;
 	//cmd_repertory["INVITE"] = &Command::INVITE;
 	cmd_repertory["PRIVMSG"] = &Command::PRIVMSG;
 	cmd_repertory["NAMES"] = &Command::NAMES;
-	//cmd_repertory["WHO"] = &Command::WHO;
 }
 
 Command::~Command()
@@ -43,12 +43,9 @@ void Command::exec(std::string &msg, Server &serv, Client &clt)
 
 void Command::exec_line(std::string msg, Server &serv, Client &clt)
 {
-	//std::cout<<"Ligne reperee : "<<msg<<std::endl;
 	std::string cmd = msg.substr(0, msg.find_first_of(" \r\n",0));
 	std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::toupper);
-	if (cmd == "USER")
-		USER(cmd, msg, serv, clt);
-	else if (cmd_repertory.find(cmd) != cmd_repertory.end())
+	if (cmd_repertory.find(cmd) != cmd_repertory.end())
 		(this->*cmd_repertory[cmd])(cmd, ft_split(msg, ' '), serv, clt);
 }
 

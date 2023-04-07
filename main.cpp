@@ -32,6 +32,7 @@ int	main(int argc, char *argv[])
 		{
 			std::cout << GREEN << "####### On epoll wait #######" << RESET << std::endl;
 			serv.print_status();
+			serv.check_channels(); //A GARDER ? 
 			event_count = epoll_wait(serv.get_epollfd(), serv._events, MAX_EVENTS, 30000);
 			std::cout << "event count : " << event_count << std::endl;
 			for (int i = 0; i < event_count; i++)

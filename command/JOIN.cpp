@@ -24,7 +24,7 @@ void Command::JOIN(std::string cmd, std::vector<std::string> vect, Server &serv,
 		//TBC
 		return;
 	}
-	//gerer le cas ou les noms sont des memes avec des majuscules
+	//gerer le cas ou les noms sont les memes avec des majuscules
 	//faire gaffe a ce que les messages d'erreur ne bloquent pas l'execution du reste de la liste
 	for(size_t i = 0; i < list_channel.size(); i++)
 	{
@@ -38,9 +38,14 @@ void Command::JOIN(std::string cmd, std::vector<std::string> vect, Server &serv,
 		}
 		else //channel pas existante
 		{
+			if (list_channel[i][0] != '#')
+			{
+				serv.send_msg(ircrep->ERR_INVALIDCHANNELNAME(clt, list_channel[i]),clt.getfd());
+				return;
+			}
 			//AJOUTER le mod du channel
 			serv.pool_channel[list_channel[i]] = new Channel(list_channel[i]);
-			serv.pool_channel.find(list_channel[i])->second->_members[clt.getfd()] = "q";
+			serv.pool_channel.find(list_channel[i])->second->_members[clt.getfd()] = "o";
 			std::cout<<clt.get_nick()<<" added to created channel "<<list_channel[i]<<std::endl;
 		}
 	}

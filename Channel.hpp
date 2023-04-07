@@ -32,11 +32,10 @@ public:
 
 //modes
 // for users :
-//     - q : channel creator
 //     - o : channel operator
 //     - v : voice
 // for channels :
-//     - i : invite only
+//     - i : invite only GARDER
 //     - m : moderated
 //     - n : outside privmsg disabled
 //     - p : private

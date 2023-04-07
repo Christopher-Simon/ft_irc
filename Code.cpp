@@ -83,11 +83,11 @@ std::string Code::RPL_NAMREPLY(Client &clt, Server &serv, std::string title)
 	for (it = serv.pool_channel.find(title)->second->_members.begin(); it != serv.pool_channel.find(title)->second->_members.end(); it++)
 	{
 		std::string mod_user;
-		if(serv.get_userinchan_mods(title, clt).find(CU_CREATOR) != std::string::npos)
-			mod_user = "~";
+		// if(serv.get_userinchan_mods(title, clt).find(CU_CREATOR) != std::string::npos)
+		// 	mod_user = "~";
 		// else if (clt._mods.find(U_AWAY) != std::string::npos)
 		// 	mod_user = "&";
-		else if (serv.get_userinchan_mods(title, clt).find(CU_OPERATOR) != std::string::npos)
+		if (serv.get_userinchan_mods(title, clt).find(CU_OPERATOR) != std::string::npos)
 			mod_user = "@";
 		// else if (serv.get_userinchan_mods(title, clt).find(CU_VOICE) != std::string::npos)
 		// 	mod_user = "+";
@@ -200,6 +200,13 @@ std::string Code::ERR_UMODEUNKNOWNFLAG(Client &clt)
 	return (Base(clt, "501") + space + clt._nickname + reply);
 }
 
+std::string Code::ERR_NOORIGIN(Client &clt)
+{
+	std::string space = " ";
+	std::string reply = " :No origin specified";
+	return (Base(clt, "409") + space + clt._nickname + reply);
+}
+
 //a revoir // envoi a tous les clients ?
 std::string Code::ERR_CHANOPRIVSNEEDED(Client &clt, std::string title)
 {
@@ -213,6 +220,13 @@ std::string Code::ERR_NOSUCHCHANNEL(Client &clt, std::string name)
 	std::string space = " ";
 	std::string reply = " :No such channel";
 	return (Base(clt, "403") + space + clt._nickname +space + name+ reply);
+}
+
+std::string Code::ERR_INVALIDCHANNELNAME(Client &clt, std::string name)
+{
+	std::string space = " ";
+	std::string reply = " :Illegal channel name";
+	return (Base(clt, "479") + space + clt._nickname +space + name+ reply);
 }
 
 std::string Code::ERR_USERONCHANNEL(Client &clt, std::string name)

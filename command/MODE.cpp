@@ -16,7 +16,6 @@ void Command::MODE(std::string cmd, std::vector<std::string> vect, Server &serv,
 	}
 	if (vect[1][0] == '#')
 	{
-		//MODE CHANNEL IMCOMPLET
 		std::string target = vect[1];
 		if (serv.pool_channel.find(target) == serv.pool_channel.end())
 		{
@@ -33,7 +32,7 @@ void Command::MODE(std::string cmd, std::vector<std::string> vect, Server &serv,
 			serv.send_msg(ircrep->ERR_CHANOPRIVSNEEDED(clt, target),clt.getfd());
 			return;
 		}
-		std::string cmods = "imnptkl";
+		std::string cmods = "ik";
 		if (!((vect[2][0] == '+' || vect[2][0] == '-') && vect[2].length() == 2 && cmods.find(vect[2][1]) != std::string::npos))
 		{
 			return;

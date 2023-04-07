@@ -178,6 +178,13 @@ void	Server::del_client(int del_fd)
 	std::cout << "delete client fd : " << it->first << std::endl;
 	if (epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, del_fd, NULL))
 		throw (std::runtime_error("epoll DEL fail"));
+	//cleaning in channels
+	mapChannel::iterator it2;
+	for (it2 = pool_channel.begin(); it2 != pool_channel.end(); ++it2)
+	{
+		if (it2->second->_members.find(del_fd) != it2->second->_members.end()) // si le client a delete fait partie du channel
+			it2->second->_members.erase(del_fd);
+	}
 	delete	it->second;
 	pool_client.erase(it);
 }
@@ -267,16 +274,24 @@ void Server::print_status()
 	std::cout<<"|	List of clients and mods :"<<std::endl;
 	mapClient::iterator it;
 	for (it = pool_client.begin(); it != pool_client.end(); ++it)
-		std::cout<<"|		- "<<it->second->get_nick()<<" = "<<it->second->_mods<<std::endl;
+	{
+		std::cout<<"|		- "<<it->second->get_nick()<<" = "<<it->second->_mods;
+		if (it->second->_identified < 3)
+			std::cout<<" (Not registered)";
+		std::cout<<std::endl;
+	}
 	std::cout<<"|"<<std::endl;
 	std::cout<<"|	List of channels and mods :"<<std::endl;
 	mapChannel::iterator it2;
 	for (it2 = pool_channel.begin(); it2 != pool_channel.end(); ++it2)
 	{
 		std::cout<<"|		- "<<it2->second->_name <<" = "<<it2->second->_channel_mods<<std::endl;
-		std::map<int, std::string>::iterator it3;
-		for (it3 = it2->second->_members.begin(); it3 != it2->second->_members.end(); ++it3)
-			std::cout<<"|			> "<<pool_client[it3->first]->get_nick()<<" = "<< it3->second<<std::endl;
+		if (it2->second->_members.size() != 0)
+		{
+			std::map<int, std::string>::iterator it3;
+			for (it3 = it2->second->_members.begin(); it3 != it2->second->_members.end(); ++it3)
+				std::cout<<"|			> "<<pool_client[it3->first]->get_nick()<<" = "<< it3->second<<std::endl;
+		}
 	}
 	std::cout<<"--------------------------------------"<<std::endl;
 	std::cout<<std::endl;
@@ -287,4 +302,22 @@ int Server::chan_has_mod(std::string title, char wanted_mod)
 	if (get_chan_mods(title).find(wanted_mod) != std::string::npos)
 		return 1;
 	return 0;
+}
+
+void Server::check_channels()
+{
+	size_t at_start = pool_channel.size();
+	mapChannel::iterator it2;
+	for (it2 = pool_channel.begin(); it2 != pool_channel.end(); ++it2)
+	{
+		if (it2->second->_members.size() == 0)
+		{
+			std::string sup = it2->first;
+			delete it2->second;
+			pool_channel.erase(sup);
+			break;
+		}
+	}
+	if (at_start != pool_channel.size())
+		check_channels();
 }

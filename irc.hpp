@@ -38,17 +38,16 @@
 #define U_OPERATOR 'o'
 
 #define C_INVITE 'i'
-#define C_MODERATED 'm'
-#define C_NOOUTSIDE 'n'
-#define C_PRIVATE 'p'
-#define C_TOPICLOCKED 't'
+//#define C_MODERATED 'm'
+//#define C_NOOUTSIDE 'n'
+//#define C_PRIVATE 'p'
+//#define C_TOPICLOCKED 't'
 #define C_KEYLOCKED 'k'
-#define C_USERLIMIT 'l'
-#define C_SECRET 's'
+//#define C_USERLIMIT 'l'
+//#define C_SECRET 's'
 
-#define CU_CREATOR 'q'
 #define CU_OPERATOR 'o'
-#define CU_VOICE 'v'
+//#define CU_VOICE 'v'
 
 extern bool gtrl_c;
 
