@@ -51,11 +51,9 @@ int	main(int argc, char *argv[])
 					} catch (Client::LostConnExceptions & e){
 						std::cerr << e.what() << std::endl;
 						serv.del_client(fd_client);
+						serv.check_channels();
 						break ;
 					}
-					//std::string str = serv.pool_client[fd_client]->get_buffer();
-					// if (serv.pool_client[fd_client]->get_buffer() == "exit\n") //TODO Replace par la command QUIT ou LEAVE ou DISCONNECT
-					// 	serv.del_client(fd_client);
 					if (serv.pool_client[fd_client]->get_buffer().find("\r\n") != std::string::npos)
 					{
 						if (NC_EASY_TEST)

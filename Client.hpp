@@ -44,10 +44,7 @@ public:
 
 //modes
 // USER MODES :
-// - a : away
 // - i : invisible
-// - w : wallops
-// - r : restricted
 // - o : operator
 
 	void get_msg();

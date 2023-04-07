@@ -33,13 +33,6 @@ public:
 //modes
 // for users :
 //     - o : channel operator
-//     - v : voice
 // for channels :
 //     - i : invite only GARDER
-//     - m : moderated
-//     - n : outside privmsg disabled
-//     - p : private
-//     - s : secret
-//     - t : topic locked
 //     - k : key locked
-//     - l : user limit
