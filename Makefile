@@ -19,6 +19,8 @@ $(CMD_DIR)PRIVMSG.cpp \
 $(CMD_DIR)NAMES.cpp \
 $(CMD_DIR)NOTICE.cpp \
 $(CMD_DIR)TOPIC.cpp \
+$(CMD_DIR)OPER.cpp \
+$(CMD_DIR)KILL.cpp \
 utils.cpp
 
 CMD_DIR = command/

@@ -18,6 +18,8 @@ Command::Command()
 	cmd_repertory["NAMES"] = &Command::NAMES;
 	cmd_repertory["NOTICE"] = &Command::NOTICE;
 	cmd_repertory["TOPIC"] = &Command::TOPIC;
+	cmd_repertory["OPER"] = &Command::OPER;
+	cmd_repertory["KILL"] = &Command::KILL;
 }
 
 Command::~Command()

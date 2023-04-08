@@ -101,8 +101,23 @@ std::string Code::RPL_NAMREPLY(Client &clt, Server &serv, std::string title)
 std::string Code::RPL_ENDOFWHO(Client &clt)
 {
 	std::string op = " :End of WHO list";
-	std::string space = " ";
 	return (Base(clt, "315") + clt.get_nick() + op);
+}
+
+std::string Code::RPL_NOTOPIC(Client &clt, std::string chan_name)
+{
+	std::string op = " :No topic is set";
+	return (Base(clt, "331") + clt.get_nick() + " " + chan_name + " " + op);
+}
+
+std::string Code::RPL_YOUREOPER(Client &clt)
+{
+	return (Base(clt, "381") + clt.get_nick() + " :You are now an IRC operator");
+}
+
+std::string Code::RPL_TOPIC(Client &clt, std::string chan_name, std::string topic)
+{
+	return (Base(clt, "332") + clt.get_nick() + " " + chan_name + " :" + topic);
 }
 
 std::string Code::RPL_ENDOFNAMES(Client &clt, std::string title)
@@ -241,6 +256,12 @@ std::string Code::ERR_NOSUCHNICK(Client &clt)
 	std::string space = " ";
 	std::string reply = " :No such nick";
 	return (Base(clt, "401") + space + clt._nickname +reply);
+}
+
+std::string Code::ERR_NOOPERHOST(Client &clt)
+{
+	std::string reply = " :No O-lines for your host";
+	return (Base(clt, "491") + " " + clt._nickname +reply);
 }
 
 std::string	Code::ERR_CANNOTSENDTOCHAN(Client &clt, std::string channel)

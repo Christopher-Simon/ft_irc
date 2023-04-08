@@ -58,6 +58,8 @@ void Client::check_registered(Server &serv, Command &cmd)
 	serv.send_msg(cmd.ircrep->RPL_CREATED(*this), _fd);
 	serv.send_msg(cmd.ircrep->RPL_MYINFO(*this), _fd);
 	serv.send_msg(cmd.ircrep->RPL_ISUPPORT(*this), _fd);
+	if (serv.pool_client.size() == 1)
+		add_mod('o');
 }
 
 bool Client::get_status()

@@ -29,6 +29,10 @@ public:
 	std::string RPL_ENDOFNAMES(Client &clt, std::string title);
 	std::string RPL_NAMREPLY(Client &clt, Server &serv, std::string title);
 	std::string RPL_ENDOFWHO(Client &clt);
+	std::string RPL_NOTOPIC(Client &clt, std::string chan_name);
+	std::string RPL_TOPIC(Client &clt, std::string chan_name, std::string topic);
+	std::string RPL_YOUREOPER(Client &clt);
+
 	// RPL_BOUNCE (010)
 	// RPL_LUSERCLIENT (251)
 	// RPL_LUSEROP (252)
@@ -60,8 +64,6 @@ public:
 	// RPL_WHOISSPECIAL (320)
 	// RPL_CREATIONTIME (329)
 	// RPL_WHOISACCOUNT (330)
-	// RPL_NOTOPIC (331)
-	// RPL_TOPIC (332)
 	// RPL_TOPICWHOTIME (333)
 	// RPL_INVITELIST (336)
 	// RPL_ENDOFINVITELIST (337)
@@ -77,7 +79,7 @@ public:
 	// RPL_ENDOFBANLIST (368)
 	// RPL_ENDOFWHOWAS (369)
 	// RPL_INFO (371)
-	// RPL_ENDOFINFO (374)
+	// RPL_ENDOFINFO (std::string Code::RPL_NOTOPIC(Client &clt, std::string chan_name)374)
 	// RPL_MOTDSTART (375)
 	// RPL_MOTD (372)
 	// RPL_ENDOFMOTD (376)
@@ -114,16 +116,13 @@ public:
 	std::string ERR_NOORIGIN(Client &clt);
 	std::string	ERR_BADCHANNELKEY(Client &clt, std::string name);
 	std::string ERR_UNKNOWNMODE(Client &clt, std::string mods);
-	
+	std::string ERR_NOOPERHOST(Client &clt);
 	// std::string ERR_NOMOTD(std::string, Client &);
 	// std::string ERR_ERRONEUSNICKNAME(std::string, Client &);
 	// std::string ERR_NICKCOLLISION(std::string, Client &);
 	// std::string ERR_USERNOTINCHANNEL(std::string, Client &);
-	// std::string ERR_CHANOPRIVSNEEDED(std::string, Client &);
-	// std::string ERR_NOOPERHOST(std::string, Client &);
 	// std::string ERR_USERSDONTMATCH(std::string, Client &);
 	// ERR_UNKNOWNERROR (400)
-	// ERR_NOSUCHNICK (401)
 	// ERR_NOSUCHSERVER (402)
 	// ERR_TOOMANYCHANNELS (405)
 	// ERR_WASNOSUCHNICK (406)
@@ -137,7 +136,6 @@ public:
 	// ERR_BADCHANMASK (476)
 	// ERR_NOPRIVILEGES (481)
 	// ERR_CANTKILLSERVER (483)
-	// ERR_NOOPERHOST (491)
 	// ERR_HELPNOTFOUND (524)
 	// ERR_INVALIDKEY (525)
 	// ERR_NOPRIVS (723)
