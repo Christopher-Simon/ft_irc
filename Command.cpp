@@ -22,6 +22,7 @@ Command::Command()
 	cmd_repertory["OPER"] = &Command::OPER;
 	cmd_repertory["KILL"] = &Command::KILL;
 	cmd_repertory["KICK"] = &Command::KICK;
+	cmd_repertory["QUIT"] = &Command::QUIT;
 }
 
 Command::~Command()

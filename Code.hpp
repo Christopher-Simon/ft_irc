@@ -119,6 +119,7 @@ public:
 	std::string	ERR_BADCHANNELKEY(Client &clt, std::string name);
 	std::string ERR_UNKNOWNMODE(Client &clt, std::string mods);
 	std::string ERR_NOOPERHOST(Client &clt);
+	std::string ERR_NOPRIVILEGES(Client &clt);
 
 	// std::string ERR_NOMOTD(std::string, Client &);
 	// std::string ERR_ERRONEUSNICKNAME(std::string, Client &);

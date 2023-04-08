@@ -42,7 +42,6 @@ void Client::get_msg()
 	count = recv(_fd, buf, BUFFER_SIZE - 1, 0);
 	if (count < 0)
 		throw (std::runtime_error("recv failed"));
-	// std::cout << "count : " << count << std::endl;
 	buf[count] = '\0';
 	_buffer += buf;
 	if (count == 0)
@@ -97,3 +96,14 @@ const char* Client::LostConnExceptions::what() const throw()
 	return("Connection with client lost");
 }
 
+std::vector<Channel *> Client::get_his_channels(Server &serv)
+{
+	std::vector<Channel *> pers_chan;
+	std::map<std::string, Channel *>::iterator it;
+	for (it = serv.pool_channel.begin(); it != serv.pool_channel.end(); it++)
+	{
+		if (serv.client_in_channel(it->first, *this) == 1)
+			pers_chan.push_back(it->second);
+	}
+	return (pers_chan);
+}

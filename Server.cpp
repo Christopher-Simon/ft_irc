@@ -187,7 +187,6 @@ void Server::send_channel_msg(std::string msg2, std::string channel, int fd_avoi
 {
 	std::string msg = msg2 + "\r\n";
 	std::map<int, std::string> clients = pool_channel[channel]->_members;
-	std::string msg = msg2 + "\r\n";
 	for (std::map<int, std::string>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
 		if (it->first != fd_avoid)

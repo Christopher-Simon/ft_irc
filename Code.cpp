@@ -305,6 +305,11 @@ std::string Code::ERR_BADCHANNELKEY(Client &clt, std::string name)
 	return (Base(clt, "475") + space + clt.get_nick() +space + name+ reply);
 }
 
+std::string Code::ERR_NOPRIVILEGES(Client &clt)
+{
+	return (Base(clt, "481") + " "+ clt.get_nick() + " :Permission Denied- You're not an IRC operator");
+}
+
 std::string Code::ERR_UNKNOWNMODE(Client &clt, std::string mods)
 {
 	std::string space = " ";

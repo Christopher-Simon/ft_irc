@@ -5,9 +5,11 @@
 #include "Server.hpp"
 #include "Command.hpp"
 #include "irc.hpp"
+#include "Channel.hpp"
 
 class Server;
 class Command;
+class Channel;
 
 class Client
 {
@@ -37,6 +39,7 @@ public:
 	int getfd();
 	bool get_status();
 	std::string get_nick();
+	std::vector<Channel *> get_his_channels(Server &serv);
 
 	void check_registered(Server &, Command &);
 	void add_mod(char);
