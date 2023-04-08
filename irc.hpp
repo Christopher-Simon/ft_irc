@@ -28,7 +28,7 @@
 #define RESET "\033[0m"
 
 #define BUFFER_SIZE 10000
-#define MAX_EVENTS 1
+#define MAX_EVENTS 1000
 #define	NC_EASY_TEST 0
 
 #define U_AWAY 'a'

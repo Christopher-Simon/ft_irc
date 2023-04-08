@@ -6,9 +6,7 @@ int makeSocketNonBlocking(int sfd)
 
 	s = fcntl (sfd, F_SETFL, O_NONBLOCK);
 	if (s == -1)
-	{
 		return -1;
-	}
 	return 0;
 }
 
@@ -65,33 +63,51 @@ void	Server::initSocket(char *port) {
 	std::cout << GREEN << "Socket creation successful" << RESET << std::endl;
 	int optval = 1;
 	if (setsockopt(_sockfd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)))
+	{
+		close(_sockfd);
 		throw (std::runtime_error("Socket option set failed"));
+	}
 
 	_address.sin_family = AF_INET;
 	_address.sin_addr.s_addr = INADDR_ANY;
 	_address.sin_port = htons(std::atoi(port));
-
 	if (makeSocketNonBlocking(_sockfd) == -1)
+	{
+		close(_sockfd);
 		throw (std::runtime_error("fcntl failed"));
+	}
 	std::cout << GREEN << "fcntl on sockfd success" << RESET << std::endl;
 
 	if (bind(_sockfd, (struct sockaddr *)&_address, sizeof(_address)) < 0)
-		throw (std::runtime_error("Socket bind failed"));else
+	{
+		close(_sockfd);
+		throw (std::runtime_error("Socket bind failed"));
+	}
 	std::cout << GREEN << "Socket bind successful" << RESET << std::endl;
 
 	if (listen(_sockfd, 2) < 0)
+	{
+		close(_sockfd);
 		throw (std::runtime_error("Socket listen failed"));
+	}
 	std::cout << GREEN << "Socket listen successful" << RESET << std::endl;
 
 	_epoll_fd = epoll_create1(0);
 	if (_epoll_fd == -1)
+	{
+		close(_sockfd);
 		throw (std::runtime_error("Failed to create epoll fd"));
+	}
 	std::cout<< GREEN << "Success to create epoll fd" << RESET << std::endl;
 
 	_event.events = EPOLLIN;
 	_event.data.fd = _sockfd;
-	if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, _sockfd, &_event))
+	if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, _sockfd, &_event)==-1)
+	{
+		close(_sockfd);
+		close(_epoll_fd);
 		throw (std::runtime_error("epoll fail"));
+	}
 }
 
 int	Server::get_sockfd()
@@ -109,15 +125,29 @@ void	Server::add_client()
 	int newFd = accept(_sockfd, (struct sockaddr *)&_address, (socklen_t *)&_addrlen);
 	if (newFd < 0)
 		throw (std::runtime_error("Socket listen failed"));
-	else
-		std::cout << GREEN << "Client accepted successful : FD = " << newFd<< RESET << std::endl;
+	std::cout << GREEN << "Client accepted successful : FD = " << newFd<< RESET << std::endl;
 	if (makeSocketNonBlocking(newFd) == -1)
+	{
+		close(newFd);
 		throw (std::runtime_error("fcntl failed"));
+	}
 	_event.events = EPOLLIN | EPOLLET;
 	_event.data.fd = newFd;
-	if (epoll_ctl(get_epollfd(), EPOLL_CTL_ADD, newFd, &_event))
-		throw (std::runtime_error("epoll fail"));
-	pool_client[newFd] = new Client(newFd);
+	if (epoll_ctl(get_epollfd(), EPOLL_CTL_ADD, newFd, &_event) == -1)
+	{
+		close(newFd);
+		throw (std::runtime_error("epoll_ctl fail"));
+	}
+	try
+	{
+		pool_client[newFd] = new Client(newFd);
+	}
+	catch(const std::exception& e)
+	{
+		close(newFd);
+		throw (std::bad_alloc());
+	}
+	
 }
 
 void Server::send_all_msg(int fd_avoid)
@@ -126,7 +156,8 @@ void Server::send_all_msg(int fd_avoid)
 	for (std::map<int, Client *>::iterator ok = pool_client.begin();ok != pool_client.end();ok++)
 	{
 		if (ok->first != fd_avoid && ok->first != 0){
-			send(ok->first, msg.c_str(), msg.size(), 0);
+			if (send(ok->first, msg.c_str(), msg.size(), 0) == -1)
+				throw (std::runtime_error("send fail"));
 		}
 	}
 	pool_client[fd_avoid]->get_buffer().clear();
@@ -144,7 +175,8 @@ void Server::send_all_msg(std::string msg, int fd_avoid)
 	for (std::map<int, Client *>::iterator ok = pool_client.begin();ok != pool_client.end();ok++)
 	{
 		if (ok->first != fd_avoid && ok->first != 0){
-			send(ok->first, msg.c_str(), msg.size(), 0);
+			if (send(ok->first, msg.c_str(), msg.size(), 0) == -1)
+				throw (std::runtime_error("send fail"));
 			std::cout << "message sent to : " << ok->second->_nickname;
 		}
 	}
@@ -155,12 +187,14 @@ void Server::send_channel_msg(std::string msg2, std::string channel, int fd_avoi
 {
 	std::string msg = msg2 + "\r\n";
 	std::map<int, std::string> clients = pool_channel[channel]->_members;
+	std::string msg = msg2 + "\r\n";
 	for (std::map<int, std::string>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
 		if (it->first != fd_avoid)
 		{
-			send(it->first, msg.c_str(), msg.size(), 0);
-			std::cout << "message sent to : " << it->second;
+			if (send(it->first, msg.c_str(), msg.size(), 0) == -1)
+				throw (std::runtime_error("send fail"));
+			std::cout << "message sent to : " << pool_client[it->first]->_nickname << " [" << it->first << "]" << std::endl;
 		}
 	}
 }
@@ -177,7 +211,7 @@ void	Server::del_client(int del_fd)
 		return ;
 	}
 	std::cout << "delete client fd : " << it->first << std::endl;
-	if (epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, del_fd, NULL))
+	if (epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, del_fd, NULL) ==-1)
 		throw (std::runtime_error("epoll DEL fail"));
 	//cleaning in channels
 	mapChannel::iterator it2;
@@ -202,7 +236,8 @@ void Server::del_channel(Channel &chan)
 	}
 	delete(pool_channel.find(name)->second);
 	std::cout<<"Info : channel "<< name << " deleted"<<std::endl;
-	pool_channel.erase(chan._name);
+
+	pool_channel.erase(name);
 }
 
 void Server::send_msg(std::string msg2, int fd)
@@ -215,7 +250,8 @@ void Server::send_msg(std::string msg2, int fd)
 	if (i == 0 || i >= 2)
 		std::cerr << RED << "\\r\\n " << i << " times  in : " << msg << RESET << std::endl;
 	std::cout << "message sent to : " << pool_client[fd]->_nickname << " [" << fd << "]" << std::endl;
-	send(fd,msg.c_str(), msg.size(), 0);
+	if (send(fd,msg.c_str(), msg.size(), 0) == -1)
+		throw (std::runtime_error("send fail"));
 }
 
 void Server::print_client()
@@ -255,6 +291,28 @@ int Server::client_in_channel(std::string title, Client &clt)
 	if (pool_channel.find(title)->second->_members.find(clt.getfd()) != pool_channel.find(title)->second->_members.end())
 		return (1);
 	return 0;
+}
+
+int	Server::user_in_channel(std::string channel, std::string user)
+{
+	if (pool_channel.find(channel) == pool_channel.end())
+	{
+		std::cerr<<RED<<"Error user_in_channel : channel not found"<<RESET<<std::endl;
+		return (0);
+	}
+	int fduser = check_nick_exist(user);
+	if (fduser == 0)
+	{
+		std::cerr<<RED<<"Error check_nick_exist : user not found"<<RESET<<std::endl;
+		return (0);
+	}
+	std::map<int, std::string> clients = pool_channel[channel]->_members;
+	for (std::map<int, std::string>::iterator it = clients.begin(); it != clients.end(); ++it)
+	{
+		if (it->first == fduser)
+			return (1);
+	}
+	return (0);
 }
 
 std::string Server::get_chan_mods(std::string title)

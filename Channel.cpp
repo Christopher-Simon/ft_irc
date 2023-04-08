@@ -59,3 +59,17 @@ void Channel::add_member(int fd)
 	_members[fd] = "";
 	nb_memb++;
 }
+
+int Channel::userInChannel(int fd)
+{
+	for (std::map<int, std::string>::iterator it = _members.begin();
+		it != _members.end();
+		++it
+	)
+	{
+		if (it->first == fd)
+			return (1);
+	}
+	return (0);
+}
+

@@ -41,6 +41,7 @@ class Server
 		void del_channel(Channel &chan);
 		int channel_exist(std::string);
 		int client_in_channel(std::string, Client &);
+		int	user_in_channel(std::string channel, std::string user);
 
 		std::string get_chan_mods(std::string);
 		Channel *get_chan(std::string);

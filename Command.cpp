@@ -3,6 +3,7 @@
 Command::Command()
 {
 	ircrep = new Code();
+
 	//CAP
 	//NORMAL CMD SETUP
 	cmd_repertory["PING"] = &Command::PING;
@@ -20,6 +21,7 @@ Command::Command()
 	cmd_repertory["TOPIC"] = &Command::TOPIC;
 	cmd_repertory["OPER"] = &Command::OPER;
 	cmd_repertory["KILL"] = &Command::KILL;
+	cmd_repertory["KICK"] = &Command::KICK;
 }
 
 Command::~Command()

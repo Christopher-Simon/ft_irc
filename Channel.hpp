@@ -24,6 +24,7 @@ public:
 	std::string _key;
 
 	void remove_memb(int fd, Server &serv);
+	int userInChannel(int fd);
 	void add_mod(char);
 	void rem_mod(char);
 

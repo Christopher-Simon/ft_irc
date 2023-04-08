@@ -282,11 +282,20 @@ std::string	Code::ERR_NOTEXTTOSEND(Client &clt)
 		clt._nickname + " :No text to send");
 }
 
+
 std::string Code::ERR_NOTONCHANNEL(Client &clt, std::string name)
 {
 	std::string space = " ";
 	std::string reply = " :You're not on that channel";
 	return (Base(clt, "442") + space + clt._nickname +space + name+ reply);
+}
+ 
+std::string Code::ERR_USERNOTINCHANNEL(Client &clt, std::string target, std::string channel)
+{
+	return (Base(clt, "441") + " "  + \
+	clt._servername + " " + target + " " + channel +\
+	 " :They aren't on that channel");
+
 }
 
 std::string Code::ERR_BADCHANNELKEY(Client &clt, std::string name)
@@ -319,7 +328,6 @@ std::string Code::ERR_UNKNOWNMODE(Client &clt, std::string mods)
 // std::string Code::ERR_NOTONCHANNEL(std::string cmd, Client &clt)
 // std::string Code::ERR_NOTREGISTERED(std::string cmd, Client &clt)
 // std::string Code::ERR_ALREADYREGISTERED(std::string cmd, Client &clt)
-// std::string Code::ERR_CHANOPRIVSNEEDED(std::string cmd, Client &clt)
 // std::string Code::ERR_NOOPERHOST(std::string cmd, Client &clt)
 // std::string Code::ERR_UMODEUNKNOWNFLAG(std::string cmd, Client &clt)
 // std::string Code::ERR_USERSDONTMATCH(std::string cmd, Client &clt)

@@ -21,6 +21,7 @@ $(CMD_DIR)NOTICE.cpp \
 $(CMD_DIR)TOPIC.cpp \
 $(CMD_DIR)OPER.cpp \
 $(CMD_DIR)KILL.cpp \
+$(CMD_DIR)KICK.cpp \
 utils.cpp
 
 CMD_DIR = command/
