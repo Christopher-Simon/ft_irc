@@ -3,6 +3,7 @@
 Command::Command()
 {
 	ircrep = new Code();
+
 	//CAP
 	//NORMAL CMD SETUP
 	cmd_repertory["PING"] = &Command::PING;

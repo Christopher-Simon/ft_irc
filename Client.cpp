@@ -13,7 +13,7 @@ Client::Client(Server &serv, int opt):_buffer()
 		throw (std::runtime_error("fcntl failed"));
 	serv._event.events = EPOLLIN | EPOLLET;
 	serv._event.data.fd = 0;
-	if (epoll_ctl(serv.get_epollfd(), EPOLL_CTL_ADD, 0, &serv._event))
+	if (epoll_ctl(serv.get_epollfd(), EPOLL_CTL_ADD, 0, &serv._event)==-1)
 		throw (std::runtime_error("epoll fail"));
 	_identified = opt;
 }

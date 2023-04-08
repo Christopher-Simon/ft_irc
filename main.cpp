@@ -34,6 +34,8 @@ int	main(int argc, char *argv[])
 			serv.print_status();
 			serv.check_channels(); //A GARDER ? 
 			event_count = epoll_wait(serv.get_epollfd(), serv._events, MAX_EVENTS, 30000);
+			if (event_count == -1)
+				throw std::runtime_error("epoll_wait");
 			std::cout << "event count : " << event_count << std::endl;
 			for (int i = 0; i < event_count; i++)
 			{
