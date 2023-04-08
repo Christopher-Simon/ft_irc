@@ -151,15 +151,16 @@ void Server::send_all_msg(std::string msg, int fd_avoid)
 	// pool_client[fd_avoid]->get_buffer().clear();
 }
 
-void Server::send_channel_msg(std::string msg, std::string channel, int fd_avoid)
+void Server::send_channel_msg(std::string msg2, std::string channel, int fd_avoid)
 {
 	std::map<int, std::string> clients = pool_channel[channel]->_members;
+	std::string msg = msg2 + "\r\n";
 	for (std::map<int, std::string>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
 		if (it->first != fd_avoid)
 		{
 			send(it->first, msg.c_str(), msg.size(), 0);
-			std::cout << "message sent to : " << it->second;
+			std::cout << "message sent to : " << pool_client[it->first]->_nickname << " [" << it->first << "]" << std::endl;
 		}
 	}
 }
@@ -201,7 +202,8 @@ void Server::del_channel(Channel &chan)
 	}
 	delete(pool_channel.find(name)->second);
 	std::cout<<"Info : channel "<< name << " deleted"<<std::endl;
-	pool_channel.erase(chan._name);
+
+	pool_channel.erase(name);
 }
 
 void Server::send_msg(std::string msg2, int fd)
@@ -254,6 +256,28 @@ int Server::client_in_channel(std::string title, Client &clt)
 	if (pool_channel.find(title)->second->_members.find(clt.getfd()) != pool_channel.find(title)->second->_members.end())
 		return (1);
 	return 0;
+}
+
+int	Server::user_in_channel(std::string channel, std::string user)
+{
+	if (pool_channel.find(channel) == pool_channel.end())
+	{
+		std::cerr<<RED<<"Error user_in_channel : channel not found"<<RESET<<std::endl;
+		return (0);
+	}
+	int fduser = check_nick_exist(user);
+	if (fduser == 0)
+	{
+		std::cerr<<RED<<"Error check_nick_exist : user not found"<<RESET<<std::endl;
+		return (0);
+	}
+	std::map<int, std::string> clients = pool_channel[channel]->_members;
+	for (std::map<int, std::string>::iterator it = clients.begin(); it != clients.end(); ++it)
+	{
+		if (it->first == fduser)
+			return (1);
+	}
+	return (0);
 }
 
 std::string Server::get_chan_mods(std::string title)

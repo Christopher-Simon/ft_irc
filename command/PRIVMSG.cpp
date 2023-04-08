@@ -13,7 +13,7 @@ void Command::PRIVMSG(std::string cmd, std::vector<std::string> vect, Server &se
 		serv.send_msg(ircrep->ERR_TOOMANYTARGETS(clt, vect[1]), clt.getfd());
 		return ;
 	}
-	if (vect[2].size() == 1)
+	if (vect.size() < 3 || vect[2].size() == 1)
 	{
 		serv.send_msg(ircrep->ERR_NOTEXTTOSEND(clt), clt.getfd());
 		return ;
@@ -47,6 +47,8 @@ void Command::PRIVMSG(std::string cmd, std::vector<std::string> vect, Server &se
 		if (fd == 0)
 			serv.send_msg(ircrep->ERR_NOSUCHNICK(clt), clt.getfd());
 		else
+		{
 			serv.send_msg(receivers, fd);
+		}
 	}
 }

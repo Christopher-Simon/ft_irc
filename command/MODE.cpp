@@ -29,7 +29,7 @@ void Command::MODE(std::string cmd, std::vector<std::string> vect, Server &serv,
 		}
 		if (serv.pool_channel.find(target)->second->_members.find(clt.getfd())->second.find('o', 0) == std::string::npos)
 		{
-			serv.send_msg(ircrep->ERR_CHANOPRIVSNEEDED(clt, target),clt.getfd());
+			serv.send_msg(ircrep->ERR_CHANOPRIVSNEEDED(clt, target),clt.getfd());//TODO Bonne ERREUR ?
 			return;
 		}
 		std::string cmods = "ik";

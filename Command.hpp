@@ -34,6 +34,8 @@ public:
 	//void INVITE(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 	void PRIVMSG(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 	void NAMES(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
+	void KICK(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
+	void Command::BAN(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 };
 
 void print_vect(std::vector<std::string> vect);
@@ -52,9 +54,11 @@ std::vector<std::string> ft_split(std::string &msg, char sep);
 // reste a faire :
 
 // mode operator channel
+	// OPER
 	// KICK
-	// BAN
-	// UNBAN
+	// BAN mode +b
+	// UNBAN mode -b
+	// SVSNICK
 
 // mode operator serv
 	//kill(pt)

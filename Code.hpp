@@ -5,6 +5,7 @@
 #include "Client.hpp"
 
 class Server;
+class Channel;
 class Client;
 
 class Code
@@ -111,8 +112,8 @@ public:
 	std::string	ERR_CANNOTSENDTOCHAN(Client &clt, std::string channel);
 	std::string	ERR_NOTEXTTOSEND(Client &clt);
 	std::string ERR_INVALIDCHANNELNAME(Client &clt, std::string name);
+	std::string ERR_USERNOTINCHANNEL(Client &clt, std::string target, std::string channel);
 	std::string ERR_NOORIGIN(Client &clt);
-
 	
 	// std::string ERR_NOMOTD(std::string, Client &);
 	// std::string ERR_ERRONEUSNICKNAME(std::string, Client &);
