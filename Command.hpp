@@ -35,7 +35,6 @@ public:
 	void PRIVMSG(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 	void NAMES(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 	void KICK(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
-	void Command::BAN(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 };
 
 void print_vect(std::vector<std::string> vect);
