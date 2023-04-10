@@ -17,8 +17,18 @@ void Command::KILL(std::string cmd, std::vector<std::string> vect, Server &serv,
 		serv.send_msg(ircrep->ERR_NOSUCHNICK(clt),clt.getfd());
 	else
 	{
-		std::string kill_msg = "KILL from " + clt.get_nick() + "!" + clt._username + "@" + clt._hotsname + " (" + vect[2] + ")";
+		std::string kill_msg = "KILL from " + clt.get_nick() + "!" + clt._username + "@" + clt._hotsname;
 		serv.send_msg(kill_msg, serv.check_nick_exist(vect[1]));
-
+		//sending quit notifications
+		Client *target = serv.pool_client[serv.check_nick_exist(vect[1])];
+		std::vector<Channel *> list_channel = target->get_his_channels(serv);
+		std::string quit_msg  = ":" + target->get_nick() + "!" + target->_username + "@" + target->_hotsname + " QUIT :Killed (" + clt.get_nick() +" (" + vect[2].substr(1, vect[2].size()) + "))";
+		for (size_t i = 0; i < list_channel.size(); i++)
+		{
+			serv.send_channel_msg(quit_msg, list_channel[i]->_name, 0);
+		}
+		std::string error_msg = "ERROR:Closing Link:" + target->_username + target->_hotsname;
+		serv.send_msg(error_msg, target->getfd());
+		serv.del_client(target->getfd());
 	}
 }

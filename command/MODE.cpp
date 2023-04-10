@@ -35,7 +35,7 @@ void Command::MODE(std::string cmd, std::vector<std::string> vect, Server &serv,
 		}
 		else if (vect.size() == 3)
 		{
-			if (vect[2] != "+o" && vect[2] != "-o")
+			if (vect[2] != "+i" && vect[2] != "-i")
 				serv.send_msg(ircrep->ERR_UNKNOWNMODE(clt, target),clt.getfd());
 			else if (vect[2][0] == '+')
 				serv.get_chan(target)->_members.find(clt.getfd())->second = "i";

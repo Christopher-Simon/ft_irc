@@ -23,7 +23,7 @@ public:
 	std::string RPL_ISUPPORT(Client &clt);
 	std::string RPL_UMODEIS(Client &clt);
 	std::string RPL_LISTSTART(Client &clt);
-	std::string RPL_LIST(Client &clt, std::string name, int nb);
+	std::string RPL_LIST(Client &clt, std::string name, int nb, std::string);
 	std::string RPL_LISTEND(Client &clt);
 	std::string RPL_CHANNELMODEIS(Client &clt, std::string title, std::string mods);
 	std::string RPL_INVITING(Client &clt, std::string title);

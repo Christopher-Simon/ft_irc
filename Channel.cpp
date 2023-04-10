@@ -13,20 +13,20 @@ Channel::~Channel()
 Channel::Channel(std::string name)
 {
 	_name = name;
-	_iskey = 0;
+	//_iskey = 0;
 	nb_memb = 1;
 	_topic = "";
 }
 
-Channel::Channel(std::string name, std::string key)
-{
-	_name = name;
-	_key = key;
-	_iskey = 1;
-	nb_memb = 1;
-	_channel_mods = "k";
-	_topic = "";
-}
+// Channel::Channel(std::string name, std::string key)
+// {
+// 	_name = name;
+// 	//_key = key;
+// 	//_iskey = 1;
+// 	nb_memb = 1;
+// 	_channel_mods = "k";
+// 	_topic = "";
+// }
 
 void Channel::remove_memb(int fd, Server &serv)
 {

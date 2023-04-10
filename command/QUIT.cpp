@@ -12,4 +12,5 @@ void Command::QUIT(std::string cmd, std::vector<std::string> vect, Server &serv,
 	{
 		serv.send_channel_msg(reply, list_channel[i]->_name, 0);
 	}
+	cmd.empty();
 }
