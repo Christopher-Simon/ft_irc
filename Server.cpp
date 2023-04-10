@@ -35,6 +35,7 @@ Server::~Server()
 	for (it = pool_client.begin(); it != pool_client.end(); ++it)
 		delete it->second;
 	mapChannel::iterator it2;
+	delete jo;
 	for (it2 = pool_channel.begin(); it2 != pool_channel.end(); ++it2)
 		delete it2->second;
 }
@@ -249,6 +250,7 @@ void Server::send_msg(std::string msg2, int fd)
 	if (i == 0 || i >= 2)
 		std::cerr << RED << "\\r\\n " << i << " times  in : " << msg << RESET << std::endl;
 	std::cout << "message sent to : " << pool_client[fd]->_nickname << " [" << fd << "]" << std::endl;
+	std::cout<<msg2<<std::endl;
 	if (send(fd,msg.c_str(), msg.size(), 0) == -1)
 		throw (std::runtime_error("send fail"));
 }

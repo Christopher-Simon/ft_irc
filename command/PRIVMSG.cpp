@@ -26,6 +26,11 @@ void Command::PRIVMSG(std::string cmd, std::vector<std::string> vect, Server &se
 				else
 					serv.send_channel_msg(receivers, list_target[i], clt.getfd());
 			}
+			else if (list_target[i] == "BOT")
+			{
+				std::string reply = ":BOT!BOT@BOT PRIVMSG " + clt.get_nick() + ":" + serv.jo->welcome_msg;
+				serv.send_msg(reply, clt.getfd());
+			}
 			else
 			{
 				int fd = serv.check_nick_exist(list_target[i]);
