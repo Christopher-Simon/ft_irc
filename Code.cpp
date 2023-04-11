@@ -110,7 +110,7 @@ std::string Code::RPL_ENDOFNAMES(Client &clt, std::string title)
 //a reprendre 
 std::string Code::RPL_UMODEIS(Client &clt)
 {
-	std::string op = " :Your host is ..., running version";
+	//std::string op = " :Your host is ..., running version";
 	std::string sign = " +";
 	std::cout<<"mode user : "<<clt._mods<<std::endl;
 	return (Base(clt, "221") + clt.get_nick() + sign + clt._mods);
@@ -136,7 +136,7 @@ std::string Code::RPL_MYINFO(Client &clt)
 std::string Code::RPL_ISUPPORT(Client &clt)
 {
 	std::string space = " ";
-	std::string op = "MODES=4";
+	std::string op = "PREFIX=(o)@ MODES=2 CHANLIMIT=#:10 NICKLEN=30 TOPICLEN=390 MAXTARGETS=20 :are supported by this server";
 	std::cout<<Base(clt, "005")+ clt.get_nick() +space+ op<<std::endl;
 	return (Base(clt, "005")+ clt.get_nick() +space+ op);
 }
