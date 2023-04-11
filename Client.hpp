@@ -42,8 +42,8 @@ public:
 	std::vector<Channel *> get_his_channels(Server &serv);
 
 	void check_registered(Server &, Command &);
-	void add_mod(char);
-	void rem_mod(char);
+	void add_mod(std::string);
+	void rem_mod(std::string);
 
 //modes
 // USER MODES :

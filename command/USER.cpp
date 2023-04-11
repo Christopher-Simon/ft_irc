@@ -16,10 +16,8 @@ void Command::USER(std::string cmd, std::vector<std::string> vect, Server &serv,
 	clt._hotsname = vect[2];
 	clt._servername = vect[3];
 	clt._realname = vect[4].substr(1, vect[4].length());
-	if (clt._identified == 2)
-	{
+	if (clt._identified == 2 || clt._identified == 1)
 		clt._identified++;
-		clt.check_registered(serv, *this);
-	}
+	clt.check_registered(serv, *this);
 	cmd.empty();
 }

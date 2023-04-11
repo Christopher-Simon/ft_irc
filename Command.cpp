@@ -34,7 +34,7 @@ void Command::exec(std::string &msg, Server &serv, Client &clt)
 {
 	//aucune gestion des prefix pour le moment
 	//integrer les commandes d'identification dans ce process
-	//std::cout<<"MESSAGE RECU"<<std::endl<<msg<<std::endl;
+	std::cout<<"MESSAGE RECU"<<std::endl<<msg<<std::endl;
 	size_t index = 0;
 	while(index != std::string::npos)
 	{

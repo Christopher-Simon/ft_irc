@@ -57,8 +57,6 @@ void Client::check_registered(Server &serv, Command &cmd)
 	serv.send_msg(cmd.ircrep->RPL_CREATED(*this), _fd);
 	serv.send_msg(cmd.ircrep->RPL_MYINFO(*this), _fd);
 	serv.send_msg(cmd.ircrep->RPL_ISUPPORT(*this), _fd);
-	// if (serv.pool_client.size() == 1)
-	// 	add_mod('o');
 }
 
 bool Client::get_status()
@@ -71,19 +69,23 @@ std::string Client::get_nick()
 	return (this->_nickname);
 }
 
-void Client::add_mod(char c)
+void Client::add_mod(std::string c)
 {
-	if (_mods.find(c) != std::string::npos)
-		return;
-	_mods = _mods + c;
+	for (int i = 0; i < c.size(); i++)
+	{
+		if (c[i] != 'o' && _mods.find(c[i]) == std::string::npos)
+			_mods = _mods + c[i];
+	}
 	return;
 }
 
-void Client::rem_mod(char c)
+void Client::rem_mod(std::string c)
 {
-	if (_mods.find(c) == std::string::npos)
-		return;
-	_mods.erase(_mods.find(c), 1);
+	for (int i = 0; i < c.size(); i++)
+	{
+		if (_mods.find(c[i]) != std::string::npos)
+			_mods.erase(_mods.find(c[i]), 1);
+	}
 	return; 
 }
 

@@ -75,8 +75,6 @@ int Bot::add_piece(Client &clt, int pos, char car, Server &serv)
 
 int Bot::check_victory(char car, Client &clt)
 {
-    // if (c<7)
-    //     return 0;
     //Colonnes;
     for (int j=0; j<7; j++)
     {
@@ -142,9 +140,7 @@ int Bot::possibilites(int p, Client &clt)
     while (i >= 0 && (memory[clt.getfd()][i][p]=='X' || memory[clt.getfd()][i][p]=='O'))
         i--;
     if (i<0)
-    {
         return 0;
-    }
     //Colonnes
     int compteur_colonne = 1;
     int intermed=i+1;
@@ -160,7 +156,6 @@ int Bot::possibilites(int p, Client &clt)
         compteur_colonne++;
         intermed++;
     }
-    
     //Lignes
     int compteur_ligne=1;
     int compteur_ligne_left = 1;
@@ -177,7 +172,6 @@ int Bot::possibilites(int p, Client &clt)
         compteur_ligne_left++;
         intermed--;
     }
-    
     int compteur_ligne_right = 1;
     intermed=p+1;
     char controller_right='d';
@@ -197,12 +191,10 @@ int Bot::possibilites(int p, Client &clt)
     else
         (compteur_ligne_left>compteur_ligne_right)?(compteur_ligne=compteur_ligne_left):(compteur_ligne=compteur_ligne_right);
     int compteur_col_ligne=(compteur_ligne>compteur_colonne)?compteur_ligne:compteur_colonne;
-    
     //Diagonales
     int compteur_diag=1;
     int compteur_diag_droit=1;
     int compteur_diag_gauche=1;
-    
     //Diagonale gauche haute
     int compteur_diag_left_haut=1;
     int intermed_col=p-1;
@@ -239,7 +231,6 @@ int Bot::possibilites(int p, Client &clt)
         intermed_col--;
         intermed_ligne++;
     }
-    
     //Diagonale droite haute
     int compteur_diag_right_haut=1;
     intermed_col=p+1;
@@ -258,7 +249,6 @@ int Bot::possibilites(int p, Client &clt)
         intermed_col++;
         intermed_ligne--;
     }
-    
     //Diagonale droite basse
     int compteur_diag_right_bas=1;
     intermed_col=p+1;
@@ -277,12 +267,10 @@ int Bot::possibilites(int p, Client &clt)
         intermed_col++;
         intermed_ligne++;
     }
-    
     if (controller_right_bas==controller_left_haut)
         compteur_diag_gauche=compteur_diag_left_haut+compteur_diag_right_bas-1;
     else
         (compteur_diag_left_haut>compteur_diag_right_bas)?(compteur_diag_gauche=compteur_diag_left_haut):(compteur_diag_gauche=compteur_diag_right_bas);
-    
     if (controller_right_haut==controller_left_bas)
         compteur_diag_droit=compteur_diag_left_bas+compteur_diag_right_haut-1;
     else
@@ -293,13 +281,13 @@ int Bot::possibilites(int p, Client &clt)
 
 static double nb_aleatoire(void)
 {
-    return rand() / (RAND_MAX + 1.);
+	return rand() / (RAND_MAX + 1.);
 }
 
 
 static int nb_aleatoire_entre(int min, int max)
 {
-    return nb_aleatoire() * (max - min + 1) + min;
+	return nb_aleatoire() * (max - min + 1) + min;
 }
 
 int Bot::meilleur_coup(Client &clt)
@@ -308,7 +296,7 @@ int Bot::meilleur_coup(Client &clt)
     int max=0;
     for (int i=0;i<7;i++)
     {
-        score[i]=possibilites(i+1, clt);
+		score[i]=possibilites(i+1, clt);
 		if (score[i] > max)
 			max = score[i];
     }
@@ -361,5 +349,10 @@ void Bot::handler(Client &clt, Server &serv, std::string msg)
 			memory.erase(clt.getfd());
 			return;
 		}
+	}
+	else if (memory.find(clt.getfd()) != memory.end() && msg == "abandon")
+	{
+		print_msg(clt, serv, "You abandoned this game");
+		memory.erase(clt.getfd());
 	}
 }

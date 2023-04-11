@@ -261,7 +261,6 @@ void Server::print_client()
 	std::cout<<"Nb de client enregistre:"<<pool_client.size()<<std::endl;
 	for (std::map<int, Client *>::iterator ok = pool_client.begin();ok != pool_client.end();ok++)
 	{
-		// ok->second->getfd()
 		std::cout << "Client sur fd " << ok->second->getfd() << std::endl;
 	}
 	std::cout<<"----------------"<<std::endl;
@@ -272,6 +271,8 @@ int Server::check_nick_exist(std::string nick)
 	mapClient::iterator it;
 	std::string ptl_nick = nick;
 	std::transform(ptl_nick.begin(), ptl_nick.end(), ptl_nick.begin(), ::toupper);
+	if (ptl_nick == "BOT")
+		return (-1);
 	for (it = pool_client.begin(); it != pool_client.end(); ++it)
 	{
 		if (ptl_nick == it->second->_intern_nick && pool_client[it->second->getfd()]->_identified == 3)

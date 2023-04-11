@@ -1,5 +1,7 @@
 #include "Command.hpp"
 
+
+//ajout de l'option pour cacher le channel avec +i
 void Command::LIST(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt)
 {
 	if (clt._identified < 3)
