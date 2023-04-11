@@ -22,8 +22,9 @@ void Command::INVITE(std::string cmd, std::vector<std::string> vect, Server &ser
 	{
 		int fd_receiver = serv.check_nick_exist(vect[1]);
 		serv.send_msg(ircrep->RPL_INVITING(clt, vect[2]), clt.getfd());
+		if (serv.get_chan(vect[2])->invited_clients.find(vect[1]) == serv.get_chan(vect[2])->invited_clients.end())
+			serv.get_chan(vect[2])->invited_clients[vect[1]] = &clt;
 		std::string reply = ":" + clt.get_nick() + "!" + clt._username + "@" + serv.pool_client[fd_receiver]->_servername + " INVITE " + serv.pool_client[fd_receiver]->get_nick() + " " + vect[2];
-		std::cout << reply<< std::endl;
 		serv.send_msg(reply, fd_receiver);
 	}
 }

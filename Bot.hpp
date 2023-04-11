@@ -24,6 +24,7 @@ public :
 	int check_victory(char, Client &);
 	int meilleur_coup(Client &clt);
 	int possibilites(int, Client &clt);
+	int check_full(Client &clt);
 };
 
 #endif

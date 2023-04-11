@@ -9,6 +9,7 @@ Client::Client()
 Client::Client(Server &serv, int opt):_buffer()
 {
 	this->_fd = 0;
+	//countdown_unregister = 0;
 	if (makeSocketNonBlocking(0) == -1)
 		throw (std::runtime_error("fcntl failed"));
 	serv._event.events = EPOLLIN | EPOLLET;
@@ -52,6 +53,15 @@ void Client::check_registered(Server &serv, Command &cmd)
 {
 	if (_identified != 3)
 		return;
+	int nb_reg = 0;
+	for (size_t i = 0; i < serv.pool_client.size(); i++)
+	{
+		if (serv.pool_client[i]->_identified >= 3)
+			nb_reg++;
+	}
+	if (nb_reg > 20)
+		return;
+	//countdown_unregister = 0;
 	serv.send_msg(cmd.ircrep->RPL_WELCOME(*this), _fd);
 	serv.send_msg(cmd.ircrep->RPL_YOURHOST(*this), _fd);
 	serv.send_msg(cmd.ircrep->RPL_CREATED(*this), _fd);
@@ -71,7 +81,7 @@ std::string Client::get_nick()
 
 void Client::add_mod(std::string c)
 {
-	for (int i = 0; i < c.size(); i++)
+	for (size_t i = 0; i < c.size(); i++)
 	{
 		if (c[i] != 'o' && _mods.find(c[i]) == std::string::npos)
 			_mods = _mods + c[i];
@@ -81,7 +91,7 @@ void Client::add_mod(std::string c)
 
 void Client::rem_mod(std::string c)
 {
-	for (int i = 0; i < c.size(); i++)
+	for (size_t i = 0; i < c.size(); i++)
 	{
 		if (_mods.find(c[i]) != std::string::npos)
 			_mods.erase(_mods.find(c[i]), 1);

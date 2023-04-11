@@ -321,6 +321,19 @@ int Bot::meilleur_coup(Client &clt)
     return possib[nb_aleatoire_entre(0,n-1)];
 }
 
+int Bot::check_full(Client &clt)
+{
+	for (int i = 0; i <= 5; i++)
+	{
+		for (int j = 0; j < 7; j++)
+		{
+			if (memory[clt.getfd()][i][j] == ' ')
+				return 0;
+		}
+	}
+	return 1;
+}
+
 void Bot::handler(Client &clt, Server &serv, std::string msg)
 {
 	if ((msg == ":play" || msg == ":new game") && memory.find(clt.getfd()) == memory.end())
@@ -340,12 +353,24 @@ void Bot::handler(Client &clt, Server &serv, std::string msg)
 			memory.erase(clt.getfd());
 			return;
 		}
+		if (check_full(clt) == 1)
+		{
+			print_msg(clt, serv, "Match nul");
+			memory.erase(clt.getfd());
+			return;
+		}
 		if (add_piece(clt, meilleur_coup(clt) - 1, 'O', serv) == -1)
 			return;
 		print_board(clt, serv);
 		if (check_victory('O', clt)== 1)
 		{
 			print_msg(clt, serv, "Victoire de l'ordi");
+			memory.erase(clt.getfd());
+			return;
+		}
+		if (check_full(clt) == 1)
+		{
+			print_msg(clt, serv, "Match nul");
 			memory.erase(clt.getfd());
 			return;
 		}

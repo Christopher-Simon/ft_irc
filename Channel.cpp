@@ -52,10 +52,15 @@ void Channel::rem_mod(char c)
 	return; 
 }
 
-void Channel::add_member(int fd)
+void Channel::add_member(int fd, Server &serv, Command &cmd)
 {
 	if (_members.find(fd) != _members.end())
 		return;
+	if (serv.pool_client[fd]->get_his_channels(serv).size() >= 10)
+	{
+		serv.send_msg(cmd.ircrep->ERR_TOOMANYCHANNELS(*serv.pool_client[fd], _name), fd);
+		return;
+	}
 	_members[fd] = "";
 	nb_memb++;
 }

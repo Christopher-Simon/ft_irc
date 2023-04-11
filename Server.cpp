@@ -285,6 +285,16 @@ int Server::channel_exist(std::string title)
 {
 	if (pool_channel.find(title) != pool_channel.end())
 		return 1;
+	std::string ptl_name;
+	std::transform(ptl_name.begin(), ptl_name.end(), ptl_name.begin(), ::toupper);
+	mapChannel::iterator it;
+	for (it = pool_channel.begin(); it != pool_channel.end(); it++)
+	{
+		std::string name = it->first;
+		std::transform(name.begin(), name.end(), name.begin(), ::toupper);
+		if (ptl_name == name)
+			return 1;
+	}
 	return 0;
 }
 

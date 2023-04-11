@@ -27,14 +27,14 @@ std::string Code::RPL_WELCOME(Client &clt)
 
 std::string Code::RPL_YOURHOST(Client &clt)
 {
-	std::string op = " :Your host is ..., running version";
+	std::string op = " :Your host is CHSIMON, running the homemade version";
 	std::cout<<Base(clt, "002") + clt.get_nick() + op<<std::endl;
 	return (Base(clt, "002") + clt.get_nick() + op);
 }
 
 std::string Code::RPL_CREATED(Client &clt)
 {
-	std::string op = " :Your host is ..., running version";
+	std::string op = " :Supported commands : INVITE - JOIN - KICK - KILL - LIST - MODE - NAMES - NICK - NOTICE - OPER - PART - PASS - PING - PRIVMSG - QUIT - TOPIC - USER";
 	std::cout<<Base(clt, "003") + clt.get_nick() + op<<std::endl;
 	return (Base(clt, "003") + clt.get_nick() + op);
 }
@@ -107,10 +107,8 @@ std::string Code::RPL_ENDOFNAMES(Client &clt, std::string title)
 	return (Base(clt, "366") + clt.get_nick() + " " + title + op);
 }
 
-//a reprendre 
 std::string Code::RPL_UMODEIS(Client &clt)
 {
-	//std::string op = " :Your host is ..., running version";
 	std::string sign = " +";
 	std::cout<<"mode user : "<<clt._mods<<std::endl;
 	return (Base(clt, "221") + clt.get_nick() + sign + clt._mods);
@@ -128,15 +126,15 @@ std::string Code::RPL_CHANNELMODEIS(Client &clt, std::string title, std::string 
 std::string Code::RPL_MYINFO(Client &clt)
 {
 	std::string space = " ";
-	std::string op = "IRC_perso_maggle";
+	std::string op = "^^^^^^^^^^^^^^^^^^THIS IS THE IRC^^^^^^^^^^^^^^^^^^^^^^";
 	std::cout<<Base(clt, "004")+ clt.get_nick() +space+ clt._servername +space+ op<<std::endl;
-	return (Base(clt, "004")+ clt.get_nick() +space+ clt._servername +space+ op);
+	return (Base(clt, "004")+ clt.get_nick() +space+ op);
 }
 
 std::string Code::RPL_ISUPPORT(Client &clt)
 {
 	std::string space = " ";
-	std::string op = "PREFIX=(o)@ MODES=2 CHANLIMIT=#:10 NICKLEN=30 TOPICLEN=390 MAXTARGETS=20 :are supported by this server";
+	std::string op = "PREFIX=(o)@ MODES=2 CHANLIMIT=#:10 MAXTARGETS=20 :are supported by this server";
 	std::cout<<Base(clt, "005")+ clt.get_nick() +space+ op<<std::endl;
 	return (Base(clt, "005")+ clt.get_nick() +space+ op);
 }
@@ -221,9 +219,14 @@ std::string Code::ERR_INVALIDCHANNELNAME(Client &clt, std::string name)
 
 std::string Code::ERR_USERONCHANNEL(Client &clt, std::string name)
 {
-	std::string space = " ";
 	std::string reply = " :is already on channel";
-	return (Base(clt, "443") + space + clt._nickname +space + name+ reply);
+	return (Base(clt, "443") + " " + clt._nickname + " " + name+ reply);
+}
+
+std::string Code::ERR_INVITEONLYCHAN(Client &clt, std::string name)
+{
+	std::string reply = " :Cannot join channel (+i)";
+	return (Base(clt, "473") + " " + clt._nickname + " " + name+ reply);
 }
 
 std::string Code::ERR_NOSUCHNICK(Client &clt)
@@ -283,6 +286,12 @@ std::string Code::ERR_BADCHANNELKEY(Client &clt, std::string name)
 std::string Code::ERR_NOPRIVILEGES(Client &clt)
 {
 	return (Base(clt, "481") + " "+ clt.get_nick() + " :Permission Denied- You're not an IRC operator");
+}
+
+
+std::string Code::ERR_TOOMANYCHANNELS(Client &clt, std::string titlechan)
+{
+	return (Base(clt, "405") + " "+ clt.get_nick() +" " + titlechan + " :You have joined too many channels");
 }
 
 std::string Code::ERR_UNKNOWNMODE(Client &clt, std::string mods)

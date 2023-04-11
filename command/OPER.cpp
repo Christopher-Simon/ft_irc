@@ -18,7 +18,7 @@ void Command::OPER(std::string cmd, std::vector<std::string> vect, Server &serv,
 	else
 	{
 		if (serv.pool_client[serv.check_nick_exist(vect[1])]->_mods.find('o') == std::string::npos)
-			serv.pool_client[serv.check_nick_exist(vect[1])]->add_mod('o');
+			serv.pool_client[serv.check_nick_exist(vect[1])]->add_mod("o");
 		serv.send_msg(ircrep->RPL_YOUREOPER(*serv.pool_client[serv.check_nick_exist(vect[1])]), serv.check_nick_exist(vect[1]));
 		serv.send_msg(ircrep->RPL_UMODEIS(*serv.pool_client[serv.check_nick_exist(vect[1])]), serv.check_nick_exist(vect[1]));
 	}
