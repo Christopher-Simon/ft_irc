@@ -50,19 +50,19 @@ class Server
 		int chan_has_mod(std::string, char);
 		std::string get_userinchan_mods(std::string, Client &);
 		void check_channels();
+		void check_clients();
 
 		void print_status();
 
-		struct epoll_event	_event;
-		struct epoll_event	_events[MAX_EVENTS];
-		struct sockaddr_in	_address;
-		int					_addrlen;
-		mapClient			pool_client;
-		mapChannel			pool_channel;
-		std::string			password;
-		std::vector<std::pair <int, std::string > > msg_list;
-		std::map<int, std::string> msg_map;
-		Bot *jo;
+		struct epoll_event			_event;
+		struct epoll_event			_events[MAX_EVENTS];
+		struct sockaddr_in			_address;
+		int							_addrlen;
+		mapClient					pool_client;
+		mapChannel					pool_channel;
+		std::string					password;
+		std::map<int, std::string>	msg_map;
+		Bot 						*jo;
 	private:
 		//std::vector<int>	client;
 		//std::map<int, Client> client;

@@ -29,10 +29,10 @@ public:
 	bool		epollout;
 	int     _identified;
 	int _pass_ok;
+	int _todel;
 	//int countdown_unregister;
 	
 	Client();
-	Client(Server &serv, int);
 	Client(int fd); // createur avec std map en parametre pour surveiller les nickname des autres clients
 	~Client();
 

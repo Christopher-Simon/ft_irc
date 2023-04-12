@@ -65,7 +65,7 @@ int Bot::add_piece(Client &clt, int pos, char car, Server &serv)
 		h--;
 	if (h < 0)
 	{
-		print_msg(clt, serv, "Colomn already full");
+		print_msg(clt, serv, "Column already full");
 		return -1;
 	}
 	else

@@ -17,7 +17,7 @@ void Command::NOTICE(std::string cmd, std::vector<std::string> vect, Server &ser
 		for (size_t i = 0; i < list_target.size(); i++)
 		{
 			reply = identifier + " NOTICE " + list_target[i] + " " + vect[2];
-			if (list_target[i][0] == '#' && serv.channel_exist(list_target[i]))
+			if (list_target[i][0] == '#' && serv.channel_exist(list_target[i]) && serv.client_in_channel(list_target[i], clt)== 1)
 				serv.send_channel_msg(reply, list_target[i], clt.getfd());
 			else if (serv.check_nick_exist(list_target[i]) != 0)
 			{

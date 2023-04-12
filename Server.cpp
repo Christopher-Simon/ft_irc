@@ -10,12 +10,28 @@ int makeSocketNonBlocking(int sfd)
 	return 0;
 }
 
-Server::Server()
+Server::Server():
+_event(),
+_events(),
+_address(),
+_addrlen(),
+pool_client(),
+pool_channel(),
+password(),
+msg_map()
 {
 	throw (std::invalid_argument("Invalid argument"));
 }
 
-Server::Server(char *port)
+Server::Server(char *port):
+_event(),
+_events(),
+_address(),
+_addrlen(),
+pool_client(),
+pool_channel(),
+password(),
+msg_map()
 {
 	initSocket(port);
 }
@@ -128,6 +144,11 @@ void	Server::add_client()
 	int newFd = accept(_sockfd, (struct sockaddr *)&_address, (socklen_t *)&_addrlen);
 	if (newFd < 0)
 		throw (std::runtime_error("Socket listen failed"));
+	if (pool_client.size() >= 50)
+	{
+		close(newFd);
+		std::cerr << "Too many clients" << std::endl;
+	}
 	std::cout << GREEN << "Client accepted successful : FD = " << newFd<< RESET << std::endl;
 	if (makeSocketNonBlocking(newFd) == -1)
 	{
@@ -343,10 +364,8 @@ int	Server::user_in_channel(std::string channel, std::string user)
 	}
 	std::map<int, std::string> clients = pool_channel[channel]->_members;
 	for (std::map<int, std::string>::iterator it = clients.begin(); it != clients.end(); ++it)
-	{
 		if (it->first == fduser)
 			return (1);
-	}
 	return (0);
 }
 
@@ -385,6 +404,10 @@ void Server::print_status()
 			std::map<int, std::string>::iterator it3;
 			for (it3 = it2->second->_members.begin(); it3 != it2->second->_members.end(); ++it3)
 				std::cout<<"|			> "<<pool_client[it3->first]->get_nick()<<" = "<< it3->second<<std::endl;
+			std::cout<<"| liste d'attente : "<<std::endl;
+			std::map<int, Client *>::iterator it4;
+			for (it4 = it2->second->invited_clients.begin(); it4 != it2->second->invited_clients.end(); ++it4)
+				std::cout<<"|			x "<<it4->second->get_nick()<<std::endl;
 		}
 	}
 	std::cout<<"--------------------------------------"<<std::endl;
@@ -419,4 +442,20 @@ void Server::check_channels()
 	}
 	if (at_start != pool_channel.size())
 		check_channels();
+}
+
+void Server::check_clients()
+{
+	size_t at_start = pool_client.size();
+	mapClient::iterator it;
+	for (it = pool_client.begin(); it != pool_client.end(); ++it)
+	{
+		if (it->second->_todel == 1)
+		{
+			del_client(it->first);
+			break;
+		}
+	}
+	if (at_start != pool_client.size())
+		check_clients();
 }

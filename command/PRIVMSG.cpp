@@ -5,11 +5,11 @@ void Command::PRIVMSG(std::string cmd, std::vector<std::string> vect, Server &se
 	(void)cmd;
 	if (clt._identified < 3)
 		serv.send_msg(ircrep->ERR_NOTREGISTERED(clt),clt.getfd());
-	if (vect.size() > 3)
+	else if (vect.size() > 3)
 		serv.send_msg(ircrep->ERR_TOOMANYTARGETS(clt, vect[1]), clt.getfd());
-	if (vect.size() < 3)
+	else if (vect.size() < 3)
 		serv.send_msg(ircrep->ERR_NEEDMOREPARAMS(cmd, clt),clt.getfd());
-	if (vect[2].size() == 1)
+	else if (vect[2].size() == 1)
 		serv.send_msg(ircrep->ERR_NOTEXTTOSEND(clt), clt.getfd());
 	else
 	{
@@ -22,6 +22,8 @@ void Command::PRIVMSG(std::string cmd, std::vector<std::string> vect, Server &se
 			{
 				if (!serv.channel_exist(list_target[i]))
 					serv.send_msg(ircrep->ERR_NOSUCHCHANNEL(clt, list_target[i]), clt.getfd());
+				else if (!serv.client_in_channel(list_target[i], clt))
+					serv.send_msg(ircrep->ERR_CANNOTSENDTOCHAN(clt, list_target[i]), clt.getfd());
 				else
 					serv.send_channel_msg(receivers, list_target[i], clt.getfd());
 			}

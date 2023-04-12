@@ -1,26 +1,25 @@
 #include "Client.hpp"
 
-Client::Client()
+Client::Client():epollout(false)
 {
 	_fd = -1;
 	_identified = 0;
 }
 
-Client::Client(Server &serv, int opt):_buffer()
-{
-	this->_fd = 0;
-	//countdown_unregister = 0;
-	if (makeSocketNonBlocking(0) == -1)
-		throw (std::runtime_error("fcntl failed"));
-	serv._event.events = EPOLLIN | EPOLLET;
-	serv._event.data.fd = 0;
-	if (epoll_ctl(serv.get_epollfd(), EPOLL_CTL_ADD, 0, &serv._event)==-1)
-		throw (std::runtime_error("epoll fail"));
-	_identified = opt;
-	_pass_ok = 0;
-}
-
-Client::Client(int fd): _fd(fd), _identified(0)
+Client::Client(int fd):
+_fd(fd),
+_buffer(),
+_nickname(),
+_intern_nick(),
+_username(),
+_hotsname(),
+_servername(),
+_realname(),
+_mods(),
+epollout(false),
+_identified(0),
+_pass_ok(),
+_todel(0)
 {
 }
 

@@ -20,7 +20,7 @@ void Command::PART(std::string cmd, std::vector<std::string> vect, Server &serv,
 			else
 			{
 				serv.pool_channel.find(list_channel[i])->second->remove_memb(clt.getfd(), serv);
-				serv.send_msg(":" + clt.get_nick() + "!" + clt.get_nick() + "@" + clt._servername + " PART " + list_channel[i], clt.getfd());
+				serv.send_msg(":" + clt.get_nick() + "!" + clt._username + "@" + clt._hotsname + " PART " + list_channel[i], clt.getfd());
 			}
 		}
 	}

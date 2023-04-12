@@ -33,6 +33,8 @@ void Command::JOIN(std::string cmd, std::vector<std::string> vect, Server &serv,
 		{
 			if (list_channel[i][0] != '#' || list_channel[i].find_first_of(" \a,") != std::string::npos)
 				serv.send_msg(ircrep->ERR_INVALIDCHANNELNAME(clt, list_channel[i]),clt.getfd());
+			else if (serv.pool_client[clt.getfd()]->get_his_channels(serv).size() >= 10)
+				serv.send_msg(ircrep->ERR_TOOMANYCHANNELS(*serv.pool_client[clt.getfd()], list_channel[i]), clt.getfd());
 			else
 			{
 				serv.pool_channel[list_channel[i]] = new Channel(list_channel[i]);

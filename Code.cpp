@@ -13,9 +13,8 @@ Code::~Code()
 
 std::string Code::Base(Client &clt, std::string nb)
 {
-	std::string sep = ":";
 	std::string space = " ";
-	return (sep + clt._servername + space + nb + space);
+	return (":" + clt.get_nick() + "!" + clt._username + "@"+ clt._hotsname + space + nb + space);
 }
 
 std::string Code::RPL_WELCOME(Client &clt)
@@ -152,126 +151,116 @@ std::string Code::ERR_UNKNOWNCOMMAND(std::string cmd, Client &clt)
 
 std::string Code::ERR_NONICKNAMEGIVEN(Client &clt)
 {
-	return (Base(clt, "431") + " " + clt._nickname + " :No nickname given");
+	return (Base(clt, "431") + clt._nickname + " :No nickname given");
 }
 
 std::string Code::ERR_NICKNAMEINUSE(std::string &nick, Client &clt)
 {
 	std::string reply = " :Nickname is already in use";
-	return (Base(clt, "433") + " * " + nick + reply);
+	return (Base(clt, "433") + "* " + nick + reply);
 }
 
 std::string Code::ERR_ALREADYREGISTERED(Client &clt)
 {
-	std::string space = " ";
 	std::string reply = " :You may not reregister";
-	return (Base(clt, "462") + space + clt._nickname + reply);
+	return (Base(clt, "462") + clt._nickname + reply);
 }
 
 std::string Code::ERR_NOTREGISTERED(Client &clt)
 {
-	std::string space = " ";
 	std::string reply = " :You have not registered";
-	return (Base(clt, "451") + space + clt._nickname + reply);
+	return (Base(clt, "451") + clt._nickname + reply);
 }
 
 std::string Code::ERR_PASSWDMISMATCH(Client &clt)
 {
-	std::string space = " ";
 	std::string reply = " :Password incorrect";
-	return (Base(clt, "464") + space + clt._nickname + reply);
+	return (Base(clt, "464") + clt._nickname + reply);
 }
 
 std::string Code::ERR_UMODEUNKNOWNFLAG(Client &clt)
 {
-	std::string space = " ";
 	std::string reply = " :Unknown MODE flag";
-	return (Base(clt, "501") + space + clt._nickname + reply);
+	return (Base(clt, "501") + clt._nickname + reply);
 }
 
 std::string Code::ERR_NOORIGIN(Client &clt)
 {
-	std::string space = " ";
 	std::string reply = " :No origin specified";
-	return (Base(clt, "409") + space + clt._nickname + reply);
+	return (Base(clt, "409") + clt._nickname + reply);
 }
 
 //a revoir // envoi a tous les clients ?
 std::string Code::ERR_CHANOPRIVSNEEDED(Client &clt, std::string title)
 {
-	std::string space = " ";
 	std::string reply = " :You're not a channel operator";
-	return (Base(clt, "482") + space + clt._nickname + space + title + reply);
+	return (Base(clt, "482") + clt._nickname + " " + title + reply);
 }
 
 std::string Code::ERR_NOSUCHCHANNEL(Client &clt, std::string name)
 {
-	std::string space = " ";
 	std::string reply = " :No such channel";
-	return (Base(clt, "403") + space + clt._nickname +space + name+ reply);
+	return (Base(clt, "403") + clt._nickname + " "+ name+ reply);
 }
 
 std::string Code::ERR_INVALIDCHANNELNAME(Client &clt, std::string name)
 {
-	std::string space = " ";
 	std::string reply = " :Illegal channel name";
-	return (Base(clt, "479") + space + clt._nickname +space + name+ reply);
+	return (Base(clt, "479") + clt._nickname + " " + name+ reply);
 }
 
 std::string Code::ERR_USERONCHANNEL(Client &clt, std::string name)
 {
 	std::string reply = " :is already on channel";
-	return (Base(clt, "443") + " " + clt._nickname + " " + name+ reply);
+	return (Base(clt, "443") + clt._nickname + " " + name+ reply);
 }
 
 std::string Code::ERR_INVITEONLYCHAN(Client &clt, std::string name)
 {
 	std::string reply = " :Cannot join channel (+i)";
-	return (Base(clt, "473") + " " + clt._nickname + " " + name+ reply);
+	return (Base(clt, "473") + clt._nickname + " " + name+ reply);
 }
 
 std::string Code::ERR_NOSUCHNICK(Client &clt)
 {
-	std::string space = " ";
 	std::string reply = " :No such nick";
-	return (Base(clt, "401") + space + clt._nickname +reply);
+	return (Base(clt, "401") + clt._nickname +reply);
 }
 
 std::string Code::ERR_NOOPERHOST(Client &clt)
 {
 	std::string reply = " :No O-lines for your host";
-	return (Base(clt, "491") + " " + clt._nickname +reply);
+	return (Base(clt, "491") + clt._nickname +reply);
 }
 
 std::string	Code::ERR_CANNOTSENDTOCHAN(Client &clt, std::string channel)
 {
-	return (Base(clt, "404") + " " + \
+	return (Base(clt, "404") + \
 		clt._nickname + " " + channel + " :Cannot send to channel");
 }
 
 std::string	Code::ERR_TOOMANYTARGETS(Client &clt, std::string channel)
 {
-	return (Base(clt, "407") + " " + \
+	return (Base(clt, "407") + \
 		clt._nickname + " " + channel + " :Too many targets");
 }
 
 std::string	Code::ERR_NOTEXTTOSEND(Client &clt)
 {
-	return (Base(clt, "412") + " " + \
+	return (Base(clt, "412") + \
 		clt._nickname + " :No text to send");
 }
 
 
 std::string Code::ERR_NOTONCHANNEL(Client &clt, std::string name)
 {
-	std::string space = " ";
 	std::string reply = " :You're not on that channel";
-	return (Base(clt, "442") + space + clt._nickname +space + name+ reply);
+	return (Base(clt, "442") + clt._nickname + " "+ name+ reply);
 }
  
 std::string Code::ERR_USERNOTINCHANNEL(Client &clt, std::string target, std::string channel)
 {
-	return (Base(clt, "441") + " "  + \
+	return (Base(clt, "441")  + \
 	clt._servername + " " + target + " " + channel +\
 	 " :They aren't on that channel");
 
@@ -279,20 +268,19 @@ std::string Code::ERR_USERNOTINCHANNEL(Client &clt, std::string target, std::str
 
 std::string Code::ERR_BADCHANNELKEY(Client &clt, std::string name)
 {
-	std::string space = " ";
 	std::string reply = " :Cannot join channel (+k)";
-	return (Base(clt, "475") + space + clt.get_nick() +space + name+ reply);
+	return (Base(clt, "475") + clt.get_nick() + " "+ name+ reply);
 }
 
 std::string Code::ERR_NOPRIVILEGES(Client &clt)
 {
-	return (Base(clt, "481") + " "+ clt.get_nick() + " :Permission Denied- You're not an IRC operator");
+	return (Base(clt, "481") + clt.get_nick() + " :Permission Denied- You're not an IRC operator");
 }
 
 
 std::string Code::ERR_TOOMANYCHANNELS(Client &clt, std::string titlechan)
 {
-	return (Base(clt, "405") + " "+ clt.get_nick() +" " + titlechan + " :You have joined too many channels");
+	return (Base(clt, "405") + clt.get_nick() +" " + titlechan + " :You have joined too many channels");
 }
 
 std::string Code::ERR_UNKNOWNMODE(Client &clt, std::string mods)
@@ -302,10 +290,10 @@ std::string Code::ERR_UNKNOWNMODE(Client &clt, std::string mods)
 		mod = mods.substr(1, mods.length());
 	else
 		mod = mods;
-	return (Base(clt, "472") + " " + clt.get_nick() + " " + mod + " :is unknown mode char to me");
+	return (Base(clt, "472") + clt.get_nick() + " " + mod + " :is unknown mode char to me");
 }
 
 std::string Code::ERR_USERSDONTMATCH(Client &clt)
 {
-	return (Base(clt, "502") + " "+ clt.get_nick() + " :Cant change mode for other users");
+	return (Base(clt, "502") + clt.get_nick() + " :Cant change mode for other users");
 }

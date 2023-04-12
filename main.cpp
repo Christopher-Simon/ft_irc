@@ -44,7 +44,7 @@ int	main(int argc, char *argv[])
 		{
 			fdset.clear();
 			std::cout << GREEN << "####### On epoll wait #######" << RESET << std::endl;
-			// serv.print_status();
+			serv.print_status();
 			serv.check_channels(); //A GARDER ? 
 			event_count = epoll_wait(serv.get_epollfd(), serv._events, MAX_EVENTS, 30000);
 			if (event_count == -1)
@@ -70,13 +70,16 @@ int	main(int argc, char *argv[])
 								cmd.exec(serv.pool_client[fd_client]->get_buffer(), serv, *serv.pool_client[fd_client]);
 								for (std::map<int, std::string>::iterator it = serv.msg_map.begin(); it != serv.msg_map.end(); ++it)
 								{
-									if (serv.pool_client.find(it->first) != serv.pool_client.end() && serv.pool_client[it->first]->epollout == false)
+									if (serv.pool_client.empty() == false
+										&& serv.pool_client.find(it->first) != serv.pool_client.end())
 									{
-										tmp_event.events = EPOLLIN | EPOLLOUT;
-										tmp_event.data.fd = it->first;
-										if (epoll_ctl(serv.get_epollfd(), EPOLL_CTL_MOD, it->first, &tmp_event)==-1)
-											throw std::runtime_error("epoll_ctl");
-										serv.pool_client[it->first]->epollout = true;
+										if (serv.pool_client[it->first]->epollout == false){
+											tmp_event.events = EPOLLIN | EPOLLOUT;
+											tmp_event.data.fd = it->first;
+											if (epoll_ctl(serv.get_epollfd(), EPOLL_CTL_MOD, it->first, &tmp_event)==-1)
+												throw std::runtime_error("epoll_ctl");
+											serv.pool_client[it->first]->epollout = true;
+										}
 									} else {
 										std::cout << RED << it->first << " not found in pool_client" << RESET << std::endl;
 										getwchar();
@@ -90,16 +93,17 @@ int	main(int argc, char *argv[])
 									throw std::runtime_error("send");
 								std::cout << "msg sent to" << "[" << fd_client << "]" << " : " << serv.msg_map[fd_client] << std::endl;
 								serv.msg_map.erase(fd_client);
-							}
-							else {
+								tmp_event.events = EPOLLIN;
+								tmp_event.data.fd = fd_client;
+								if (epoll_ctl(serv.get_epollfd(), EPOLL_CTL_MOD, fd_client, &tmp_event) == -1)
+									throw std::runtime_error("epoll_ctl");
+								serv.pool_client[fd_client]->epollout = false;
+								if (serv.pool_client[fd_client]->_todel == true)
+									serv.del_client(fd_client);
+							} else {
 								std::cout << RED << fd_client << " not found in msg_map" << RESET << std::endl;
 								getwchar();
 							}
-							tmp_event.events = EPOLLIN;
-							tmp_event.data.fd = fd_client;
-							if (epoll_ctl(serv.get_epollfd(), EPOLL_CTL_MOD, fd_client, &tmp_event) == -1)
-								throw std::runtime_error("epoll_ctl");
-							serv.pool_client[fd_client]->epollout = false;
 						}
 					} catch (Client::LostConnExceptions & e){
 						std::cerr << e.what() << std::endl;
