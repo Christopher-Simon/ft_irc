@@ -4,12 +4,12 @@ void Command::USER(std::string cmd, std::vector<std::string> vect, Server &serv,
 {
 	if (clt._identified == 3)
 	{
-		serv.send_msg(ircrep->ERR_ALREADYREGISTERED(clt),clt.getfd());
+		serv.store_msg(ircrep->ERR_ALREADYREGISTERED(clt),clt.getfd());
 		return;
 	}
 	if (vect.size() != 5)
 	{
-		serv.send_msg(ircrep->ERR_NEEDMOREPARAMS(cmd, clt),clt.getfd());
+		serv.store_msg(ircrep->ERR_NEEDMOREPARAMS(cmd, clt),clt.getfd());
 		return;
 	}
 	clt._username = vect[1];

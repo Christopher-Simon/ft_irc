@@ -65,11 +65,11 @@ void Client::check_registered(Server &serv, Command &cmd)
 	if (nb_reg > 20)
 		return;
 	//countdown_unregister = 0;
-	serv.send_msg(cmd.ircrep->RPL_WELCOME(*this), _fd);
-	serv.send_msg(cmd.ircrep->RPL_YOURHOST(*this), _fd);
-	serv.send_msg(cmd.ircrep->RPL_CREATED(*this), _fd);
-	serv.send_msg(cmd.ircrep->RPL_MYINFO(*this), _fd);
-	serv.send_msg(cmd.ircrep->RPL_ISUPPORT(*this), _fd);
+	serv.store_msg(cmd.ircrep->RPL_WELCOME(*this), _fd);
+	serv.store_msg(cmd.ircrep->RPL_YOURHOST(*this), _fd);
+	serv.store_msg(cmd.ircrep->RPL_CREATED(*this), _fd);
+	serv.store_msg(cmd.ircrep->RPL_MYINFO(*this), _fd);
+	serv.store_msg(cmd.ircrep->RPL_ISUPPORT(*this), _fd);
 }
 
 bool Client::get_status()

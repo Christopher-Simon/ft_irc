@@ -10,7 +10,7 @@ void Command::QUIT(std::string cmd, std::vector<std::string> vect, Server &serv,
 		reply = ":" + clt.get_nick() + "!" + clt._username + "@" + clt._hotsname + " QUIT :Client Quit";
 	for (size_t i = 0; i < list_channel.size(); i++)
 	{
-		serv.send_channel_msg(reply, list_channel[i]->_name, 0);
+		serv.store_channel_msg(reply, list_channel[i]->_name, 0);
 	}
 	cmd.empty();
 }

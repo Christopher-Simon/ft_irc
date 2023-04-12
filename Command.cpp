@@ -32,8 +32,7 @@ Command::~Command()
 
 void Command::exec(std::string &msg, Server &serv, Client &clt)
 {
-	//aucune gestion des prefix pour le moment
-	//integrer les commandes d'identification dans ce process
+
 	std::cout<<"MESSAGE RECU"<<std::endl<<msg<<std::endl;
 	size_t index = 0;
 	while(index != std::string::npos)
@@ -43,8 +42,6 @@ void Command::exec(std::string &msg, Server &serv, Client &clt)
 		index = msg.find("\r\n");
 		if (index == std::string::npos)
 			break;
-		// while (msg[index] == '\r' || msg[index] == '\n')
-		// 	index++;
 	}
 }
 
@@ -55,7 +52,3 @@ void Command::exec_line(std::string msg, Server &serv, Client &clt)
 	if (cmd_repertory.find(cmd) != cmd_repertory.end())
 		(this->*cmd_repertory[cmd])(cmd, ft_split(msg, ' '), serv, clt);
 }
-
-// //nous avions signe un contrat le ... pour : listing
-// //il a ete confirme que tout ces elements avaient ete livres le ... 
-// comment envisager de s'engager dans un nouveau contrat si le premier n'est pas honore 
