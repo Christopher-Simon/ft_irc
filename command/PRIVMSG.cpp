@@ -18,13 +18,16 @@ void Command::PRIVMSG(std::string cmd, std::vector<std::string> vect, Server &se
 		{
 			std::string identifier = ":" + clt._nickname + "!" + clt._username + "@" + clt._hotsname;
 			std::string receivers = identifier + " PRIVMSG " + list_target[i] + " "+ vect[2];
-		 	//std::cout << "receivers : " << receivers <<std::endl;
 			if (list_target[i][0] == '#')
 			{
 				if (!serv.channel_exist(list_target[i]))
 					serv.send_msg(ircrep->ERR_NOSUCHCHANNEL(clt, list_target[i]), clt.getfd());
 				else
 					serv.send_channel_msg(receivers, list_target[i], clt.getfd());
+			}
+			else if (list_target[i] == "BOT")
+			{
+				serv.jo->handler(clt, serv, vect[2]);
 			}
 			else
 			{

@@ -23,6 +23,7 @@ $(CMD_DIR)OPER.cpp \
 $(CMD_DIR)KILL.cpp \
 $(CMD_DIR)KICK.cpp \
 $(CMD_DIR)QUIT.cpp \
+Bot.cpp \
 utils.cpp
 
 CMD_DIR = command/

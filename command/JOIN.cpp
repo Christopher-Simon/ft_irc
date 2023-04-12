@@ -1,6 +1,5 @@
 #include "Command.hpp"
 
-//ajout du cas des channel invite
 void Command::JOIN(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt)
 {
 	if (clt._identified < 3)
@@ -19,23 +18,21 @@ void Command::JOIN(std::string cmd, std::vector<std::string> vect, Server &serv,
 		serv.send_msg(ircrep->ERR_UNKNOWNCOMMAND(cmd, clt),clt.getfd());
 		return;
 	}
-	//gerer le cas ou les noms sont les memes avec des majuscules
-	//faire gaffe a ce que les messages d'erreur ne bloquent pas l'execution du reste de la liste
 	for(size_t i = 0; i < list_channel.size(); i++)
 	{
-		if (serv.channel_exist(list_channel[i]) == 1) //Channel trouve
-			serv.get_chan(list_channel[i])->add_member(clt.getfd());
-		// else if (serv.channel_exist(list_channel[i]) == 1 && serv.get_chan(list_channel[i])->_iskey == 1)
-		// {
-		// 	serv.send_msg(ircrep->ERR_BADCHANNELKEY(clt, list_channel[i]), clt.getfd());
-		// }
+		if (serv.channel_exist(list_channel[i]) == 1 && serv.chan_has_mod(list_channel[i], 'i') == 0) //Channel trouve
+			serv.get_chan(list_channel[i])->add_member(clt.getfd(), serv, *this);
+		else if (serv.channel_exist(list_channel[i]) == 1 && serv.chan_has_mod(list_channel[i], 'i')==1)
+		{
+			if (serv.get_chan(list_channel[i])->invited_clients.find(clt.getfd()) == serv.get_chan(list_channel[i])->invited_clients.end())
+				serv.send_msg(ircrep->ERR_INVITEONLYCHAN(clt, list_channel[i]),clt.getfd());
+			else
+				serv.get_chan(list_channel[i])->add_member(clt.getfd(), serv, *this);
+		}
 		else //channel pas existante
 		{
 			if (list_channel[i][0] != '#' || list_channel[i].find_first_of(" \a,") != std::string::npos)
-			{
 				serv.send_msg(ircrep->ERR_INVALIDCHANNELNAME(clt, list_channel[i]),clt.getfd());
-			}
-			//AJOUTER le mod du channel
 			else
 			{
 				serv.pool_channel[list_channel[i]] = new Channel(list_channel[i]);

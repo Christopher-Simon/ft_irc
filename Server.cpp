@@ -35,6 +35,7 @@ Server::~Server()
 	for (it = pool_client.begin(); it != pool_client.end(); ++it)
 		delete it->second;
 	mapChannel::iterator it2;
+	delete jo;
 	for (it2 = pool_channel.begin(); it2 != pool_channel.end(); ++it2)
 		delete it2->second;
 }
@@ -267,6 +268,7 @@ void Server::send_msg(std::string msg2, int fd)
 	msg_map[fd] += msg;
 	// if (send(fd,msg.c_str(), msg.size(), 0) == -1)
 	// 	throw (std::runtime_error("send fail"));
+
 }
 
 void Server::print_client()
@@ -275,7 +277,6 @@ void Server::print_client()
 	std::cout<<"Nb de client enregistre:"<<pool_client.size()<<std::endl;
 	for (std::map<int, Client *>::iterator ok = pool_client.begin();ok != pool_client.end();ok++)
 	{
-		// ok->second->getfd()
 		std::cout << "Client sur fd " << ok->second->getfd() << std::endl;
 	}
 	std::cout<<"----------------"<<std::endl;
@@ -286,6 +287,8 @@ int Server::check_nick_exist(std::string nick)
 	mapClient::iterator it;
 	std::string ptl_nick = nick;
 	std::transform(ptl_nick.begin(), ptl_nick.end(), ptl_nick.begin(), ::toupper);
+	if (ptl_nick == "BOT")
+		return (-1);
 	for (it = pool_client.begin(); it != pool_client.end(); ++it)
 	{
 		if (ptl_nick == it->second->_intern_nick && pool_client[it->second->getfd()]->_identified == 3)
@@ -293,6 +296,23 @@ int Server::check_nick_exist(std::string nick)
 	}
 	return (0);
 }
+
+// int Server::channel_exist(std::string title)
+// {
+// 	if (pool_channel.find(title) != pool_channel.end())
+// 		return 1;
+// 	std::string ptl_name;
+// 	std::transform(ptl_name.begin(), ptl_name.end(), ptl_name.begin(), ::toupper);
+// 	mapChannel::iterator it;
+// 	for (it = pool_channel.begin(); it != pool_channel.end(); it++)
+// 	{
+// 		std::string name = it->first;
+// 		std::transform(name.begin(), name.end(), name.begin(), ::toupper);
+// 		if (ptl_name == name)
+// 			return 1;
+// 	}
+// 	return 0;
+// }
 
 int Server::channel_exist(std::string title)
 {

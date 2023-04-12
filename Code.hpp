@@ -120,12 +120,13 @@ public:
 	std::string ERR_UNKNOWNMODE(Client &clt, std::string mods);
 	std::string ERR_NOOPERHOST(Client &clt);
 	std::string ERR_NOPRIVILEGES(Client &clt);
+	std::string ERR_USERSDONTMATCH(Client &clt);
+	std::string ERR_INVITEONLYCHAN(Client &clt, std::string name);
+	std::string ERR_TOOMANYCHANNELS(Client &clt, std::string titlechan);
 
 	// std::string ERR_NOMOTD(std::string, Client &);
 	// std::string ERR_ERRONEUSNICKNAME(std::string, Client &);
 	// std::string ERR_NICKCOLLISION(std::string, Client &);
-	// std::string ERR_USERNOTINCHANNEL(std::string, Client &);
-	// std::string ERR_USERSDONTMATCH(std::string, Client &);
 	// ERR_UNKNOWNERROR (400)
 	// ERR_NOSUCHSERVER (402)
 	// ERR_TOOMANYCHANNELS (405)
@@ -134,8 +135,6 @@ public:
 	// ERR_INPUTTOOLONG (417)
 	// ERR_NOMOTD (422)
 	// ERR_YOUREBANNEDCREEP (465)
-	// ERR_CHANNELISFULL (471)
-	// ERR_INVITEONLYCHAN (473)
 	// ERR_BANNEDFROMCHAN (474)
 	// ERR_BADCHANMASK (476)
 	// ERR_NOPRIVILEGES (481)

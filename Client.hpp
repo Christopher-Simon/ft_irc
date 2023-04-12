@@ -25,8 +25,11 @@ public:
 	std::string _servername; // is the name of the server that the client is connecting to
 	std::string _realname;
 	std::string _mods;
-	int			_identified;
+
 	bool		epollout;
+	int     _identified;
+	int _pass_ok;
+	//int countdown_unregister;
 	
 	Client();
 	Client(Server &serv, int);
@@ -43,8 +46,8 @@ public:
 	std::vector<Channel *> get_his_channels(Server &serv);
 
 	void check_registered(Server &, Command &);
-	void add_mod(char);
-	void rem_mod(char);
+	void add_mod(std::string);
+	void rem_mod(std::string);
 
 //modes
 // USER MODES :

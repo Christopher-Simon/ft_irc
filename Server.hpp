@@ -12,9 +12,11 @@
 #include "irc.hpp"
 #include "Client.hpp"
 #include "Channel.hpp"
+#include "Bot.hpp"
 
 class Client;
 class Channel;
+class Bot;
 
 class Server 
 {
@@ -58,9 +60,9 @@ class Server
 		mapClient			pool_client;
 		mapChannel			pool_channel;
 		std::string			password;
-
 		std::vector<std::pair <int, std::string > > msg_list;
 		std::map<int, std::string> msg_map;
+		Bot *jo;
 	private:
 		//std::vector<int>	client;
 		//std::map<int, Client> client;

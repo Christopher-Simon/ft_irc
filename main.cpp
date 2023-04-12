@@ -36,6 +36,7 @@ int	main(int argc, char *argv[])
 		std::string tmp = argv[2];
 		serv.password = tmp;//temp
 		std::set<int> fdset;
+		serv.jo = new Bot(); //temp
 
 		int event_count;
 		signal(SIGINT, &sighandler);
