@@ -13,4 +13,3 @@ void Command::PING(std::string cmd, std::vector<std::string> vect, Server &serv,
 	}
 	cmd.empty();
 }
-
