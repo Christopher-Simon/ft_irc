@@ -72,13 +72,14 @@ std::string Code::RPL_NAMREPLY(Client &clt, Server &serv, std::string title)
 	for (it = serv.pool_channel.find(title)->second->_members.begin(); it != serv.pool_channel.find(title)->second->_members.end(); it++)
 	{
 		std::string mod_user;
-		if (serv.get_userinchan_mods(title, clt).find(CU_OPERATOR) != std::string::npos)
+		if (it->second.find(CU_OPERATOR) != std::string::npos)
 			mod_user = "@";
 		else
 			mod_user = "";
 		rep = rep + " " + mod_user + serv.pool_client[it->first]->get_nick();
 	}
-	return (Base(clt, "353") + clt.get_nick() + title + rep);
+	//if (serv.get_chan(title)->_channel_mods.find('i') != std::string::npos)
+	return (Base(clt, "353") + clt.get_nick() + " " + title + rep);
 }
 
 std::string Code::RPL_ENDOFWHO(Client &clt)

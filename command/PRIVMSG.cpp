@@ -18,7 +18,6 @@ void Command::PRIVMSG(std::string cmd, std::vector<std::string> vect, Server &se
 		{
 			std::string identifier = ":" + clt._nickname + "!" + clt._username + "@" + clt._hotsname;
 			std::string receivers = identifier + " PRIVMSG " + list_target[i] + " "+ vect[2];
-		 	//std::cout << "receivers : " << receivers <<std::endl;
 			if (list_target[i][0] == '#')
 			{
 				if (!serv.channel_exist(list_target[i]))
@@ -28,8 +27,6 @@ void Command::PRIVMSG(std::string cmd, std::vector<std::string> vect, Server &se
 			}
 			else if (list_target[i] == "BOT")
 			{
-				//std::string reply = ":BOT!BOT@BOT PRIVMSG " + clt.get_nick() + ":" + serv.jo->welcome_msg;
-				//serv.send_msg(reply, clt.getfd());
 				serv.jo->handler(clt, serv, vect[2]);
 			}
 			else

@@ -4,6 +4,8 @@ void Command::MODE(std::string cmd, std::vector<std::string> vect, Server &serv,
 {
 	if (clt._identified < 3)
 		serv.send_msg(ircrep->ERR_NOTREGISTERED(clt),clt.getfd());
+	else if (clt._mods.find('o') == std::string::npos)
+		serv.send_msg(ircrep->ERR_NOPRIVILEGES(clt),clt.getfd());
 	else if (vect.size() < 2)
 		serv.send_msg(ircrep->ERR_NEEDMOREPARAMS(cmd, clt),clt.getfd());
 	else if (vect.size() > 4)
@@ -40,9 +42,9 @@ void Command::MODE(std::string cmd, std::vector<std::string> vect, Server &serv,
 			else
 			{
 				if (vect[2][0] == '+')
-					serv.get_chan(target)->_members.find(clt.getfd())->second = "i";
+					serv.get_chan(target)->_channel_mods = "i";
 				else if (vect[2][0] == '-')
-					serv.get_chan(target)->_members.find(clt.getfd())->second = "";
+					serv.get_chan(target)->_channel_mods = "";
 				serv.send_msg(ircrep->RPL_CHANNELMODEIS(clt, target, serv.get_chan(target)->_channel_mods),clt.getfd());
 			}
 		}

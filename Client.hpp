@@ -26,6 +26,7 @@ public:
 	std::string _realname;
 	std::string _mods;
 	int _identified;
+	int _pass_ok;
 	//int countdown_unregister;
 	
 	Client();

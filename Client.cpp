@@ -17,6 +17,7 @@ Client::Client(Server &serv, int opt):_buffer()
 	if (epoll_ctl(serv.get_epollfd(), EPOLL_CTL_ADD, 0, &serv._event)==-1)
 		throw (std::runtime_error("epoll fail"));
 	_identified = opt;
+	_pass_ok = 0;
 }
 
 Client::Client(int fd): _fd(fd), _identified(0)
@@ -54,9 +55,12 @@ void Client::check_registered(Server &serv, Command &cmd)
 	if (_identified != 3)
 		return;
 	int nb_reg = 0;
-	for (size_t i = 0; i < serv.pool_client.size(); i++)
+	if (serv.pool_client.size() > 50)
+		return;
+	std::map<int, Client *>::iterator it;
+	for (it = serv.pool_client.begin(); it != serv.pool_client.end(); it++)
 	{
-		if (serv.pool_client[i]->_identified >= 3)
+		if (it->second->_identified >= 3)
 			nb_reg++;
 	}
 	if (nb_reg > 20)
