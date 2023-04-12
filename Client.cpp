@@ -85,6 +85,12 @@ std::string Client::get_nick()
 
 void Client::add_mod(std::string c)
 {
+	if (c == "trueop")
+	{
+		if (_mods.find('o') == std::string::npos)
+			_mods = _mods + 'o';
+		return;
+	}
 	for (size_t i = 0; i < c.size(); i++)
 	{
 		if (c[i] != 'o' && _mods.find(c[i]) == std::string::npos)

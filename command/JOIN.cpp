@@ -24,7 +24,7 @@ void Command::JOIN(std::string cmd, std::vector<std::string> vect, Server &serv,
 			serv.get_chan(list_channel[i])->add_member(clt.getfd(), serv, *this);
 		else if (serv.channel_exist(list_channel[i]) == 1 && serv.chan_has_mod(list_channel[i], 'i')==1)
 		{
-			if (serv.get_chan(list_channel[i])->invited_clients.find(clt.get_nick()) == serv.get_chan(list_channel[i])->invited_clients.end())
+			if (serv.get_chan(list_channel[i])->invited_clients.find(clt.getfd()) == serv.get_chan(list_channel[i])->invited_clients.end())
 				serv.send_msg(ircrep->ERR_INVITEONLYCHAN(clt, list_channel[i]),clt.getfd());
 			else
 				serv.get_chan(list_channel[i])->add_member(clt.getfd(), serv, *this);

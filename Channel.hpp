@@ -21,7 +21,7 @@ public:
 	unsigned int nb_memb;
 	std::string _name;
 	std::string _topic;
-	std::map<std::string, Client *> invited_clients;
+	std::map<int, Client *> invited_clients;
 
 	void remove_memb(int fd, Server &serv);
 	int userInChannel(int fd);
