@@ -58,23 +58,48 @@ int	main(int argc, char *argv[])
 					serv.add_client();
 				else
 				{
-					serv.pool_client[serv._events[i].data.fd]->epollout = !!(serv._events[i].events & EPOLLOUT);
 					int fd_client = serv._events[i].data.fd;
 					try{
-						if (serv._events[i].events & EPOLLIN)
-						{
-							std::cout << "EPOLLIN" << std::endl;
+						struct epoll_event tmp_event;
+						if (serv._events[i].events & EPOLLIN) {
 							serv.pool_client[fd_client]->get_msg();
 							size_t t = serv.pool_client[fd_client]->get_buffer().find("\r\n");
 							if (t != std::string::npos)
 							{
-								if (NC_EASY_TEST)
-									serv.send_all_msg(fd_client);
-								else {
 								std::cout << "exec de ses mort" << std::endl;
-									cmd.exec(serv.pool_client[fd_client]->get_buffer(), serv, *serv.pool_client[fd_client]);
+								cmd.exec(serv.pool_client[fd_client]->get_buffer(), serv, *serv.pool_client[fd_client]);
+								for (std::map<int, std::string>::iterator it = serv.msg_map.begin(); it != serv.msg_map.end(); ++it)
+								{
+									if (serv.pool_client.find(it->first) != serv.pool_client.end() && serv.pool_client[it->first]->epollout == false)
+									{
+										tmp_event.events = EPOLLIN | EPOLLOUT;
+										tmp_event.data.fd = it->first;
+										if (epoll_ctl(serv.get_epollfd(), EPOLL_CTL_MOD, it->first, &tmp_event)==-1)
+											throw std::runtime_error("epoll_ctl");
+										serv.pool_client[it->first]->epollout = true;
+									} else {
+										std::cout << RED << it->first << " not found in pool_client" << RESET << std::endl;
+										getwchar();
+									}
 								}
+							} 
+						} else if (serv._events[i].events & EPOLLOUT) {
+							if (serv.msg_map.find(fd_client) != serv.msg_map.end())
+							{
+								if (send(fd_client, serv.msg_map[fd_client].c_str(), serv.msg_map[fd_client].size(), 0) == -1)
+									throw std::runtime_error("send");
+								std::cout << "msg sent to" << "[" << fd_client << "]" << " : " << serv.msg_map[fd_client] << std::endl;
+								serv.msg_map.erase(fd_client);
 							}
+							else {
+								std::cout << RED << fd_client << " not found in msg_map" << RESET << std::endl;
+								getwchar();
+							}
+							tmp_event.events = EPOLLIN;
+							tmp_event.data.fd = fd_client;
+							if (epoll_ctl(serv.get_epollfd(), EPOLL_CTL_MOD, fd_client, &tmp_event) == -1)
+								throw std::runtime_error("epoll_ctl");
+							serv.pool_client[fd_client]->epollout = false;
 						}
 					} catch (Client::LostConnExceptions & e){
 						std::cerr << e.what() << std::endl;
@@ -84,62 +109,6 @@ int	main(int argc, char *argv[])
 					}
 				}
 			}
-			std::cout << RED << "####### GROS ZIZI #######" << RESET << std::endl;
-			std::cout << "msg_map size : " << serv.msg_map.size() << std::endl;
-			for (
-				std::map<int, std::string>::iterator it = serv.msg_map.begin();
-				it != serv.msg_map.end();
-			)
-			{
-				std::map<int, std::string>::iterator tmp = it;
-				struct epoll_event tmp_event;
-
-				if(fdset.find(it->first) != fdset.end() && serv.pool_client[it->first]->epollout == true )
-				{
-					if (send(it->first, it->second.c_str(), it->second.size(), 0) == -1)
-						throw std::runtime_error("send");
-					std::cout << BLUE << "message sent to : " << serv.pool_client[it->first]->_nickname << " [" << it->first << "]" << RESET << std::endl;
-
-					tmp_event.events = EPOLLIN;
-					tmp_event.data.fd = it->first;
-					if (epoll_ctl(serv.get_epollfd(), EPOLL_CTL_MOD, it->first, &tmp_event)==-1)
-						throw std::runtime_error("epoll_ctl");
-
-					it++;
-					serv.msg_map.erase(tmp);
-				}
-				else {
-					tmp_event.events = EPOLLIN | EPOLLOUT;
-					tmp_event.data.fd = it->first;
-					if (epoll_ctl(serv.get_epollfd(), EPOLL_CTL_MOD, it->first, &tmp_event)==-1)
-						throw std::runtime_error("epoll_ctl");
-					it++;
-				}
-				// std::cout << "pool_client : " << it->first << " " << it->second->_nickname << std::endl;
-			}
-			// for (std::vector<std::pair <int, std::string > >::iterator it = serv.msg_list.begin(); it != serv.msg_list.end(); ++it)
-			// {
-			// 	struct epoll_event tmp_event;
-			// 	// serv.msg_list
-			// 	if(isInEnvent(serv._events, it->first, event_count) && serv.pool_client[it->first]->epollout == true )
-			// 	{
-			// 		if (send(it->first, it->second.c_str(), it->second.size(), 0) == -1)
-			// 			throw std::runtime_error("send");
-			// 		std::cout << BLUE << "message sent to : " << serv.pool_client[it->first]->_nickname << " [" << it->first << "]" << RESET << std::endl;
-
-			// 		tmp_event.events = EPOLLIN;
-			// 		tmp_event.data.fd = it->first;
-			// 		if (epoll_ctl(serv.get_epollfd(), EPOLL_CTL_MOD, it->first, &tmp_event)==-1)
-			// 			throw std::runtime_error("epoll_ctl");
-			// 	}
-			// 	else {
-			// 		tmp_event.events = EPOLLIN | EPOLLOUT;
-			// 		tmp_event.data.fd = it->first;
-			// 		if (epoll_ctl(serv.get_epollfd(), EPOLL_CTL_MOD, it->first, &tmp_event)==-1)
-			// 			throw std::runtime_error("epoll_ctl");
-			// 	}
-				
-			// }
 		}
 	} catch (std::exception & e) {
 		std::cerr << RED << e.what() << RESET << std::endl;
