@@ -66,19 +66,23 @@ std::string Code::RPL_LISTEND(Client &clt)
 std::string Code::RPL_NAMREPLY(Client &clt, Server &serv, std::string title)
 {
 	std::string mod_chan;
-	std::string rep = " :";
+	std::string rep = " ";
 	std::map<int, std::string>::iterator it;
 	for (it = serv.pool_channel.find(title)->second->_members.begin(); it != serv.pool_channel.find(title)->second->_members.end(); it++)
 	{
 		std::string mod_user;
+		if (it == serv.pool_channel.find(title)->second->_members.begin())
+			rep = rep + ":";
+		else
+			rep = rep + " ";
 		if (it->second.find(CU_OPERATOR) != std::string::npos)
 			mod_user = "@";
 		else
 			mod_user = "";
-		rep = rep + " " + mod_user + serv.pool_client[it->first]->get_nick();
+		rep = rep + mod_user + serv.pool_client[it->first]->get_nick();
 	}
 	//if (serv.get_chan(title)->_channel_mods.find('i') != std::string::npos)
-	return (Base(clt, "353") + clt.get_nick() + " " + title + rep);
+	return (Base(clt, "353") + clt.get_nick() + " = " + title + rep);
 }
 
 std::string Code::RPL_ENDOFWHO(Client &clt)
@@ -103,7 +107,7 @@ std::string Code::RPL_TOPIC(Client &clt, std::string chan_name, std::string topi
 
 std::string Code::RPL_ENDOFNAMES(Client &clt, std::string title)
 {
-	std::string op = " :End of /NAMES";
+	std::string op = " :End of /NAMES list";
 	return (Base(clt, "366") + clt.get_nick() + " " + title + op);
 }
 
