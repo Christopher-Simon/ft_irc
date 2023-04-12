@@ -203,10 +203,8 @@ void Server::send_channel_msg(std::string msg2, std::string channel, int fd_avoi
 		{
 			// if (send(it->first, msg.c_str(), msg.size(), 0) == -1)
 			// 	throw (std::runtime_error("send fail"));
-		std::cout << "1" << std::endl;
 			// msg_list.push_back(std::make_pair(it->first, msg));
 			msg_map[it->first] += msg;
-			std::cout << "2" << std::endl;
 			// std::cout << "message sent to : " << pool_client[it->first]->_nickname << " [" << it->first << "]" << std::endl;
 		}
 	}
@@ -233,6 +231,8 @@ void	Server::del_client(int del_fd)
 		if (it2->second->_members.find(del_fd) != it2->second->_members.end()) // si le client a delete fait partie du channel
 			it2->second->_members.erase(del_fd);
 	}
+	if (msg_map.find(del_fd) != msg_map.end())
+		msg_map.erase(del_fd);
 	delete	it->second;
 	pool_client.erase(it);
 }
