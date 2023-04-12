@@ -38,14 +38,14 @@ void Command::exec(std::string &msg, Server &serv, Client &clt)
 	size_t index = 0;
 	while(index != std::string::npos)
 	{
-		this->exec_line(msg.substr(index, msg.find_first_of("\r\n", index) - index), serv, clt);
-		index = msg.find_first_of("\r\n", index + 1);
+		this->exec_line(msg.substr(0, msg.find("\r\n")), serv, clt);
+		msg.erase(0, msg.find("\r\n") + 2);
+		index = msg.find("\r\n");
 		if (index == std::string::npos)
 			break;
-		while (msg[index] == '\r' || msg[index] == '\n')
-			index++;
+		// while (msg[index] == '\r' || msg[index] == '\n')
+		// 	index++;
 	}
-
 }
 
 void Command::exec_line(std::string msg, Server &serv, Client &clt)

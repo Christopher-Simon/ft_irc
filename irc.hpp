@@ -27,7 +27,7 @@
 #define PURPLE "\033[35m"
 #define RESET "\033[0m"
 
-#define BUFFER_SIZE 10000
+#define BUFFER_SIZE 512
 #define MAX_EVENTS 1000
 #define	NC_EASY_TEST 0
 

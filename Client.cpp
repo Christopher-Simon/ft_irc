@@ -38,11 +38,11 @@ void Client::get_msg()
 	int count;
 	char buf[BUFFER_SIZE];
 
-
 	count = recv(_fd, buf, BUFFER_SIZE - 1, 0);
 	if (count < 0)
 		throw (std::runtime_error("recv failed"));
 	buf[count] = '\0';
+	std::cout << "________buffer_________ " << buf << std::endl;
 	_buffer += buf;
 	if (count == 0)
 		throw(LostConnExceptions());
@@ -90,6 +90,11 @@ void Client::rem_mod(char c)
 std::string & Client::get_buffer() {
 	return (_buffer);
 }
+
+	void	Client::set_buffer(std::string & new_buffer){
+		_buffer = new_buffer;
+	}
+
 
 const char* Client::LostConnExceptions::what() const throw()
 {

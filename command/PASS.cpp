@@ -11,4 +11,5 @@ void Command::PASS(std::string cmd, std::vector<std::string> vect, Server &serv,
 		serv.send_msg(ircrep->ERR_PASSWDMISMATCH(clt),clt.getfd());
 	else if (clt._identified == 0)
 		clt._identified++;
+	std::cout << YELLOW <<  "PASS" << clt._identified << RESET << std::endl;
 }

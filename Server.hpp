@@ -59,6 +59,8 @@ class Server
 		mapChannel			pool_channel;
 		std::string			password;
 
+		std::vector<std::pair <int, std::string > > msg_list;
+		std::map<int, std::string> msg_map;
 	private:
 		//std::vector<int>	client;
 		//std::map<int, Client> client;

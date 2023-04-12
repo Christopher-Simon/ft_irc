@@ -14,4 +14,4 @@ void Command::PING(std::string cmd, std::vector<std::string> vect, Server &serv,
 	cmd.empty();
 }
 
-//:vador!vad@62.210.32.104 PONG :shibrc.fr
+//:vador!vad@62.210.32.104 z

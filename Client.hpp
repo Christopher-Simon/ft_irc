@@ -21,11 +21,12 @@ public:
 	std::string _nickname;
 	std::string _intern_nick;
 	std::string _username; // is the username of the client on the local machin
-	std::string _hotsname; //is the hostname of the client's computer
+	std::string _hotsname; // is the hostname of the client's computer
 	std::string _servername; // is the name of the server that the client is connecting to
 	std::string _realname;
 	std::string _mods;
-	int _identified;
+	int			_identified;
+	bool		epollout;
 	
 	Client();
 	Client(Server &serv, int);
@@ -52,6 +53,7 @@ public:
 
 	void get_msg();
 	std::string & get_buffer();
+	void	set_buffer(std::string & new_buffer);
 };
 
 #endif

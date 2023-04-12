@@ -12,7 +12,10 @@ void Command::NICK(std::string cmd, std::vector<std::string> vect, Server &serv,
 	Server::mapClient::iterator it;
 	if (serv.check_nick_exist(ptl_nick) != 0
 		|| vect[1].find_first_of(" ,*?!@", 0) != std::string::npos 
-		|| vect[1][0] == '$' || vect[1][0] == ':' || vect[1][0] == '#' || vect[1][0] == '&')
+		|| vect[1][0] == '$' 
+		|| vect[1][0] == ':' 
+		|| vect[1][0] == '#' 
+		|| vect[1][0] == '&')
 	{
 		serv.send_msg(ircrep->ERR_NICKNAMEINUSE(vect[1], clt),clt.getfd());
 		return;
@@ -28,7 +31,7 @@ void Command::NICK(std::string cmd, std::vector<std::string> vect, Server &serv,
 		//serv.send_msg(reply,clt.getfd());
 		//prevention des autres clients
 		std::map<int, Client *>::iterator it;
-		for (it = serv.pool_client.begin(); it != serv.pool_client.end(); it++)
+		for (it = serv.pool_client.begin(); it != serv.pool_client.end(); ++it)
 		{
 			serv.send_msg(reply, it->second->getfd());
 		}

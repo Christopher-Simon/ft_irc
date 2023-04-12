@@ -100,6 +100,7 @@ void	Server::initSocket(char *port) {
 	}
 	std::cout<< GREEN << "Success to create epoll fd" << RESET << std::endl;
 
+	// _event.events = EPOLLIN | EPOLLET;
 	_event.events = EPOLLIN;
 	_event.data.fd = _sockfd;
 	if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, _sockfd, &_event)==-1)
@@ -122,6 +123,7 @@ int	Server::get_epollfd()
 
 void	Server::add_client()
 {
+	std::cout<<"client trying connect"<<std::endl;
 	int newFd = accept(_sockfd, (struct sockaddr *)&_address, (socklen_t *)&_addrlen);
 	if (newFd < 0)
 		throw (std::runtime_error("Socket listen failed"));
@@ -131,7 +133,10 @@ void	Server::add_client()
 		close(newFd);
 		throw (std::runtime_error("fcntl failed"));
 	}
-	_event.events = EPOLLIN | EPOLLET;
+	// _event.events = EPOLLIN | EPOLLET;
+	_event.events = EPOLLIN ;
+	// _event.events = EPOLLIN | EPOLLOUT | EPOLLET;
+	// _event.events = EPOLLIN | EPOLLOUT ;
 	_event.data.fd = newFd;
 	if (epoll_ctl(get_epollfd(), EPOLL_CTL_ADD, newFd, &_event) == -1)
 	{
@@ -156,8 +161,11 @@ void Server::send_all_msg(int fd_avoid)
 	for (std::map<int, Client *>::iterator ok = pool_client.begin();ok != pool_client.end();ok++)
 	{
 		if (ok->first != fd_avoid && ok->first != 0){
-			if (send(ok->first, msg.c_str(), msg.size(), 0) == -1)
-				throw (std::runtime_error("send fail"));
+			// if (send(ok->first, msg.c_str(), msg.size(), 0) == -1)
+			// msg_list.push_back(std::make_pair(ok->first, msg));
+			msg_map[ok->first] += msg;
+			// if (send(ok->first, msg.c_str(), msg.size(), 0) == -1)
+			// 	throw (std::runtime_error("send fail"));
 		}
 	}
 	pool_client[fd_avoid]->get_buffer().clear();
@@ -175,9 +183,11 @@ void Server::send_all_msg(std::string msg, int fd_avoid)
 	for (std::map<int, Client *>::iterator ok = pool_client.begin();ok != pool_client.end();ok++)
 	{
 		if (ok->first != fd_avoid && ok->first != 0){
-			if (send(ok->first, msg.c_str(), msg.size(), 0) == -1)
-				throw (std::runtime_error("send fail"));
-			std::cout << "message sent to : " << ok->second->_nickname;
+			// msg_list.push_back(std::make_pair(ok->first, msg));
+			msg_map[ok->first] += msg;
+			// if (send(ok->first, msg.c_str(), msg.size(), 0) == -1)
+			// 	throw (std::runtime_error("send fail"));
+			// std::cout << "message sent to : " << ok->second->_nickname;
 		}
 	}
 	// pool_client[fd_avoid]->get_buffer().clear();
@@ -191,9 +201,13 @@ void Server::send_channel_msg(std::string msg2, std::string channel, int fd_avoi
 	{
 		if (it->first != fd_avoid)
 		{
-			if (send(it->first, msg.c_str(), msg.size(), 0) == -1)
-				throw (std::runtime_error("send fail"));
-			std::cout << "message sent to : " << pool_client[it->first]->_nickname << " [" << it->first << "]" << std::endl;
+			// if (send(it->first, msg.c_str(), msg.size(), 0) == -1)
+			// 	throw (std::runtime_error("send fail"));
+		std::cout << "1" << std::endl;
+			// msg_list.push_back(std::make_pair(it->first, msg));
+			msg_map[it->first] += msg;
+			std::cout << "2" << std::endl;
+			// std::cout << "message sent to : " << pool_client[it->first]->_nickname << " [" << it->first << "]" << std::endl;
 		}
 	}
 }
@@ -248,9 +262,11 @@ void Server::send_msg(std::string msg2, int fd)
 		i++;
 	if (i == 0 || i >= 2)
 		std::cerr << RED << "\\r\\n " << i << " times  in : " << msg << RESET << std::endl;
-	std::cout << "message sent to : " << pool_client[fd]->_nickname << " [" << fd << "]" << std::endl;
-	if (send(fd,msg.c_str(), msg.size(), 0) == -1)
-		throw (std::runtime_error("send fail"));
+	// std::cout << "message sent to : " << pool_client[fd]->_nickname << " [" << fd << "]" << std::endl;
+	// msg_list.push_back(std::make_pair(fd, msg));
+	msg_map[fd] += msg;
+	// if (send(fd,msg.c_str(), msg.size(), 0) == -1)
+	// 	throw (std::runtime_error("send fail"));
 }
 
 void Server::print_client()
