@@ -144,7 +144,5 @@ void	Client::leave_process(Server & serv)
 	std::string identifier = ":" + _nickname + "!" + _username + "@" + _hotsname;
 	std::string str = + " :Lost terminal";
 	for (std::vector<Channel *>::iterator it = channels.begin(); it != channels.end(); ++it)
-	{
 		serv.store_channel_msg(identifier + " QUIT :QUIT " + str, (*it)->_name, _fd);
-	}
 }
