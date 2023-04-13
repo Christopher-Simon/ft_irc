@@ -29,7 +29,7 @@ void Command::KILL(std::string cmd, std::vector<std::string> vect, Server &serv,
 		}
 		// modif du message erreur
 		std::string error_msg = "ERROR :Closing Link:" + target->_hotsname;
-		serv.send_msg(error_msg, target->getfd());
+		serv.store_msg(error_msg, target->getfd());
 		target->_todel = 1;
 	}
 }

@@ -138,7 +138,7 @@ std::string Code::RPL_MYINFO(Client &clt)
 std::string Code::RPL_ISUPPORT(Client &clt)
 {
 	std::string space = " ";
-	std::string op = "PREFIX=(o)@ MODES=2 CHANLIMIT=#:10 MAXTARGETS=20 :are supported by this server";
+	std::string op = "PREFIX=(o)@ MODES=2 CHANLIMIT=#:10 MAXTARGETS=20 CHANMODES=i :are supported by this server";
 	std::cout<<Base(clt, "005")+ clt.get_nick() +space+ op<<std::endl;
 	return (Base(clt, "005")+ clt.get_nick() +space+ op);
 }

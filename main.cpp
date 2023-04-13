@@ -45,7 +45,7 @@ int	main(int argc, char *argv[])
 			fdset.clear();
 			std::cout << GREEN << "####### On epoll wait #######" << RESET << std::endl;
 			serv.print_status();
-			serv.check_channels(); //A GARDER ? 
+			serv.check_channels();
 			event_count = epoll_wait(serv.get_epollfd(), serv._events, MAX_EVENTS, 30000);
 			if (event_count == -1)
 				throw std::runtime_error("epoll_wait");
@@ -73,7 +73,7 @@ int	main(int argc, char *argv[])
 							size_t t = serv.pool_client[fd_client]->get_buffer().find("\r\n");
 							if (t != std::string::npos)
 							{
-								std::cout << "exec de ses mort" << std::endl;
+								//std::cout << "exec de ses mort" << std::endl;
 								cmd.exec(serv.pool_client[fd_client]->get_buffer(), serv, *serv.pool_client[fd_client]);
 								for (std::map<int, std::string>::iterator it = serv.msg_map.begin(); it != serv.msg_map.end(); ++it)
 								{
@@ -106,7 +106,10 @@ int	main(int argc, char *argv[])
 									throw std::runtime_error("epoll_ctl");
 								serv.pool_client[fd_client]->epollout = false;
 								if (serv.pool_client[fd_client]->_todel == true)
+								{
 									serv.del_client(fd_client);
+									serv.check_channels();
+								}
 							} else {
 								std::cout << RED << fd_client << " not found in msg_map" << RESET << std::endl;
 								getwchar();

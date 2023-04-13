@@ -26,7 +26,7 @@ void Command::NICK(std::string cmd, std::vector<std::string> vect, Server &serv,
 	if (!(clt._pass_ok == 1 && clt._user_ok == 1 && clt._nick_ok == 1))
 	{
 		std::string reply2 = ":" + prev_nick + "!" + clt._username + "@" + clt._servername + " NICK :" + vect[1];
-		serv.send_msg(reply2, clt.getfd());
+		serv.store_msg(reply2, clt.getfd());
 		clt._nick_ok = 1;
 
 		clt.check_registered(serv, *this);

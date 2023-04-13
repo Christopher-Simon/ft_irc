@@ -24,7 +24,9 @@ void Command::PART(std::string cmd, std::vector<std::string> vect, Server &serv,
 					reason = vect[2];
 				else
 					reason = ":";
-				serv.send_msg(":" + clt.get_nick() + "!" + clt._username + "@" + clt._hotsname + " PART " + list_channel[i] + " " + reason, clt.getfd());
+				std::map<int, std::string>::iterator it;
+				for (it = serv.get_chan(list_channel[i])->_members.begin(); it != serv.get_chan(list_channel[i])->_members.end(); it++)
+					serv.store_msg(":" + clt.get_nick() + "!" + clt._username + "@" + clt._hotsname + " PART " + list_channel[i] + " " + reason, it->first);
 				serv.pool_channel.find(list_channel[i])->second->remove_memb(clt.getfd(), serv);
 				//serv.store_msg(":" + clt.get_nick() + "!" + clt._username + "@" + clt._hotsname + " PART " + list_channel[i], clt.getfd());
 			}

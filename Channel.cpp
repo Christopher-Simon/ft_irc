@@ -64,7 +64,7 @@ void Channel::add_member(int fd, Server &serv, Command &cmd)
 	std::string reply = ":" + serv.pool_client[fd]->get_nick() + "!" + serv.pool_client[fd]->_username + "@" + serv.pool_client[fd]->_hotsname + " JOIN :";
 	std::map<int, std::string>::iterator it;
 	for (it = _members.begin(); it != _members.end(); it++)
-		serv.send_msg(reply + _name, it->first);
+		serv.store_msg(reply + _name, it->first);
 }
 
 int Channel::userInChannel(int fd)
