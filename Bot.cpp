@@ -17,14 +17,14 @@ Bot::~Bot()
 void Bot::send_welcome(Client &clt, Server &serv)
 {
 	std::string prev = id + clt.get_nick() + ":";
-	serv.send_msg(prev + " ____  __ __  ____ _____ _____  ____  ____     __    ___       ___   __ __   ____  ______  ____     ___ ", clt.getfd());
-	serv.send_msg(prev + "|    \\|  |  ||    / ___// ___/ /    ||    \\   /  ]  /  _]     /   \\ |  |  | /    ||      ||    \\   /  _]", clt.getfd());
-	serv.send_msg(prev + "|  o  )  |  | |  (   \\_(   \\_ |  o  ||  _  | /  /  /  [_     |     ||  |  ||  o  ||      ||  D  ) /  [_ ", clt.getfd());
-	serv.send_msg(prev + "|   _/|  |  | |  |\\__  |\\__  ||     ||  |  |/  /  |    _]    |  Q  ||  |  ||     ||_|  |_||    / |    _]", clt.getfd());
-	serv.send_msg(prev + "|  |  |  :  | |  |/  \\ |/  \\ ||  _  ||  |  /   \\_ |   [_     |     ||  :  ||  _  |  |  |  |    \\ |   [_ ", clt.getfd());
-	serv.send_msg(prev + "|  |  |     | |  |\\    |\\    ||  |  ||  |  \\     ||     |    |     ||     ||  |  |  |  |  |  .  \\|     |", clt.getfd());
-	serv.send_msg(prev + "|__|   \\__,_||____|\\___| \\___||__|__||__|__|\\____||_____|     \\__,_| \\__,_||__|__|  |__|  |__|\\_||_____|", clt.getfd());
-	serv.send_msg(prev + "", clt.getfd());
+	serv.store_msg(prev + " ____  __ __  ____ _____ _____  ____  ____     __    ___       ___   __ __   ____  ______  ____     ___ ", clt.getfd());
+	serv.store_msg(prev + "|    \\|  |  ||    / ___// ___/ /    ||    \\   /  ]  /  _]     /   \\ |  |  | /    ||      ||    \\   /  _]", clt.getfd());
+	serv.store_msg(prev + "|  o  )  |  | |  (   \\_(   \\_ |  o  ||  _  | /  /  /  [_     |     ||  |  ||  o  ||      ||  D  ) /  [_ ", clt.getfd());
+	serv.store_msg(prev + "|   _/|  |  | |  |\\__  |\\__  ||     ||  |  |/  /  |    _]    |  Q  ||  |  ||     ||_|  |_||    / |    _]", clt.getfd());
+	serv.store_msg(prev + "|  |  |  :  | |  |/  \\ |/  \\ ||  _  ||  |  /   \\_ |   [_     |     ||  :  ||  _  |  |  |  |    \\ |   [_ ", clt.getfd());
+	serv.store_msg(prev + "|  |  |     | |  |\\    |\\    ||  |  ||  |  \\     ||     |    |     ||     ||  |  |  |  |  |  .  \\|     |", clt.getfd());
+	serv.store_msg(prev + "|__|   \\__,_||____|\\___| \\___||__|__||__|__|\\____||_____|     \\__,_| \\__,_||__|__|  |__|  |__|\\_||_____|", clt.getfd());
+	serv.store_msg(prev + "", clt.getfd());
 }
 
 std::vector<std::string> Bot::new_board()
@@ -38,7 +38,7 @@ std::vector<std::string> Bot::new_board()
 void Bot::print_msg(Client &clt, Server &serv, std::string msg)
 {
 	std::string prev = id + clt.get_nick() + " :";
-	serv.send_msg(prev + msg, clt.getfd());
+	serv.store_msg(prev + msg, clt.getfd());
 }
 
 void Bot::print_board(Client &clt, Server &serv)

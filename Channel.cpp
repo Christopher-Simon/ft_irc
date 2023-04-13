@@ -56,7 +56,7 @@ void Channel::add_member(int fd, Server &serv, Command &cmd)
 {
 	if (serv.pool_client[fd]->get_his_channels(serv).size() >= 10)
 	{
-		serv.send_msg(cmd.ircrep->ERR_TOOMANYCHANNELS(*serv.pool_client[fd], _name), fd);
+		serv.store_msg(cmd.ircrep->ERR_TOOMANYCHANNELS(*serv.pool_client[fd], _name), fd);
 		return;
 	}
 	_members[fd] = "";

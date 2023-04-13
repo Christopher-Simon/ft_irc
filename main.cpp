@@ -61,7 +61,14 @@ int	main(int argc, char *argv[])
 					int fd_client = serv._events[i].data.fd;
 					try{
 						struct epoll_event tmp_event;
-						if (serv._events[i].events & EPOLLIN) {
+						if (serv._events[i].events & EPOLLERR)
+
+							throw Client::LostConnExceptions("EPOLLERR");
+						else if (serv._events[i].events & EPOLLHUP) 
+							throw Client::LostConnExceptions("EPOLLHUP");
+						else if (serv._events[i].events & EPOLLRDHUP)	
+							throw Client::LostConnExceptions("EPOLLRDHUP");
+						else if (serv._events[i].events & EPOLLIN) {
 							serv.pool_client[fd_client]->get_msg();
 							size_t t = serv.pool_client[fd_client]->get_buffer().find("\r\n");
 							if (t != std::string::npos)
@@ -74,7 +81,7 @@ int	main(int argc, char *argv[])
 										&& serv.pool_client.find(it->first) != serv.pool_client.end())
 									{
 										if (serv.pool_client[it->first]->epollout == false){
-											tmp_event.events = EPOLLIN | EPOLLOUT;
+											tmp_event.events = EPOLLIN | EPOLLOUT | EPOLLHUP | EPOLLERR | EPOLLRDHUP;
 											tmp_event.data.fd = it->first;
 											if (epoll_ctl(serv.get_epollfd(), EPOLL_CTL_MOD, it->first, &tmp_event)==-1)
 												throw std::runtime_error("epoll_ctl");
@@ -93,7 +100,7 @@ int	main(int argc, char *argv[])
 									throw std::runtime_error("send");
 								std::cout << "msg sent to" << "[" << fd_client << "]" << " : " << serv.msg_map[fd_client] << std::endl;
 								serv.msg_map.erase(fd_client);
-								tmp_event.events = EPOLLIN;
+								tmp_event.events = EPOLLIN | EPOLLHUP | EPOLLERR | EPOLLRDHUP;
 								tmp_event.data.fd = fd_client;
 								if (epoll_ctl(serv.get_epollfd(), EPOLL_CTL_MOD, fd_client, &tmp_event) == -1)
 									throw std::runtime_error("epoll_ctl");
@@ -106,7 +113,7 @@ int	main(int argc, char *argv[])
 							}
 						}
 					} catch (Client::LostConnExceptions & e){
-						std::cerr << e.what() << std::endl;
+						std::cerr << ORANGE << e.what() << RESET << std::endl;
 						serv.del_client(fd_client);
 						serv.check_channels();
 						continue ;

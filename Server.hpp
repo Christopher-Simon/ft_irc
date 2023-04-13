@@ -34,10 +34,10 @@ class Server
 
 		void add_client();
 		int check_nick_exist(std::string);
-		void send_all_msg(int);
-		void send_all_msg(std::string msg, int fd_avoid);
-		void send_channel_msg(std::string msg, std::string channel, int fd_avoid);
-		void send_msg(std::string, int);
+		void store_all_msg(int);
+		void store_all_msg(std::string msg, int fd_avoid);
+		void store_channel_msg(std::string msg, std::string channel, int fd_avoid);
+		void store_msg(std::string, int);
 		void print_client();
 		void del_client(int del_fd);
 		void del_channel(Channel &chan);

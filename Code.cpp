@@ -184,7 +184,7 @@ std::string Code::ERR_PASSWDMISMATCH(Client &clt)
 
 std::string Code::ERR_UMODEUNKNOWNFLAG(Client &clt)
 {
-	std::string reply = " :Unknown MODE flag";
+	std::string reply = " :Unknown MODE flistlistlag";
 	return (Base(clt, "501") + clt._nickname + reply);
 }
 

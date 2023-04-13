@@ -40,7 +40,11 @@ public:
 
 	class	LostConnExceptions : public std::exception {
 		public:
-			virtual const char*	what() const throw();
+			LostConnExceptions(const std::string & message) : _msg(message) {}
+			virtual const char*	what() const throw() { return _msg.c_str(); }
+			~LostConnExceptions() throw() {}
+		private :
+			std::string _msg;
 	};
 	int getfd();
 	bool get_status();

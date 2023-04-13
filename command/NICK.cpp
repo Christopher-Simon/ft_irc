@@ -4,7 +4,7 @@ void Command::NICK(std::string cmd, std::vector<std::string> vect, Server &serv,
 {
 	if (vect.size() != 2)
 	{
-		serv.send_msg(ircrep->ERR_NONICKNAMEGIVEN(clt),clt.getfd());
+		serv.store_msg(ircrep->ERR_NONICKNAMEGIVEN(clt),clt.getfd());
 		return;
 	}
 	std::string ptl_nick = vect[1];
@@ -17,7 +17,7 @@ void Command::NICK(std::string cmd, std::vector<std::string> vect, Server &serv,
 		|| vect[1][0] == '#' 
 		|| vect[1][0] == '&')
 	{
-		serv.send_msg(ircrep->ERR_NICKNAMEINUSE(vect[1], clt),clt.getfd());
+		serv.store_msg(ircrep->ERR_NICKNAMEINUSE(vect[1], clt),clt.getfd());
 		return;
 	}
 	std::string prev_nick = clt._nickname;
@@ -28,6 +28,7 @@ void Command::NICK(std::string cmd, std::vector<std::string> vect, Server &serv,
 		std::string reply2 = ":" + prev_nick + "!" + clt._username + "@" + clt._servername + " NICK :" + vect[1];
 		serv.send_msg(reply2, clt.getfd());
 		clt._nick_ok = 1;
+
 		clt.check_registered(serv, *this);
 	}
 	else if (clt._pass_ok == 1 && clt._user_ok == 1 && clt._nick_ok == 1)
@@ -37,7 +38,7 @@ void Command::NICK(std::string cmd, std::vector<std::string> vect, Server &serv,
 		std::map<int, Client *>::iterator it;
 		for (it = serv.pool_client.begin(); it != serv.pool_client.end(); ++it)
 		{
-			serv.send_msg(reply, it->second->getfd());
+			serv.store_msg(reply, it->second->getfd());
 		}
 	}
 	cmd.empty(); 

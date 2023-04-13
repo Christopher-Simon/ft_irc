@@ -5,14 +5,14 @@ void Command::NAMES(std::string cmd, std::vector<std::string> vect, Server &serv
 	if (clt._identified < 3)
 		serv.send_msg(ircrep->ERR_NOTREGISTERED(clt),clt.getfd());
 	else if (vect.size() > 2)
-		serv.send_msg(ircrep->ERR_UNKNOWNCOMMAND(cmd, clt),clt.getfd());
+		serv.store_msg(ircrep->ERR_UNKNOWNCOMMAND(cmd, clt),clt.getfd());
 	else if (vect.size() == 1)
 	{
 		std::map<std::string, Channel *>::iterator it;
 		std::string total;
 		for (it = serv.pool_channel.begin(); it != serv.pool_channel.end(); it++)
 		{
-			serv.send_msg(ircrep->RPL_NAMREPLY(clt, serv, it->first), clt.getfd());
+			serv.store_msg(ircrep->RPL_NAMREPLY(clt, serv, it->first), clt.getfd());
 			if (it == serv.pool_channel.begin())
 				total = it->first;
 			else

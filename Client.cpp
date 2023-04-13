@@ -48,7 +48,7 @@ void Client::get_msg()
 	std::cout << "________buffer_________ " << buf << std::endl;
 	_buffer += buf;
 	if (count == 0)
-		throw(LostConnExceptions());
+		throw(LostConnExceptions("Connection with client lost"));
 }
 
 void Client::check_registered(Server &serv, Command &cmd)
@@ -69,11 +69,11 @@ void Client::check_registered(Server &serv, Command &cmd)
 	if (nb_reg > 20)
 		return;
 	//countdown_unregister = 0;
-	serv.send_msg(cmd.ircrep->RPL_WELCOME(*this), _fd);
-	serv.send_msg(cmd.ircrep->RPL_YOURHOST(*this), _fd);
-	serv.send_msg(cmd.ircrep->RPL_CREATED(*this), _fd);
-	serv.send_msg(cmd.ircrep->RPL_MYINFO(*this), _fd);
-	serv.send_msg(cmd.ircrep->RPL_ISUPPORT(*this), _fd);
+	serv.store_msg(cmd.ircrep->RPL_WELCOME(*this), _fd);
+	serv.store_msg(cmd.ircrep->RPL_YOURHOST(*this), _fd);
+	serv.store_msg(cmd.ircrep->RPL_CREATED(*this), _fd);
+	serv.store_msg(cmd.ircrep->RPL_MYINFO(*this), _fd);
+	serv.store_msg(cmd.ircrep->RPL_ISUPPORT(*this), _fd);
 }
 
 bool Client::get_status()
@@ -121,10 +121,10 @@ std::string & Client::get_buffer() {
 	}
 
 
-const char* Client::LostConnExceptions::what() const throw()
-{
-	return("Connection with client lost");
-}
+// const char* Client::LostConnExceptions::what() const throw()
+// {
+// 	return("Connection with client lost");
+// }
 
 std::vector<Channel *> Client::get_his_channels(Server &serv)
 {

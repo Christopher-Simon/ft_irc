@@ -155,10 +155,7 @@ void	Server::add_client()
 		close(newFd);
 		throw (std::runtime_error("fcntl failed"));
 	}
-	// _event.events = EPOLLIN | EPOLLET;
-	_event.events = EPOLLIN ;
-	// _event.events = EPOLLIN | EPOLLOUT | EPOLLET;
-	// _event.events = EPOLLIN | EPOLLOUT ;
+	_event.events = EPOLLIN | EPOLLHUP | EPOLLERR | EPOLLRDHUP;
 	_event.data.fd = newFd;
 	if (epoll_ctl(get_epollfd(), EPOLL_CTL_ADD, newFd, &_event) == -1)
 	{
@@ -177,23 +174,18 @@ void	Server::add_client()
 	
 }
 
-void Server::send_all_msg(int fd_avoid)
+void Server::store_all_msg(int fd_avoid)
 {
 	std::string msg = pool_client[fd_avoid]->get_buffer();
 	for (std::map<int, Client *>::iterator ok = pool_client.begin();ok != pool_client.end();ok++)
 	{
-		if (ok->first != fd_avoid && ok->first != 0){
-			// if (send(ok->first, msg.c_str(), msg.size(), 0) == -1)
-			// msg_list.push_back(std::make_pair(ok->first, msg));
+		if (ok->first != fd_avoid && ok->first != 0)
 			msg_map[ok->first] += msg;
-			// if (send(ok->first, msg.c_str(), msg.size(), 0) == -1)
-			// 	throw (std::runtime_error("send fail"));
-		}
 	}
 	pool_client[fd_avoid]->get_buffer().clear();
 }
 
-void Server::send_all_msg(std::string msg, int fd_avoid)
+void Server::store_all_msg(std::string msg, int fd_avoid)
 {
 	size_t i(0);
 	size_t pos(0);
@@ -201,34 +193,21 @@ void Server::send_all_msg(std::string msg, int fd_avoid)
 		i++;
 	if (i == 0 || i >= 2)
 		std::cerr << RED << "\\r\\n " << i << " times  in : " << msg << RESET << std::endl;
-	// std::string msg = pool_client[fd_avoid]->get_buffer();
 	for (std::map<int, Client *>::iterator ok = pool_client.begin();ok != pool_client.end();ok++)
 	{
-		if (ok->first != fd_avoid && ok->first != 0){
-			// msg_list.push_back(std::make_pair(ok->first, msg));
+		if (ok->first != fd_avoid && ok->first != 0)
 			msg_map[ok->first] += msg;
-			// if (send(ok->first, msg.c_str(), msg.size(), 0) == -1)
-			// 	throw (std::runtime_error("send fail"));
-			// std::cout << "message sent to : " << ok->second->_nickname;
-		}
 	}
-	// pool_client[fd_avoid]->get_buffer().clear();
 }
 
-void Server::send_channel_msg(std::string msg2, std::string channel, int fd_avoid)
+void Server::store_channel_msg(std::string msg2, std::string channel, int fd_avoid)
 {
 	std::string msg = msg2 + "\r\n";
 	std::map<int, std::string> clients = pool_channel[channel]->_members;
 	for (std::map<int, std::string>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
 		if (it->first != fd_avoid)
-		{
-			// if (send(it->first, msg.c_str(), msg.size(), 0) == -1)
-			// 	throw (std::runtime_error("send fail"));
-			// msg_list.push_back(std::make_pair(it->first, msg));
 			msg_map[it->first] += msg;
-			// std::cout << "message sent to : " << pool_client[it->first]->_nickname << " [" << it->first << "]" << std::endl;
-		}
 	}
 }
 
@@ -246,7 +225,6 @@ void	Server::del_client(int del_fd)
 	std::cout << "delete client fd : " << it->first << std::endl;
 	if (epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, del_fd, NULL) ==-1)
 		throw (std::runtime_error("epoll DEL fail"));
-	//cleaning in channels
 	mapChannel::iterator it2;
 	for (it2 = pool_channel.begin(); it2 != pool_channel.end(); ++it2)
 	{
@@ -275,7 +253,7 @@ void Server::del_channel(Channel &chan)
 	pool_channel.erase(name);
 }
 
-void Server::send_msg(std::string msg2, int fd)
+void Server::store_msg(std::string msg2, int fd)
 {
 	size_t i(0);
 	size_t pos(0);
@@ -284,11 +262,7 @@ void Server::send_msg(std::string msg2, int fd)
 		i++;
 	if (i == 0 || i >= 2)
 		std::cerr << RED << "\\r\\n " << i << " times  in : " << msg << RESET << std::endl;
-	// std::cout << "message sent to : " << pool_client[fd]->_nickname << " [" << fd << "]" << std::endl;
-	// msg_list.push_back(std::make_pair(fd, msg));
 	msg_map[fd] += msg;
-	// if (send(fd,msg.c_str(), msg.size(), 0) == -1)
-	// 	throw (std::runtime_error("send fail"));
 
 }
 
