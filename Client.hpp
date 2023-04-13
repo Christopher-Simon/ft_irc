@@ -54,6 +54,7 @@ public:
 	void check_registered(Server &, Command &);
 	void add_mod(std::string);
 	void rem_mod(std::string);
+	void leave_process(Server & serv);
 
 //modes
 // USER MODES :

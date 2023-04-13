@@ -51,6 +51,8 @@ class Server
 		std::string get_userinchan_mods(std::string, Client &);
 		void check_channels();
 		void check_clients();
+		void switch_pollout();
+		void switch_pollin(int fd_client);
 
 		void print_status();
 

@@ -416,3 +416,50 @@ void Server::check_clients()
 	if (at_start != pool_client.size())
 		check_clients();
 }
+
+void	Server::switch_pollout() {
+	struct epoll_event tmp_event;
+
+	for (std::map<int, std::string>::iterator it = msg_map.begin(); it != msg_map.end(); ++it)
+	{
+		if (pool_client.empty() == false
+			&& pool_client.find(it->first) != pool_client.end())
+		{
+			if (pool_client[it->first]->epollout == false){
+				tmp_event.events = EPOLLIN | EPOLLOUT | EPOLLHUP | EPOLLERR | EPOLLRDHUP;
+				tmp_event.data.fd = it->first;
+				if (epoll_ctl(get_epollfd(), EPOLL_CTL_MOD, it->first, &tmp_event)==-1)
+					throw std::runtime_error("epoll_ctl");
+				pool_client[it->first]->epollout = true;
+			}
+		} else {
+			std::cout << RED << it->first << " not found in pool_client" << RESET << std::endl;
+			getwchar();
+		}
+	}
+}
+
+void	Server::switch_pollin(int fd_client) {
+	struct epoll_event tmp_event;
+
+	if (msg_map.find(fd_client) != msg_map.end())
+	{
+		if (send(fd_client, msg_map[fd_client].c_str(), msg_map[fd_client].size(), 0) == -1)
+			throw std::runtime_error("send");
+		std::cout << "msg sent to" << "[" << fd_client << "]" << " : " << msg_map[fd_client] << std::endl;
+		msg_map.erase(fd_client);
+		tmp_event.events = EPOLLIN | EPOLLHUP | EPOLLERR | EPOLLRDHUP;
+		tmp_event.data.fd = fd_client;
+		if (epoll_ctl(get_epollfd(), EPOLL_CTL_MOD, fd_client, &tmp_event) == -1)
+			throw std::runtime_error("epoll_ctl");
+		pool_client[fd_client]->epollout = false;
+		if (pool_client[fd_client]->_todel == true)
+		{
+			del_client(fd_client);
+			check_channels();
+		}
+	} else {
+		std::cout << RED << fd_client << " not found in msg_map" << RESET << std::endl;
+		getwchar();
+	}
+}

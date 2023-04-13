@@ -43,6 +43,7 @@
 
 #define CU_OPERATOR 'o'
 //#define CU_VOICE 'v'
+#define ERROR(x) std::cerr << RED << x << RESET << std::endl;
 
 extern bool gtrl_c;
 
