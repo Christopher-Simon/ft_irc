@@ -19,8 +19,14 @@ void Command::PART(std::string cmd, std::vector<std::string> vect, Server &serv,
 				serv.store_msg(ircrep->ERR_NOTONCHANNEL(clt, list_channel[i]),clt.getfd());
 			else
 			{
+				std::string reason;
+				if (vect.size() == 3)
+					reason = vect[2];
+				else
+					reason = ":";
+				serv.send_msg(":" + clt.get_nick() + "!" + clt._username + "@" + clt._hotsname + " PART " + list_channel[i] + " " + reason, clt.getfd());
 				serv.pool_channel.find(list_channel[i])->second->remove_memb(clt.getfd(), serv);
-				serv.store_msg(":" + clt.get_nick() + "!" + clt._username + "@" + clt._hotsname + " PART " + list_channel[i], clt.getfd());
+				//serv.store_msg(":" + clt.get_nick() + "!" + clt._username + "@" + clt._hotsname + " PART " + list_channel[i], clt.getfd());
 			}
 		}
 	}

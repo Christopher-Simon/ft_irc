@@ -27,8 +27,10 @@ public:
 	std::string _mods;
 
 	bool		epollout;
-	int     _identified;
+	int _user_ok;
+	int _nick_ok;
 	int _pass_ok;
+	int _identified;
 	int _todel;
 	//int countdown_unregister;
 	
