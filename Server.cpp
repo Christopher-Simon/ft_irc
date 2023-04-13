@@ -155,7 +155,7 @@ void	Server::add_client()
 		close(newFd);
 		throw (std::runtime_error("fcntl failed"));
 	}
-	_event.events = EPOLLIN ;
+	_event.events = EPOLLIN | EPOLLHUP | EPOLLERR | EPOLLRDHUP;
 	_event.data.fd = newFd;
 	if (epoll_ctl(get_epollfd(), EPOLL_CTL_ADD, newFd, &_event) == -1)
 	{

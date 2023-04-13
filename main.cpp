@@ -61,7 +61,14 @@ int	main(int argc, char *argv[])
 					int fd_client = serv._events[i].data.fd;
 					try{
 						struct epoll_event tmp_event;
-						if (serv._events[i].events & EPOLLIN) {
+						if (serv._events[i].events & EPOLLERR)
+
+							throw Client::LostConnExceptions("EPOLLERR");
+						else if (serv._events[i].events & EPOLLHUP) 
+							throw Client::LostConnExceptions("EPOLLHUP");
+						else if (serv._events[i].events & EPOLLRDHUP)	
+							throw Client::LostConnExceptions("EPOLLRDHUP");
+						else if (serv._events[i].events & EPOLLIN) {
 							serv.pool_client[fd_client]->get_msg();
 							size_t t = serv.pool_client[fd_client]->get_buffer().find("\r\n");
 							if (t != std::string::npos)
@@ -106,7 +113,7 @@ int	main(int argc, char *argv[])
 							}
 						}
 					} catch (Client::LostConnExceptions & e){
-						std::cerr << e.what() << std::endl;
+						std::cerr << "\033[38;5;208m" << e.what() << RESET << std::endl;
 						serv.del_client(fd_client);
 						serv.check_channels();
 						continue ;

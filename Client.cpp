@@ -46,7 +46,7 @@ void Client::get_msg()
 	std::cout << "________buffer_________ " << buf << std::endl;
 	_buffer += buf;
 	if (count == 0)
-		throw(LostConnExceptions());
+		throw(LostConnExceptions("Connection with client lost"));
 }
 
 void Client::check_registered(Server &serv, Command &cmd)
@@ -117,10 +117,10 @@ std::string & Client::get_buffer() {
 	}
 
 
-const char* Client::LostConnExceptions::what() const throw()
-{
-	return("Connection with client lost");
-}
+// const char* Client::LostConnExceptions::what() const throw()
+// {
+// 	return("Connection with client lost");
+// }
 
 std::vector<Channel *> Client::get_his_channels(Server &serv)
 {
