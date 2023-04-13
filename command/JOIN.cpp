@@ -23,12 +23,12 @@ void Command::JOIN(std::string cmd, std::vector<std::string> vect, Server &serv,
 		if (serv.channel_exist(list_channel[i]) == 1 && serv.chan_has_mod(list_channel[i], 'i') == 0) //Channel trouve
 		{
 			std::string reply = ":" + clt.get_nick() + "!" + clt._username + "@" + clt._hotsname + " JOIN :";
+			serv.get_chan(list_channel[i])->add_member(clt.getfd(), serv, *this);
 			serv.store_msg(reply + list_channel[i], clt.getfd());
 			if (serv.get_chan(list_channel[i])->_topic != "")
 				serv.store_msg(ircrep->RPL_TOPIC(clt, list_channel[i], serv.get_chan(list_channel[i])->_topic), clt.getfd());
 			serv.store_msg(ircrep->RPL_NAMREPLY(clt, serv, list_channel[i]), clt.getfd());
 			serv.store_msg(ircrep->RPL_ENDOFNAMES(clt, list_channel[i]),clt.getfd());
-			serv.get_chan(list_channel[i])->add_member(clt.getfd(), serv, *this);
 		}
 		else if (serv.channel_exist(list_channel[i]) == 1 && serv.chan_has_mod(list_channel[i], 'i')==1)
 		{
@@ -36,13 +36,14 @@ void Command::JOIN(std::string cmd, std::vector<std::string> vect, Server &serv,
 				serv.store_msg(ircrep->ERR_INVITEONLYCHAN(clt, list_channel[i]),clt.getfd());
 			else
 			{
+				serv.get_chan(list_channel[i])->add_member(clt.getfd(), serv, *this);
 				std::string reply = ":" + clt.get_nick() + "!" + clt._username + "@" + clt._hotsname + " JOIN :";
 				serv.store_msg(reply + list_channel[i], clt.getfd());
 				if (serv.get_chan(list_channel[i])->_topic != "")
 					serv.store_msg(ircrep->RPL_TOPIC(clt, list_channel[i], serv.get_chan(list_channel[i])->_topic), clt.getfd());
 				serv.store_msg(ircrep->RPL_NAMREPLY(clt, serv, list_channel[i]), clt.getfd());
 				serv.store_msg(ircrep->RPL_ENDOFNAMES(clt, list_channel[i]),clt.getfd());
-				serv.get_chan(list_channel[i])->add_member(clt.getfd(), serv, *this);
+				
 			}
 		}
 		else //channel pas existante
