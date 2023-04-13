@@ -19,7 +19,7 @@ void Command::MODE(std::string cmd, std::vector<std::string> vect, Server &serv,
 			serv.store_msg(ircrep->ERR_CHANOPRIVSNEEDED(clt, target),clt.getfd());
 		else if (vect.size() == 4)
 		{
-			std::string ptl_nick2 = vect[3].substr(1, vect[3].size());
+			std::string ptl_nick2 = vect[3];
 			std::transform(ptl_nick2.begin(), ptl_nick2.end(), ptl_nick2.begin(), ::toupper);
 			if (vect[2] != "+o" && vect[2] != "-o")
 				serv.store_msg(ircrep->ERR_UNKNOWNMODE(clt, target),clt.getfd());
@@ -30,17 +30,17 @@ void Command::MODE(std::string cmd, std::vector<std::string> vect, Server &serv,
 				if (vect[2][0] == '+')
 				{
 					serv.get_chan(target)->_members.find(clt.getfd())->second = "o";
-					std::map<int, std::string>::iterator it;
-					for (it = serv.get_chan(vect[1])->_members.begin(); it != serv.get_chan(vect[1])->_members.end(); it++)
-					{
-						serv.store_msg(ircrep->RPL_NAMREPLY(clt, serv, vect[1]), it->first);
-						serv.store_msg(ircrep->RPL_ENDOFNAMES(clt, vect[1]),it->first);
-					}
+						// serv.store_msg(ircrep->RPL_NAMREPLY(clt, serv, vect[1]), it->first);
+						// serv.store_msg(ircrep->RPL_ENDOFNAMES(clt, vect[1]),it->first);
 				}
 				else if (vect[2][0] == '-')
 				{
 					serv.get_chan(target)->_members.find(clt.getfd())->second = "";
 				}
+				std::map<int, std::string>::iterator it;
+				std::string reply = ":" + clt.get_nick() + "!" + clt._username + "@" + clt._hotsname + " MODE " + vect[1] + " " + vect[2] +" " + clt.get_nick();
+				for (it = serv.get_chan(vect[1])->_members.begin(); it != serv.get_chan(vect[1])->_members.end(); it++)
+					serv.store_msg(reply, it->first);
 			}
 		}
 		else if (vect.size() == 3)

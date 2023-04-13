@@ -5,8 +5,8 @@ void Command::TOPIC(std::string cmd, std::vector<std::string> vect, Server &serv
 	(void)cmd;
 	if (clt._identified < 3)
 		serv.store_msg(ircrep->ERR_NOTREGISTERED(clt),clt.getfd());
-	else if (clt._mods.find('o') == std::string::npos)
-		serv.store_msg(ircrep->ERR_NOPRIVILEGES(clt),clt.getfd());
+	// else if (clt._mods.find('o') == std::string::npos)
+	// 	serv.store_msg(ircrep->ERR_NOPRIVILEGES(clt),clt.getfd());
 	else if (vect.size() < 2)
 		serv.store_msg(ircrep->ERR_NEEDMOREPARAMS(cmd, clt),clt.getfd());
 	else if (vect.size() > 3)
@@ -15,8 +15,8 @@ void Command::TOPIC(std::string cmd, std::vector<std::string> vect, Server &serv
 	{
 		if (serv.channel_exist(vect[1]) == 0)
 			serv.store_msg(ircrep->ERR_NOSUCHCHANNEL(clt, vect[1]), clt.getfd());
-		// else if (serv.get_chan(vect[1])->_channel_mods.find('o') == std::string::npos)
-		// 	serv.store_msg("ERROR: Not an operator of this channel",clt.getfd());
+		else if ((serv.get_chan(vect[1])->_members)[clt.getfd()] != "o")
+			serv.store_msg("ERROR: Not an operator of this channel",clt.getfd());
 		else if (serv.get_chan(vect[1])->_topic == "")
 			serv.store_msg(ircrep->RPL_NOTOPIC(clt, vect[1]), clt.getfd());
 		else
@@ -26,8 +26,8 @@ void Command::TOPIC(std::string cmd, std::vector<std::string> vect, Server &serv
 	{
 		if (serv.channel_exist(vect[1]) == 0)
 			serv.store_msg(ircrep->ERR_NOSUCHCHANNEL(clt, vect[1]), clt.getfd());
-		// else if (serv.get_chan(vect[1])->_channel_mods.find('o') == std::string::npos)
-		// 	serv.store_msg("ERROR: Not an operator of this channel",clt.getfd());
+		else if ((serv.get_chan(vect[1])->_members)[clt.getfd()] != "o")
+			serv.store_msg("ERROR: Not an operator of this channel",clt.getfd());
 		else if (vect[2] == ":")
 		{
 			serv.get_chan(vect[1])->_topic = "";
