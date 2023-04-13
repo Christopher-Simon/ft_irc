@@ -54,8 +54,6 @@ void Channel::rem_mod(char c)
 
 void Channel::add_member(int fd, Server &serv, Command &cmd)
 {
-	// if (_members.find(fd) != _members.end())
-	// 	return;
 	if (serv.pool_client[fd]->get_his_channels(serv).size() >= 10)
 	{
 		serv.send_msg(cmd.ircrep->ERR_TOOMANYCHANNELS(*serv.pool_client[fd], _name), fd);
@@ -63,6 +61,10 @@ void Channel::add_member(int fd, Server &serv, Command &cmd)
 	}
 	_members[fd] = "";
 	nb_memb++;
+	std::string reply = ":" + serv.pool_client[fd]->get_nick() + "!" + serv.pool_client[fd]->_username + "@" + serv.pool_client[fd]->_hotsname + " JOIN :";
+	std::map<int, std::string>::iterator it;
+	for (it = _members.begin(); it != _members.end(); it++)
+		serv.send_msg(reply + _name, it->first);
 }
 
 int Channel::userInChannel(int fd)

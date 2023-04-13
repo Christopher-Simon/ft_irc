@@ -1,7 +1,5 @@
 #include "../Command.hpp"
 
-
-//cmd qui se base sur le nickname, utiliser le real name ?
 void Command::OPER(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt)
 {
 	(void)cmd;

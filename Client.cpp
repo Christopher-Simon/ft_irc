@@ -17,8 +17,10 @@ _servername(),
 _realname(),
 _mods(),
 epollout(false),
-_identified(0),
+_user_ok(),
+_nick_ok(),
 _pass_ok(),
+_identified(),
 _todel(0)
 {
 }
@@ -51,6 +53,8 @@ void Client::get_msg()
 
 void Client::check_registered(Server &serv, Command &cmd)
 {
+	if (_pass_ok == 1 && _user_ok == 1 && _nick_ok == 1)
+		_identified = 3;
 	if (_identified != 3)
 		return;
 	int nb_reg = 0;

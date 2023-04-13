@@ -47,7 +47,7 @@ std::string Code::RPL_INVITING(Client &clt, std::string title)
 
 std::string Code::RPL_LISTSTART(Client &clt)
 {
-	return (Base(clt, "321") + clt.get_nick() + " Channel :Users Name");
+	return (Base(clt, "321") + clt.get_nick() + " Channel :Users Topic");
 }
 
 std::string Code::RPL_LIST(Client &clt, std::string name, int nb, std::string topic)

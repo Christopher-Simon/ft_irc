@@ -12,7 +12,6 @@ void Command::PASS(std::string cmd, std::vector<std::string> vect, Server &serv,
 			serv.send_msg(ircrep->ERR_PASSWDMISMATCH(clt),clt.getfd());
 		else
 		{
-			clt._identified++;
 			clt._pass_ok = 1;
 			clt.check_registered(serv, *this);
 		}
@@ -23,7 +22,6 @@ void Command::PASS(std::string cmd, std::vector<std::string> vect, Server &serv,
 		serv.send_msg(ircrep->ERR_PASSWDMISMATCH(clt),clt.getfd());
 	else if (clt._identified == 0)
 	{
-		clt._identified++;
 		clt._pass_ok = 1;
 		clt.check_registered(serv, *this);
 	}

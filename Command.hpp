@@ -33,14 +33,13 @@ public:
 	void PART(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 	void INVITE(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 	void PRIVMSG(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
-	//void NAMES(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
+	void NAMES(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 	void NOTICE(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 	void TOPIC(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 	void OPER(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 	void KILL(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 	void KICK(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 	void QUIT(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
-	//void P4(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 };
 
 void print_vect(std::vector<std::string> vect);

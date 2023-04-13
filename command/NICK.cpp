@@ -23,16 +23,14 @@ void Command::NICK(std::string cmd, std::vector<std::string> vect, Server &serv,
 	std::string prev_nick = clt._nickname;
 	clt._nickname = vect[1];
 	clt._intern_nick = ptl_nick;
-	if (clt._identified == 1)
-		clt._identified++;
-	else if (clt._identified == 2)
+	if (!(clt._pass_ok == 1 && clt._user_ok == 1 && clt._nick_ok == 1))
 	{
 		std::string reply2 = ":" + prev_nick + "!" + clt._username + "@" + clt._servername + " NICK :" + vect[1];
 		serv.send_msg(reply2, clt.getfd());
-		clt._identified++;
+		clt._nick_ok = 1;
 		clt.check_registered(serv, *this);
 	}
-	else if (clt._identified == 3)
+	else if (clt._pass_ok == 1 && clt._user_ok == 1 && clt._nick_ok == 1)
 	{
 		std::string reply = ":" + prev_nick + "!" + clt._username + "@" + clt._servername + " NICK :" + vect[1];
 		//prevention des autres clients
