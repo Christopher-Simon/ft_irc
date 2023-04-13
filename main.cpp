@@ -81,7 +81,7 @@ int	main(int argc, char *argv[])
 										&& serv.pool_client.find(it->first) != serv.pool_client.end())
 									{
 										if (serv.pool_client[it->first]->epollout == false){
-											tmp_event.events = EPOLLIN | EPOLLOUT;
+											tmp_event.events = EPOLLIN | EPOLLOUT | EPOLLHUP | EPOLLERR | EPOLLRDHUP;
 											tmp_event.data.fd = it->first;
 											if (epoll_ctl(serv.get_epollfd(), EPOLL_CTL_MOD, it->first, &tmp_event)==-1)
 												throw std::runtime_error("epoll_ctl");
@@ -100,7 +100,7 @@ int	main(int argc, char *argv[])
 									throw std::runtime_error("send");
 								std::cout << "msg sent to" << "[" << fd_client << "]" << " : " << serv.msg_map[fd_client] << std::endl;
 								serv.msg_map.erase(fd_client);
-								tmp_event.events = EPOLLIN;
+								tmp_event.events = EPOLLIN | EPOLLHUP | EPOLLERR | EPOLLRDHUP;
 								tmp_event.data.fd = fd_client;
 								if (epoll_ctl(serv.get_epollfd(), EPOLL_CTL_MOD, fd_client, &tmp_event) == -1)
 									throw std::runtime_error("epoll_ctl");
@@ -113,7 +113,7 @@ int	main(int argc, char *argv[])
 							}
 						}
 					} catch (Client::LostConnExceptions & e){
-						std::cerr << "\033[38;5;208m" << e.what() << RESET << std::endl;
+						std::cerr << ORANGE << e.what() << RESET << std::endl;
 						serv.del_client(fd_client);
 						serv.check_channels();
 						continue ;
