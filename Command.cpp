@@ -33,7 +33,7 @@ Command::~Command()
 void Command::exec(std::string &msg, Server &serv, Client &clt)
 {
 
-	std::cout<<"MESSAGE RECU"<<std::endl<<msg<<std::endl;
+	// /std::cout<<"MESSAGE RECU"<<std::endl<<msg<<std::endl;
 	size_t index = 0;
 	while(index != std::string::npos)
 	{

@@ -23,7 +23,7 @@ msg_map()
 	throw (std::invalid_argument("Invalid argument"));
 }
 
-Server::Server(char *port):
+Server::Server(char *port, char *pwd):
 _event(),
 _events(),
 _address(),
@@ -34,6 +34,8 @@ password(),
 msg_map()
 {
 	initSocket(port);
+	password = pwd;
+	jo = new Bot();
 }
 
 Server::Server(Server const & raw)
@@ -44,7 +46,8 @@ Server::Server(Server const & raw)
 
 Server::~Server()
 {
-	std::cout << "Destroying Server" << std::endl;
+	if (VERBOSE)
+		std::cout << "Destroying Server" << std::endl;
 	close(_sockfd);
 	close(_epoll_fd);
 	mapClient::iterator it;
@@ -140,7 +143,7 @@ int	Server::get_epollfd()
 
 void	Server::add_client()
 {
-	std::cout<<"client trying connect"<<std::endl;
+	//std::cout<<"client trying connect"<<std::endl;
 	int newFd = accept(_sockfd, (struct sockaddr *)&_address, (socklen_t *)&_addrlen);
 	if (newFd < 0)
 		throw (std::runtime_error("Socket listen failed"));
@@ -239,16 +242,16 @@ void	Server::del_client(int del_fd)
 
 void Server::del_channel(Channel &chan)
 {
-	if (chan.nb_memb != 0 || chan._members.size() != 0)
-		std::cout<<"Warning : deleting non empty channel"<<std::endl;
+	//if (chan.nb_memb != 0 || chan._members.size() != 0)
+		//std::cout<<"Warning : deleting non empty channel"<<std::endl;
 	std::string name = chan._name;
 	if (pool_channel.find(name) == pool_channel.end())
 	{
-		std::cout<<"Error : channel to delete not found"<<std::endl;
+		//std::cout<<"Error : channel to delete not found"<<std::endl;
 		return;
 	}
 	delete(pool_channel.find(name)->second);
-	std::cout<<"Info : channel "<< name << " deleted"<<std::endl;
+	//std::cout<<"Info : channel "<< name << " deleted"<<std::endl;
 
 	pool_channel.erase(name);
 }
@@ -432,10 +435,11 @@ void	Server::switch_pollout() {
 					throw std::runtime_error("epoll_ctl");
 				pool_client[it->first]->epollout = true;
 			}
-		} else {
-			std::cout << RED << it->first << " not found in pool_client" << RESET << std::endl;
-			getwchar();
 		}
+		// else {
+		// 	std::cout << RED << it->first << " not found in pool_client" << RESET << std::endl;
+		// 	getwchar();
+		// }
 	}
 }
 
@@ -458,8 +462,9 @@ void	Server::switch_pollin(int fd_client) {
 			del_client(fd_client);
 			check_channels();
 		}
-	} else {
-		std::cout << RED << fd_client << " not found in msg_map" << RESET << std::endl;
-		getwchar();
-	}
+	} 
+	// else {
+	// 	std::cout << RED << fd_client << " not found in msg_map" << RESET << std::endl;
+	// 	getwchar();
+	// }
 }

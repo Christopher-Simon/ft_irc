@@ -15,7 +15,7 @@ void Command::MODE(std::string cmd, std::vector<std::string> vect, Server &serv,
 			serv.store_msg(ircrep->ERR_NOSUCHCHANNEL(clt, target),clt.getfd());
 		else if (vect.size() == 2)
 			serv.store_msg(ircrep->RPL_CHANNELMODEIS(clt, target, serv.get_chan(target)->_channel_mods),clt.getfd());
-		else if (clt._mods.find('o') == std::string::npos)
+		else if (serv.get_chan(vect[1])->_members[clt.getfd()].find('o') == std::string::npos && clt._mods.find('o') == std::string::npos)
 			serv.store_msg(ircrep->ERR_CHANOPRIVSNEEDED(clt, target),clt.getfd());
 		else if (vect.size() == 4)
 		{
@@ -72,9 +72,9 @@ void Command::MODE(std::string cmd, std::vector<std::string> vect, Server &serv,
 		else if (vect[2][0] == '+' || vect[2][0] == '-')
 		{
 			if (vect[2][0] == '+')
-				clt.add_mod(vect[2].substr(1, vect[2].size()));
+				clt.add_mod(vect[2].substr(1, vect[2].size()), serv, *this);
 			else if (vect[2][0] == '-')
-				clt.rem_mod(vect[2].substr(1, vect[2].size()));
+				clt.rem_mod(vect[2].substr(1, vect[2].size()), serv, *this);
 			serv.store_msg(ircrep->RPL_UMODEIS(clt), clt.getfd());
 		}
 		else
