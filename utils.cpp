@@ -23,6 +23,7 @@ std::vector<std::string> ft_split(std::string &msg, char sep)
 		vect.push_back(s);
 	if (msg.find(":", 1) != std::string::npos)
 		vect.push_back(msg.substr(end, msg.length()));
-	print_vect(vect);
+	if (VERBOSE)
+		print_vect(vect);
 	return (vect);
 }

@@ -13,9 +13,9 @@ void Command::PART(std::string cmd, std::vector<std::string> vect, Server &serv,
 		std::vector<std::string> list_channel = ft_split(vect[1], ',');
 		for(size_t i = 0; i < list_channel.size(); i++)
 		{
-			if (serv.pool_channel.find(list_channel[i]) == serv.pool_channel.end())
+			if (serv.pool_channel.find(serv.toupper(list_channel[i])) == serv.pool_channel.end())
 				serv.store_msg(ircrep->ERR_NOSUCHCHANNEL(clt, list_channel[i]),clt.getfd());
-			else if (serv.pool_channel.find(list_channel[i])->second->_members.find(clt.getfd()) == serv.pool_channel.find(list_channel[i])->second->_members.end()) //client pas dans le channel
+			else if (serv.pool_channel.find(serv.toupper(list_channel[i]))->second->_members.find(clt.getfd()) == serv.pool_channel.find(serv.toupper(list_channel[i]))->second->_members.end()) //client pas dans le channel
 				serv.store_msg(ircrep->ERR_NOTONCHANNEL(clt, list_channel[i]),clt.getfd());
 			else
 			{
@@ -27,7 +27,7 @@ void Command::PART(std::string cmd, std::vector<std::string> vect, Server &serv,
 				std::map<int, std::string>::iterator it;
 				for (it = serv.get_chan(list_channel[i])->_members.begin(); it != serv.get_chan(list_channel[i])->_members.end(); it++)
 					serv.store_msg(":" + clt.get_nick() + "!" + clt._username + "@" + clt._hotsname + " PART " + list_channel[i] + " " + reason, it->first);
-				serv.pool_channel.find(list_channel[i])->second->remove_memb(clt.getfd(), serv);
+				serv.pool_channel.find(serv.toupper(list_channel[i]))->second->remove_memb(clt.getfd(), serv);
 				//serv.store_msg(":" + clt.get_nick() + "!" + clt._username + "@" + clt._hotsname + " PART " + list_channel[i], clt.getfd());
 			}
 		}

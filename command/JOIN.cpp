@@ -54,8 +54,8 @@ void Command::JOIN(std::string cmd, std::vector<std::string> vect, Server &serv,
 				serv.store_msg(ircrep->ERR_TOOMANYCHANNELS(*serv.pool_client[clt.getfd()], list_channel[i]), clt.getfd());
 			else
 			{
-				serv.pool_channel[list_channel[i]] = new Channel(list_channel[i]);
-				serv.pool_channel.find(list_channel[i])->second->_members[clt.getfd()] = "o";
+				serv.pool_channel[serv.toupper(list_channel[i])] = new Channel(serv.toupper(list_channel[i]),list_channel[i]);
+				serv.pool_channel.find(serv.toupper(list_channel[i]))->second->_members[clt.getfd()] = "o";
 				std::string reply = ":" + clt.get_nick() + "!" + clt._username + "@" + clt._hotsname + " JOIN :";
 				serv.store_msg(reply + list_channel[i], clt.getfd());
 				if (serv.get_chan(list_channel[i])->_topic != "")

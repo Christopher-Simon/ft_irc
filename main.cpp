@@ -21,29 +21,28 @@ int	main(int argc, char *argv[])
 		return 1;
 	}
 	try {
-		Server	serv(argv[1]);
+		Server	serv(argv[1], argv[2]);
 		Command cmd;
-		std::string tmp = argv[2];
-		serv.password = tmp;//temp
-		std::set<int> fdset;
-		serv.jo = new Bot(); //temp
 
 		int event_count;
 		signal(SIGINT, &sighandler);
 		while (gtrl_c)
 		{
-			fdset.clear();
-			std::cout << GREEN << "####### On epoll wait #######" << RESET << std::endl;
-			serv.print_status();
+			if (VERBOSE)
+				std::cout << GREEN << "####### On epoll wait #######" << RESET << std::endl;
+			if (VERBOSE)
+				serv.print_status();
 			serv.check_channels();
 			event_count = epoll_wait(serv.get_epollfd(), serv._events, MAX_EVENTS, 30000);
 			if (event_count == -1)
-				throw std::runtime_error("epoll_wait");
-			std::cout << "event count : " << event_count << std::endl;
+			{
+				std::cout << GREEN << "See you soon !" << RESET << std::endl;
+				return 0; //throw std::;
+			}
+			//std::cout << "event count : " << event_count << std::endl;
 			for (int i = 0; i < event_count; i++)
 			{
-				fdset.insert(serv._events[i].data.fd);
-				std::cout << "fd[" << serv._events[i].data.fd << "]" << std::endl;
+				//std::cout << "fd[" << serv._events[i].data.fd << "]" << std::endl;
 				if (serv._events[i].data.fd == serv.get_sockfd())
 					serv.add_client();
 				else
@@ -80,7 +79,10 @@ int	main(int argc, char *argv[])
 							serv.switch_pollin(fd_client);
 						}
 					} catch (Client::LostConnExceptions & e){
-						std::cerr << ORANGE << e.what() << RESET << std::endl;
+						if (VERBOSE)
+							std::cerr << ORANGE << e.what() << RESET << std::endl;
+						else
+							std::cout << ORANGE << "Client disconnected" << RESET << std::endl;
 						serv.del_client(fd_client);
 						serv.check_channels();
 						continue ;

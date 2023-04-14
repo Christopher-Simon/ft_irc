@@ -14,7 +14,7 @@ void Command::LIST(std::string cmd, std::vector<std::string> vect, Server &serv,
 		for (it2 = serv.pool_channel.begin(); it2 != serv.pool_channel.end(); ++it2)
 		{
 			//if (it2->second->_channel_mods.find('i') == std::string::npos)
-			serv.store_msg(ircrep->RPL_LIST(clt, it2->second->_name, it2->second->_members.size(), it2->second->_topic), clt.getfd());
+			serv.store_msg(ircrep->RPL_LIST(clt, it2->second->_intern_name, it2->second->_members.size(), it2->second->_topic), clt.getfd());
 		}
 		serv.store_msg(ircrep->RPL_LISTEND(clt), clt.getfd());
 	}

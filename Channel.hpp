@@ -13,7 +13,7 @@ class Channel
 {
 public:
 	Channel();
-	Channel(std::string);
+	Channel(std::string, std::string);
 	~Channel();
 
 	std::map<int, std::string> _members;
@@ -21,6 +21,7 @@ public:
 	unsigned int nb_memb;
 	std::string _name;
 	std::string _topic;
+	std::string _intern_name;
 	std::map<int, Client *> invited_clients;
 
 	void remove_memb(int fd, Server &serv);

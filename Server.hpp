@@ -24,7 +24,7 @@ class Server
 		typedef	std::map<int, Client *>  mapClient;
 		typedef std::map<std::string, Channel *> mapChannel;
 		Server();
-		Server(char *port);
+		Server(char *port, char *pwd);
 		Server(Server const & raw);
 		~Server();
 		Server & operator=(Server const & rhs);
@@ -53,6 +53,9 @@ class Server
 		void check_clients();
 		void switch_pollout();
 		void switch_pollin(int fd_client);
+
+		//std::string getname(std::string title);
+		std::string toupper(std::string);
 
 		void print_status();
 

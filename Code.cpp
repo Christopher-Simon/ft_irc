@@ -20,21 +20,21 @@ std::string Code::Base(Client &clt, std::string nb)
 std::string Code::RPL_WELCOME(Client &clt)
 {
 	std::string op = " :           __________                                 \n         .'----------`.                              \n         | .--------. |                             \n         | |########| |       __________              \n         | |########| |      /__________\\             \n.--------| `--------' |------|    --=-- |-------------.\n|        `----,-.-----'      |o ======  |             | \n|       ______|_|_______     |__________|             | \n|      /  %%%%%%%%%%%%  \\                             | \n|     /  %%%%%%%%%%%%%%  \\                            | \n|     ^^^^^^^^^^^^^^^^^^^^                            | \n+-----------------------------------------------------+\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ";
-	std::cout<<Base(clt, "001") + clt.get_nick() + op<<std::endl;
+	//std::cout<<Base(clt, "001") + clt.get_nick() + op<<std::endl;
 	return (Base(clt, "001") + clt.get_nick() + op);
 }
 
 std::string Code::RPL_YOURHOST(Client &clt)
 {
 	std::string op = " :Your host is CHSIMON, running the homemade version";
-	std::cout<<Base(clt, "002") + clt.get_nick() + op<<std::endl;
+	//std::cout<<Base(clt, "002") + clt.get_nick() + op<<std::endl;
 	return (Base(clt, "002") + clt.get_nick() + op);
 }
 
 std::string Code::RPL_CREATED(Client &clt)
 {
 	std::string op = " :Supported commands : INVITE - JOIN - KICK - KILL - LIST - MODE - NAMES - NICK - NOTICE - OPER - PART - PASS - PING - PRIVMSG - QUIT - TOPIC - USER";
-	std::cout<<Base(clt, "003") + clt.get_nick() + op<<std::endl;
+	//std::cout<<Base(clt, "003") + clt.get_nick() + op<<std::endl;
 	return (Base(clt, "003") + clt.get_nick() + op);
 }
 
@@ -68,10 +68,10 @@ std::string Code::RPL_NAMREPLY(Client &clt, Server &serv, std::string title)
 	std::string mod_chan;
 	std::string rep = " ";
 	std::map<int, std::string>::iterator it;
-	for (it = serv.pool_channel.find(title)->second->_members.begin(); it != serv.pool_channel.find(title)->second->_members.end(); it++)
+	for (it = serv.pool_channel.find(serv.toupper(title))->second->_members.begin(); it != serv.pool_channel.find(serv.toupper(title))->second->_members.end(); it++)
 	{
 		std::string mod_user;
-		if (it == serv.pool_channel.find(title)->second->_members.begin())
+		if (it == serv.pool_channel.find(serv.toupper(title))->second->_members.begin())
 			rep = rep + ":";
 		else
 			rep = rep + " ";
@@ -114,7 +114,7 @@ std::string Code::RPL_ENDOFNAMES(Client &clt, std::string title)
 std::string Code::RPL_UMODEIS(Client &clt)
 {
 	std::string sign = " +";
-	std::cout<<"mode user : "<<clt._mods<<std::endl;
+	//std::cout<<"mode user : "<<clt._mods<<std::endl;
 	return (Base(clt, "221") + clt.get_nick() + sign + clt._mods);
 }
 
@@ -123,7 +123,7 @@ std::string Code::RPL_CHANNELMODEIS(Client &clt, std::string title, std::string 
 {
 	std::string op = " ";
 	std::string space = "";
-	std::cout<<"mode channel : "<<clt._mods<<std::endl;
+	//std::cout<<"mode channel : "<<clt._mods<<std::endl;
 	return (Base(clt, "324") + clt.get_nick() + op + title + op + mods + space);
 }
 
@@ -131,7 +131,7 @@ std::string Code::RPL_MYINFO(Client &clt)
 {
 	std::string space = " ";
 	std::string op = "^^^^^^^^^^^^^^^^^^THIS IS THE IRC^^^^^^^^^^^^^^^^^^^^^^";
-	std::cout<<Base(clt, "004")+ clt.get_nick() +space+ clt._servername +space+ op<<std::endl;
+	//std::cout<<Base(clt, "004")+ clt.get_nick() +space+ clt._servername +space+ op<<std::endl;
 	return (Base(clt, "004")+ clt.get_nick() +space+ op);
 }
 
@@ -139,7 +139,7 @@ std::string Code::RPL_ISUPPORT(Client &clt)
 {
 	std::string space = " ";
 	std::string op = "PREFIX=(o)@ MODES=2 CHANLIMIT=#:10 MAXTARGETS=20 CHANMODES=i :are supported by this server";
-	std::cout<<Base(clt, "005")+ clt.get_nick() +space+ op<<std::endl;
+	//std::cout<<Base(clt, "005")+ clt.get_nick() +space+ op<<std::endl;
 	return (Base(clt, "005")+ clt.get_nick() +space+ op);
 }
 

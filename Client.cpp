@@ -27,7 +27,8 @@ _todel(0)
 
 Client::~Client()
 {
-	std::cout << "destroy client fd : " << _fd << std::endl;
+	if (VERBOSE)
+		std::cout << "destroy client fd : " << _fd << std::endl;
 	close(_fd);
 }
 
@@ -45,7 +46,8 @@ void Client::get_msg()
 	if (count < 0)
 		throw (std::runtime_error("recv failed"));
 	buf[count] = '\0';
-	std::cout << "________buffer_________ " << buf << std::endl;
+	if (VERBOSE)
+		std::cout << "________buffer_________ " << buf << std::endl;
 	_buffer += buf;
 	if (count == 0)
 		throw(LostConnExceptions("Connection with client lost"));
@@ -86,7 +88,7 @@ std::string Client::get_nick()
 	return (this->_nickname);
 }
 
-void Client::add_mod(std::string c)
+void Client::add_mod(std::string c, Server &serv, Command &cmd)
 {
 	if (c == "trueop")
 	{
@@ -96,16 +98,26 @@ void Client::add_mod(std::string c)
 	}
 	for (size_t i = 0; i < c.size(); i++)
 	{
+		if (c[i] != 'i' && c[i] != 'o')
+		{
+			serv.store_msg(cmd.ircrep->ERR_UNKNOWNMODE(*this, c),getfd());
+			return;
+		}
 		if (c[i] != 'o' && _mods.find(c[i]) == std::string::npos)
 			_mods = _mods + c[i];
 	}
 	return;
 }
 
-void Client::rem_mod(std::string c)
+void Client::rem_mod(std::string c, Server &serv, Command &cmd)
 {
 	for (size_t i = 0; i < c.size(); i++)
 	{
+		if (c[i] != 'i' && c[i] != 'o')
+		{
+			serv.store_msg(cmd.ircrep->ERR_UNKNOWNMODE(*this, c),getfd());
+			return;
+		}
 		if (_mods.find(c[i]) != std::string::npos)
 			_mods.erase(_mods.find(c[i]), 1);
 	}

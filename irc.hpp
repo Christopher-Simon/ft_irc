@@ -32,6 +32,8 @@
 #define MAX_EVENTS 1000
 #define	NC_EASY_TEST 0
 
+#define	VERBOSE 1
+
 #define U_AWAY 'a'
 #define U_INVISIBLE 'i'
 #define U_WALLOPS 'w'
