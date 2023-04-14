@@ -1,82 +1,84 @@
 #include "../Command.hpp"
 
-
-//Modifier pour traiter le cas ou on veut ajouter plusieurs modes en meme temps
 void Command::MODE(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt)
 {
 	if (clt._identified < 3)
+		serv.store_msg(ircrep->ERR_NOTREGISTERED(clt),clt.getfd());
+	else if (vect.size() < 2)
+		serv.store_msg(ircrep->ERR_NEEDMOREPARAMS(cmd, clt),clt.getfd());
+	else if (vect.size() > 4)
+		serv.store_msg(ircrep->ERR_UNKNOWNCOMMAND(cmd, clt),clt.getfd());
+	else if (vect[1][0] == '#')
 	{
-		serv.send_msg(ircrep->ERR_NOTREGISTERED(clt),clt.getfd());
-		return;
-	}
-	if (vect.size() < 2)
-	{
-		serv.send_msg(ircrep->ERR_NEEDMOREPARAMS(cmd, clt),clt.getfd());
-		return;
-	}
-	if (vect[1][0] == '#')
-	{
-		//MODE CHANNEL IMCOMPLET
 		std::string target = vect[1];
 		if (serv.pool_channel.find(target) == serv.pool_channel.end())
+			serv.store_msg(ircrep->ERR_NOSUCHCHANNEL(clt, target),clt.getfd());
+		else if (vect.size() == 2)
+			serv.store_msg(ircrep->RPL_CHANNELMODEIS(clt, target, serv.get_chan(target)->_channel_mods),clt.getfd());
+		else if (clt._mods.find('o') == std::string::npos)
+			serv.store_msg(ircrep->ERR_CHANOPRIVSNEEDED(clt, target),clt.getfd());
+		else if (vect.size() == 4)
 		{
-			serv.send_msg(ircrep->ERR_NOSUCHCHANNEL(clt, target),clt.getfd());
-			return;
+			std::string ptl_nick2 = vect[3];
+			std::transform(ptl_nick2.begin(), ptl_nick2.end(), ptl_nick2.begin(), ::toupper);
+			if (vect[2] != "+o" && vect[2] != "-o")
+				serv.store_msg(ircrep->ERR_UNKNOWNMODE(clt, target),clt.getfd());
+			else if (ptl_nick2 != clt._intern_nick)
+				serv.store_msg(ircrep->ERR_USERSDONTMATCH(clt),clt.getfd());
+			else
+			{
+				if (vect[2][0] == '+')
+				{
+					serv.get_chan(target)->_members.find(clt.getfd())->second = "o";
+						// serv.store_msg(ircrep->RPL_NAMREPLY(clt, serv, vect[1]), it->first);
+						// serv.store_msg(ircrep->RPL_ENDOFNAMES(clt, vect[1]),it->first);
+				}
+				else if (vect[2][0] == '-')
+				{
+					serv.get_chan(target)->_members.find(clt.getfd())->second = "";
+				}
+				std::map<int, std::string>::iterator it;
+				std::string reply = ":" + clt.get_nick() + "!" + clt._username + "@" + clt._hotsname + " MODE " + vect[1] + " " + vect[2] +" " + clt.get_nick();
+				for (it = serv.get_chan(vect[1])->_members.begin(); it != serv.get_chan(vect[1])->_members.end(); it++)
+					serv.store_msg(reply, it->first);
+			}
 		}
-		if (vect.size() == 2)
+		else if (vect.size() == 3)
 		{
-			serv.send_msg(ircrep->RPL_CHANNELMODEIS(clt, target, serv.pool_channel.find(target)->second->_channel_mods),clt.getfd());
-			return;
+			if (vect[2] != "+i" && vect[2] != "-i")
+				serv.store_msg(ircrep->ERR_UNKNOWNMODE(clt, target),clt.getfd());
+			else
+			{
+				if (vect[2][0] == '+')
+					serv.get_chan(target)->_channel_mods = "i";
+				else if (vect[2][0] == '-')
+					serv.get_chan(target)->_channel_mods = "";
+				serv.store_msg(ircrep->RPL_CHANNELMODEIS(clt, target, serv.get_chan(target)->_channel_mods),clt.getfd());
+			}
 		}
-		if (serv.pool_channel.find(target)->second->_members.find(clt.getfd())->second.find('o', 0) == std::string::npos)
-		{
-			serv.send_msg(ircrep->ERR_CHANOPRIVSNEEDED(clt, target),clt.getfd());
-			return;
-		}
-		std::string cmods = "imnptkl";
-		if (!((vect[2][0] == '+' || vect[2][0] == '-') && vect[2].length() == 2 && cmods.find(vect[2][1]) != std::string::npos))
-		{
-			return;
-		}
-		if (vect[2][0] == '+')
-			serv.pool_channel.find(target)->second->add_mod(vect[2][1]);
-		else if (vect[2][0] == '-')
-			serv.pool_channel.find(target)->second->rem_mod(vect[2][1]);
+		return;
 	}
 	else
 	{
-		//question si le mode sort un nickname deja existant mais sans maj par exemple
 		std::string ptl_nick = vect[1].substr(0, vect[1].find_first_of(" \r\n",0));
 		std::transform(ptl_nick.begin(), ptl_nick.end(), ptl_nick.begin(), ::toupper);
+		std::string mods = "io";
 		if (serv.check_nick_exist(ptl_nick)== 0)
+			serv.store_msg(ircrep->ERR_NOSUCHNICK(clt),clt.getfd());
+		else if (ptl_nick != clt._intern_nick)
+			serv.store_msg(ircrep->ERR_USERSDONTMATCH(clt),clt.getfd());
+		else if (vect.size() == 2)
+			serv.store_msg(ircrep->RPL_UMODEIS(clt), clt.getfd());
+		else if (vect[2][0] == '+' || vect[2][0] == '-')
 		{
-			return; //ERR_NOSUCHNICK
+			if (vect[2][0] == '+')
+				clt.add_mod(vect[2].substr(1, vect[2].size()));
+			else if (vect[2][0] == '-')
+				clt.rem_mod(vect[2].substr(1, vect[2].size()));
+			serv.store_msg(ircrep->RPL_UMODEIS(clt), clt.getfd());
 		}
-		if (ptl_nick != clt._intern_nick)
-		{
-			//ERR_USERSDONTMATCH
-			return;
-		}
-		if (vect.size() == 2)
-		{
-			serv.send_msg(ircrep->RPL_UMODEIS(clt), clt.getfd());
-			return;
-		}
-		//aucun flag gere pour le moment
-		else if (vect.size() > 3)
-		{
-			serv.send_msg(ircrep->RPL_UMODEIS(clt), clt.getfd());
-			return;
-		}
-		std::string mods = "airwro";
-		if (!((vect[2][0] == '+' || vect[2][0] == '-') && vect[2].length() == 2 && mods.find(vect[2][1]) != std::string::npos))
-		{
-			return;
-		}
-		if (vect[2][0] == '+')
-			clt.add_mod(vect[2][1]);
-		else if (vect[2][0] == '-')
-			clt.rem_mod(vect[2][1]);
+		else
+			serv.store_msg(ircrep->ERR_UNKNOWNMODE(clt, vect[2]),clt.getfd());
 	}
 	cmd.empty();
 	return;

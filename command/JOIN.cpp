@@ -1,48 +1,68 @@
 #include "Command.hpp"
 
-//ajout du droit de channel operator quand le client cree un channel qui existait pas
 void Command::JOIN(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt)
 {
 	if (clt._identified < 3)
 	{
-		serv.send_msg(ircrep->ERR_NOTREGISTERED(clt),clt.getfd());
+		serv.store_msg(ircrep->ERR_NOTREGISTERED(clt),clt.getfd());
 		return;
 	}
 	if (vect.size() == 1)
 	{
-		serv.send_msg(ircrep->ERR_NEEDMOREPARAMS(cmd, clt),clt.getfd());
+		serv.store_msg(ircrep->ERR_NEEDMOREPARAMS(cmd, clt),clt.getfd());
 		return;
 	}
 	std::vector<std::string> list_channel = ft_split(vect[1], ',');
-	if (vect.size() == 3)
+	if (vect.size() >= 3)
 	{
-		std::vector<std::string> list_key = ft_split(vect[2], ',');
-		// for(size_t i = 0; i < list_channel.size(); i++)
-		// {
-
-		// }
-		//TBC
+		serv.store_msg(ircrep->ERR_UNKNOWNCOMMAND(cmd, clt),clt.getfd());
 		return;
 	}
-	//gerer le cas ou les noms sont des memes avec des majuscules
-	//faire gaffe a ce que les messages d'erreur ne bloquent pas l'execution du reste de la liste
 	for(size_t i = 0; i < list_channel.size(); i++)
 	{
-		if (serv.channel_exist(list_channel[i]) == 1) //Channel trouve
+		if (serv.channel_exist(list_channel[i]) == 1 && serv.chan_has_mod(list_channel[i], 'i') == 0) //Channel trouve
 		{
-			if (serv.client_in_channel(list_channel[i], clt) == 1) //client deja present dans le channel
-				return;
-			serv.pool_channel.find(list_channel[i])->second->_members[clt.getfd()] = "i";
-			serv.pool_channel.find(list_channel[i])->second->nb_memb++;
-			std::cout<<clt.get_nick()<<" added to channel "<<list_channel[i]<<std::endl;
+			std::string reply = ":" + clt.get_nick() + "!" + clt._username + "@" + clt._hotsname + " JOIN :";
+			serv.get_chan(list_channel[i])->add_member(clt.getfd(), serv, *this);
+			serv.store_msg(reply + list_channel[i], clt.getfd());
+			if (serv.get_chan(list_channel[i])->_topic != "")
+				serv.store_msg(ircrep->RPL_TOPIC(clt, list_channel[i], serv.get_chan(list_channel[i])->_topic), clt.getfd());
+			serv.store_msg(ircrep->RPL_NAMREPLY(clt, serv, list_channel[i]), clt.getfd());
+			serv.store_msg(ircrep->RPL_ENDOFNAMES(clt, list_channel[i]),clt.getfd());
+		}
+		else if (serv.channel_exist(list_channel[i]) == 1 && serv.chan_has_mod(list_channel[i], 'i')==1)
+		{
+			if (serv.get_chan(list_channel[i])->invited_clients.find(clt.getfd()) == serv.get_chan(list_channel[i])->invited_clients.end())
+				serv.store_msg(ircrep->ERR_INVITEONLYCHAN(clt, list_channel[i]),clt.getfd());
+			else
+			{
+				serv.get_chan(list_channel[i])->add_member(clt.getfd(), serv, *this);
+				std::string reply = ":" + clt.get_nick() + "!" + clt._username + "@" + clt._hotsname + " JOIN :";
+				serv.store_msg(reply + list_channel[i], clt.getfd());
+				if (serv.get_chan(list_channel[i])->_topic != "")
+					serv.store_msg(ircrep->RPL_TOPIC(clt, list_channel[i], serv.get_chan(list_channel[i])->_topic), clt.getfd());
+				serv.store_msg(ircrep->RPL_NAMREPLY(clt, serv, list_channel[i]), clt.getfd());
+				serv.store_msg(ircrep->RPL_ENDOFNAMES(clt, list_channel[i]),clt.getfd());
+				
+			}
 		}
 		else //channel pas existante
 		{
-			//AJOUTER le mod du channel
-			serv.pool_channel[list_channel[i]] = new Channel(list_channel[i]);
-			serv.pool_channel.find(list_channel[i])->second->_members[clt.getfd()] = "q";
-			std::cout<<clt.get_nick()<<" added to created channel "<<list_channel[i]<<std::endl;
+			if (list_channel[i][0] != '#' || list_channel[i].find_first_of(" \a,") != std::string::npos)
+				serv.store_msg(ircrep->ERR_INVALIDCHANNELNAME(clt, list_channel[i]),clt.getfd());
+			else if (serv.pool_client[clt.getfd()]->get_his_channels(serv).size() >= 10)
+				serv.store_msg(ircrep->ERR_TOOMANYCHANNELS(*serv.pool_client[clt.getfd()], list_channel[i]), clt.getfd());
+			else
+			{
+				serv.pool_channel[list_channel[i]] = new Channel(list_channel[i]);
+				serv.pool_channel.find(list_channel[i])->second->_members[clt.getfd()] = "o";
+				std::string reply = ":" + clt.get_nick() + "!" + clt._username + "@" + clt._hotsname + " JOIN :";
+				serv.store_msg(reply + list_channel[i], clt.getfd());
+				if (serv.get_chan(list_channel[i])->_topic != "")
+					serv.store_msg(ircrep->RPL_TOPIC(clt, list_channel[i], serv.get_chan(list_channel[i])->_topic), clt.getfd());
+				serv.store_msg(ircrep->RPL_NAMREPLY(clt, serv, list_channel[i]), clt.getfd());
+				serv.store_msg(ircrep->RPL_ENDOFNAMES(clt, list_channel[i]),clt.getfd());
+			}
 		}
 	}
-	return;
 }

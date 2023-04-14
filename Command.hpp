@@ -23,7 +23,7 @@ public:
 	void exec(std::string &, Server &, Client &);
 	void exec_line(std::string msg, Server &serv, Client &clt);
 
-	void USER(std::string cmd, std::string line, Server &serv, Client &clt);
+	void USER(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 	void NICK(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 	void PASS(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 	void PING(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
@@ -33,10 +33,53 @@ public:
 	void PART(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 	void INVITE(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 	void PRIVMSG(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
-	//void NAMES(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
+	void NAMES(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
+	void NOTICE(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
+	void TOPIC(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
+	void OPER(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
+	void KILL(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
+	void KICK(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
+	void QUIT(std::string cmd, std::vector<std::string> vect, Server &serv, Client &clt);
 };
 
 void print_vect(std::vector<std::string> vect);
 std::vector<std::string> ft_split(std::string &msg, char sep);
+
+// NOTICE
+// PRIVMSG
+// LIST 
+// PART 
+// JOIN 
+// MODE 
+// NICK 
+// PASS 
+// USER 
+// PING 
+// reste a faire :
+
+// mode operator channel
+	// OPER
+	// KICK
+	// BAN mode +b
+	// UNBAN mode -b
+	// SVSNICK
+
+// mode operator serv
+	//kill(pt)
+
+//mode invisible  (?)
+
+// INVITE a valider 
+// TOPIC 
+
+//est ce qu'on garde les keys ?
+//protection pour pas d'espace dans le mdp
+//pb au niveau des modes, modes internes au channel etc.
+
+//ajout du chanlimit / client limit / client dans channel limit
+//gestion des mods
+//maintien du serveur en activite constante
+//fichiers ?
+//bot
 
 #endif

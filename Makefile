@@ -16,6 +16,14 @@ $(CMD_DIR)PING.cpp \
 $(CMD_DIR)USER.cpp \
 $(CMD_DIR)INVITE.cpp \
 $(CMD_DIR)PRIVMSG.cpp \
+$(CMD_DIR)NAMES.cpp \
+$(CMD_DIR)NOTICE.cpp \
+$(CMD_DIR)TOPIC.cpp \
+$(CMD_DIR)OPER.cpp \
+$(CMD_DIR)KILL.cpp \
+$(CMD_DIR)KICK.cpp \
+$(CMD_DIR)QUIT.cpp \
+Bot.cpp \
 utils.cpp
 
 CMD_DIR = command/
