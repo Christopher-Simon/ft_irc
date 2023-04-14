@@ -15,7 +15,7 @@ void Command::MODE(std::string cmd, std::vector<std::string> vect, Server &serv,
 			serv.store_msg(ircrep->ERR_NOSUCHCHANNEL(clt, target),clt.getfd());
 		else if (vect.size() == 2)
 			serv.store_msg(ircrep->RPL_CHANNELMODEIS(clt, target, serv.get_chan(target)->_channel_mods),clt.getfd());
-		else if (clt._mods.find('o') == std::string::npos)
+		else if (serv.get_chan(vect[1])->_members[clt.getfd()].find('o') == std::string::npos)
 			serv.store_msg(ircrep->ERR_CHANOPRIVSNEEDED(clt, target),clt.getfd());
 		else if (vect.size() == 4)
 		{
