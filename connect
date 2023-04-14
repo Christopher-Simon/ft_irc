@@ -1,6 +1,0 @@
-CAP LS
-PASS toto
-NICK pedro
-USER pedro poder localhost :OUI
-JOIN #truc
-JOIN #bonjour

@@ -1,0 +1,35 @@
+/join chan
+/join chan,chan1,chan2
+
+/nick
+/nick new_nick
+
+/quit
+/quit message
+
+/ping Client
+
+/msg #channel msg
+/msg user msg
+
+/notice #channel msg
+/notice user,#channel,user msg
+
+/pass
+
+/part
+/part msg
+
+/oper user admin
+
+/mode #channel +o user
+/mode #channel +i
+/mode user -o
+
+/invite user #channel
+
+/kick #channel user
+
+/names #channel
+
+/list -yes
