@@ -11,7 +11,7 @@ void Command::MODE(std::string cmd, std::vector<std::string> vect, Server &serv,
 	else if (vect[1][0] == '#')
 	{
 		std::string target = vect[1];
-		if (serv.pool_channel.find(target) == serv.pool_channel.end())
+		if (serv.pool_channel.find(serv.toupper(target)) == serv.pool_channel.end())
 			serv.store_msg(ircrep->ERR_NOSUCHCHANNEL(clt, target),clt.getfd());
 		else if (vect.size() == 2)
 			serv.store_msg(ircrep->RPL_CHANNELMODEIS(clt, target, serv.get_chan(target)->_channel_mods),clt.getfd());

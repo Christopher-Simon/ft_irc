@@ -68,10 +68,10 @@ std::string Code::RPL_NAMREPLY(Client &clt, Server &serv, std::string title)
 	std::string mod_chan;
 	std::string rep = " ";
 	std::map<int, std::string>::iterator it;
-	for (it = serv.pool_channel.find(title)->second->_members.begin(); it != serv.pool_channel.find(title)->second->_members.end(); it++)
+	for (it = serv.pool_channel.find(serv.toupper(title))->second->_members.begin(); it != serv.pool_channel.find(serv.toupper(title))->second->_members.end(); it++)
 	{
 		std::string mod_user;
-		if (it == serv.pool_channel.find(title)->second->_members.begin())
+		if (it == serv.pool_channel.find(serv.toupper(title))->second->_members.begin())
 			rep = rep + ":";
 		else
 			rep = rep + " ";

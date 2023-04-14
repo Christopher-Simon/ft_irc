@@ -10,23 +10,15 @@ Channel::~Channel()
 	
 }
 
-Channel::Channel(std::string name)
+Channel::Channel(std::string up_name, std::string name)
 {
-	_name = name;
+	_name = up_name;
 	//_iskey = 0;
+	//std::transform(name.begin(), name.end(), name.begin(), ::toupper);
+	_intern_name = name;
 	nb_memb = 1;
 	_topic = "";
 }
-
-// Channel::Channel(std::string name, std::string key)
-// {
-// 	_name = name;
-// 	//_key = key;
-// 	//_iskey = 1;
-// 	nb_memb = 1;
-// 	_channel_mods = "k";
-// 	_topic = "";
-// }
 
 void Channel::remove_memb(int fd, Server &serv)
 {

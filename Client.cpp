@@ -46,7 +46,8 @@ void Client::get_msg()
 	if (count < 0)
 		throw (std::runtime_error("recv failed"));
 	buf[count] = '\0';
-	std::cout << "________buffer_________ " << buf << std::endl;
+	if (VERBOSE)
+		std::cout << "________buffer_________ " << buf << std::endl;
 	_buffer += buf;
 	if (count == 0)
 		throw(LostConnExceptions("Connection with client lost"));

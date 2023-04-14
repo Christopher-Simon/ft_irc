@@ -80,7 +80,8 @@ void	Server::initSocket(char *port) {
 	_sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (_sockfd == -1)
 		throw (std::runtime_error("Socket creation failed"));
-	std::cout << GREEN << "Socket creation successful" << RESET << std::endl;
+	if (VERBOSE)
+		std::cout << GREEN << "Socket creation successful" << RESET << std::endl;
 	int optval = 1;
 	if (setsockopt(_sockfd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)))
 	{
@@ -206,7 +207,7 @@ void Server::store_all_msg(std::string msg, int fd_avoid)
 void Server::store_channel_msg(std::string msg2, std::string channel, int fd_avoid)
 {
 	std::string msg = msg2 + "\r\n";
-	std::map<int, std::string> clients = pool_channel[channel]->_members;
+	std::map<int, std::string> clients = pool_channel[toupper(channel)]->_members;
 	for (std::map<int, std::string>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
 		if (it->first != fd_avoid)
@@ -244,16 +245,16 @@ void Server::del_channel(Channel &chan)
 {
 	//if (chan.nb_memb != 0 || chan._members.size() != 0)
 		//std::cout<<"Warning : deleting non empty channel"<<std::endl;
-	std::string name = chan._name;
-	if (pool_channel.find(name) == pool_channel.end())
+	std::string name = toupper(chan._name);
+	if (pool_channel.find((name)) == pool_channel.end())
 	{
 		//std::cout<<"Error : channel to delete not found"<<std::endl;
 		return;
 	}
-	delete(pool_channel.find(name)->second);
+	delete(pool_channel.find((name))->second);
 	//std::cout<<"Info : channel "<< name << " deleted"<<std::endl;
 
-	pool_channel.erase(name);
+	pool_channel.erase((name));
 }
 
 void Server::store_msg(std::string msg2, int fd)
@@ -295,23 +296,40 @@ int Server::check_nick_exist(std::string nick)
 	return (0);
 }
 
+// int Server::channel_exist(std::string title)
+// {
+// 	mapChannel::iterator it;
+// 	std::string ptl_name = title;
+// 	std::string ref;
+// 	std::transform(ptl_name.begin(), ptl_name.end(), ptl_name.begin(), ::toupper);
+// 	for (it = pool_channel.begin(); it != pool_channel.end(); it++)
+// 	{
+// 		ref = it->first;
+// 		std::transform(ref.begin(), ref.end(), ref.begin(), ::toupper);
+// 		if (ref == ptl_name)
+// 			return 1;
+// 	}
+// 	return 0;
+// }
+
 int Server::channel_exist(std::string title)
 {
-	if (pool_channel.find(title) != pool_channel.end())
+	if (pool_channel.find(toupper(title)) != pool_channel.end())
 		return 1;
 	return 0;
 }
 
 int Server::client_in_channel(std::string title, Client &clt)
 {
-	if (pool_channel.find(title)->second->_members.find(clt.getfd()) != pool_channel.find(title)->second->_members.end())
+	if (pool_channel.find((toupper(title)))->second->_members.find(clt.getfd()) != pool_channel.find((toupper(title)))->second->_members.end())
 		return (1);
 	return 0;
 }
 
-int	Server::user_in_channel(std::string channel, std::string user)
+int	Server::user_in_channel(std::string title, std::string user)
 {
-	if (pool_channel.find(channel) == pool_channel.end())
+	std::string channel = toupper(title);
+	if (pool_channel.find((channel)) == pool_channel.end())
 	{
 		std::cerr<<RED<<"Error user_in_channel : channel not found"<<RESET<<std::endl;
 		return (0);
@@ -322,7 +340,7 @@ int	Server::user_in_channel(std::string channel, std::string user)
 		std::cerr<<RED<<"Error check_nick_exist : user not found"<<RESET<<std::endl;
 		return (0);
 	}
-	std::map<int, std::string> clients = pool_channel[channel]->_members;
+	std::map<int, std::string> clients = pool_channel[(channel)]->_members;
 	for (std::map<int, std::string>::iterator it = clients.begin(); it != clients.end(); ++it)
 		if (it->first == fduser)
 			return (1);
@@ -331,12 +349,12 @@ int	Server::user_in_channel(std::string channel, std::string user)
 
 std::string Server::get_chan_mods(std::string title)
 {
-	return (pool_channel.find(title)->second->_channel_mods);
+	return (pool_channel.find((toupper(title)))->second->_channel_mods);
 }
 
 std::string Server::get_userinchan_mods(std::string title, Client &clt)
 {
-	return (pool_channel.find(title)->second->_members[clt.getfd()]);
+	return (pool_channel.find((toupper(title)))->second->_members[clt.getfd()]);
 }
 
 void Server::print_status()
@@ -358,7 +376,7 @@ void Server::print_status()
 	mapChannel::iterator it2;
 	for (it2 = pool_channel.begin(); it2 != pool_channel.end(); ++it2)
 	{
-		std::cout<<"|		- "<<it2->second->_name <<" = "<<it2->second->_channel_mods<<std::endl;
+		std::cout<<"|		- "<<it2->second->_intern_name <<" = "<<it2->second->_channel_mods<<std::endl;
 		if (it2->second->_members.size() != 0)
 		{
 			std::map<int, std::string>::iterator it3;
@@ -376,14 +394,14 @@ void Server::print_status()
 
 int Server::chan_has_mod(std::string title, char wanted_mod)
 {
-	if (get_chan_mods(title).find(wanted_mod) != std::string::npos)
+	if (get_chan_mods(toupper(title)).find(wanted_mod) != std::string::npos)
 		return 1;
 	return 0;
 }
 
-Channel *Server::get_chan(std::string channel_name)
+Channel *Server::get_chan(std::string title)
 {
-	return (pool_channel.find(channel_name)->second);
+	return (pool_channel.find((toupper(title)))->second);
 }
 
 void Server::check_channels()
@@ -396,7 +414,7 @@ void Server::check_channels()
 		{
 			std::string sup = it2->first;
 			delete it2->second;
-			pool_channel.erase(sup);
+			pool_channel.erase((sup));
 			break;
 		}
 	}
@@ -450,7 +468,7 @@ void	Server::switch_pollin(int fd_client) {
 	{
 		if (send(fd_client, msg_map[fd_client].c_str(), msg_map[fd_client].size(), 0) == -1)
 			throw std::runtime_error("send");
-		std::cout << "msg sent to" << "[" << fd_client << "]" << " : " << msg_map[fd_client] << std::endl;
+		//std::cout << "msg sent to" << "[" << fd_client << "]" << " : " << msg_map[fd_client] << std::endl;
 		msg_map.erase(fd_client);
 		tmp_event.events = EPOLLIN | EPOLLHUP | EPOLLERR | EPOLLRDHUP;
 		tmp_event.data.fd = fd_client;
@@ -467,4 +485,23 @@ void	Server::switch_pollin(int fd_client) {
 	// 	std::cout << RED << fd_client << " not found in msg_map" << RESET << std::endl;
 	// 	getwchar();
 	// }
+}
+
+// std::string Server::getname(std::string title)
+// {
+// 	std::string ptl_name = title;
+// 	std::transform(ptl_name.begin(), ptl_name.end(), ptl_name.begin(), ::toupper);
+// 	std::map<std::string, Channel *>::iterator it;
+// 	for (it = pool_channel.begin(); it != pool_channel.end(); it++)
+// 	{
+// 		if (it->second->_intern_name == ptl_name)
+// 			return it->second->_name;
+// 	}
+// 	return (title);
+// }
+
+std::string Server::toupper(std::string str)
+{
+	std::transform(str.begin(), str.end(), str.begin(), ::toupper);
+	return str;
 }

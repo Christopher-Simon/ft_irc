@@ -54,6 +54,9 @@ class Server
 		void switch_pollout();
 		void switch_pollin(int fd_client);
 
+		//std::string getname(std::string title);
+		std::string toupper(std::string);
+
 		void print_status();
 
 		struct epoll_event			_event;

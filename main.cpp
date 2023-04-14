@@ -79,7 +79,10 @@ int	main(int argc, char *argv[])
 							serv.switch_pollin(fd_client);
 						}
 					} catch (Client::LostConnExceptions & e){
-						std::cerr << ORANGE << e.what() << RESET << std::endl;
+						if (VERBOSE)
+							std::cerr << ORANGE << e.what() << RESET << std::endl;
+						else
+							std::cout << ORANGE << "Client disconnected" << RESET << std::endl;
 						serv.del_client(fd_client);
 						serv.check_channels();
 						continue ;
