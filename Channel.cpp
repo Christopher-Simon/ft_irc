@@ -48,7 +48,7 @@ void Channel::add_member(int fd, Server &serv, Command &cmd)
 {
 	if (serv.pool_client[fd]->get_his_channels(serv).size() >= 10)
 	{
-		serv.store_msg(cmd.ircrep->ERR_TOOMANYCHANNELS(*serv.pool_client[fd], _name), fd);
+		serv.store_msg(cmd.ircrep->ERR_TOOMANYCHANNELS(*serv.pool_client[fd], _intern_name), fd);
 		return;
 	}
 	_members[fd] = "";
@@ -56,7 +56,7 @@ void Channel::add_member(int fd, Server &serv, Command &cmd)
 	std::string reply = ":" + serv.pool_client[fd]->get_nick() + "!" + serv.pool_client[fd]->_username + "@" + serv.pool_client[fd]->_hotsname + " JOIN :";
 	std::map<int, std::string>::iterator it;
 	for (it = _members.begin(); it != _members.end(); it++)
-		serv.store_msg(reply + _name, it->first);
+		serv.store_msg(reply + _intern_name, it->first);
 }
 
 int Channel::userInChannel(int fd)
